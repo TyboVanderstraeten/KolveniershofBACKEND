@@ -41,7 +41,8 @@ namespace KolveniershofBACKEND
             #endregion
 
             #region Dependency Injections
-
+            services
+                .AddScoped<DBInitializer>();
             #endregion
 
             #region NSwag
@@ -125,7 +126,7 @@ namespace KolveniershofBACKEND
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env,DBInitializer dbInitializer)
         {
             if (env.IsDevelopment())
             {
@@ -146,6 +147,8 @@ namespace KolveniershofBACKEND
             app.UseSwagger();
 
             app.UseCors("AllowAllOrigins");
+
+            dbInitializer.seedDatabase();
         }
     }
 }
