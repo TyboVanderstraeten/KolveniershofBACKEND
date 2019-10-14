@@ -5,7 +5,13 @@ using System.Threading.Tasks;
 
 namespace KolveniershofBACKEND.Models.Domain
 {
-    public class NoteType
+    public enum NoteType
     {
+        VERVOER,
+        ATELIERS_WEEKSCHEMA,
+        CLIENTEN,
+        VARIA,
+        BEGELEIDING_STAGIAIRS_VRIJWILLIGERS,
+        LOGISTIEK
     }
 }

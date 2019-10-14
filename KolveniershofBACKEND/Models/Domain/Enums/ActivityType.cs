@@ -5,7 +5,12 @@ using System.Threading.Tasks;
 
 namespace KolveniershofBACKEND.Models.Domain
 {
-    public class ActivityType
+    public enum ActivityType
     {
+        ATELIER,
+        EVENEMENT,
+        AFWEZIG,
+        VERVOER,
+        ZIEK
     }
 }

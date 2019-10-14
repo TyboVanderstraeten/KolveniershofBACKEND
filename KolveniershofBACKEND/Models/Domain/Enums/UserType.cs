@@ -5,7 +5,11 @@ using System.Threading.Tasks;
 
 namespace KolveniershofBACKEND.Models.Domain
 {
-    public class UserType
+    public enum UserType
     {
+        CLIENT,
+        BEGELEIDER,
+        STAGIAIR,
+        VRIJWILLIGER
     }
 }

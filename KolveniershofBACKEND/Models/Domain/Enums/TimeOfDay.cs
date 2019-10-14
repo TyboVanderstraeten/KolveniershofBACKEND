@@ -5,7 +5,12 @@ using System.Threading.Tasks;
 
 namespace KolveniershofBACKEND.Models.Domain
 {
-    public class TimeOfDay
+    public enum TimeOfDay
     {
+        OCHTEND,
+        VOORMIDDAG,
+        MIDDAG,
+        NAMIDDAG,
+        AVOND
     }
 }
