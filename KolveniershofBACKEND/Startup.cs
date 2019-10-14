@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using KolveniershofBACKEND.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -32,15 +33,16 @@ namespace KolveniershofBACKEND
             #endregion
 
             #region DBContext
-            //services.AddDbContext<DBContext>(options =>
-            //{
-            //    // Change 'TyboConnection' to 'DefaultConnection', my SQL-server instance name is different than default
-            //    options.UseSqlServer(Configuration["ConnectionStrings:TyboConnection"]);
-            //});
+            services.AddDbContext<DBContext>(options =>
+            {
+                // Change 'TyboConnection' to 'DefaultConnection', my SQL-server instance name is different than default
+                options.UseSqlServer(Configuration["ConnectionStrings:TyboConnection"]);
+            });
             #endregion
 
             #region Dependency Injections
- 
+            services
+                .AddScoped<DBInitializer>();
             #endregion
 
             #region NSwag
@@ -69,23 +71,23 @@ namespace KolveniershofBACKEND
             #endregion
 
             #region Authentication
-            services.AddAuthentication(x =>
-            {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(x =>
-            {
-                x.RequireHttpsMetadata = false;
-                x.SaveToken = true;
-                x.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    // Make sure to add a (long-enough) token to user-secrets!
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:Key"])),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
-                };
-            });
+            //services.AddAuthentication(x =>
+            //{
+            //    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            //    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            //}).AddJwtBearer(x =>
+            //{
+            //    x.RequireHttpsMetadata = false;
+            //    x.SaveToken = true;
+            //    x.TokenValidationParameters = new TokenValidationParameters
+            //    {
+            //        ValidateIssuerSigningKey = true,
+            //        // Make sure to add a (long-enough) token to user-secrets!
+            //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:Key"])),
+            //        ValidateIssuer = false,
+            //        ValidateAudience = false
+            //    };
+            //});
             #endregion
 
             #region Authorization
@@ -124,7 +126,7 @@ namespace KolveniershofBACKEND
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env,DBInitializer dbInitializer)
         {
             if (env.IsDevelopment())
             {
@@ -145,6 +147,8 @@ namespace KolveniershofBACKEND
             app.UseSwagger();
 
             app.UseCors("AllowAllOrigins");
+
+            dbInitializer.seedDatabase();
         }
     }
 }
