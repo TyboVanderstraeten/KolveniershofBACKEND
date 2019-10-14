@@ -3,7 +3,6 @@ using KolveniershofBACKEND.Models.Domain;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace KolveniershofBACKEND.Data
 {
     public class DBContext : IdentityDbContext
@@ -18,7 +17,7 @@ namespace KolveniershofBACKEND.Data
             builder.ApplyConfiguration(new UserConfiguration());
             builder.ApplyConfiguration(new AttendanceConfiguration());
             builder.ApplyConfiguration(new CustomDayConfiguration());
-            builder.ApplyConfiguration(new DayActivity());
+            builder.ApplyConfiguration(new DayActivityConfiguration());
             builder.ApplyConfiguration(new DayConfiguration());
             builder.ApplyConfiguration(new HelperConfiguration());
             builder.ApplyConfiguration(new NoteConfiguration());
