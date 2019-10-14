@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using KolveniershofBACKEND.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -32,15 +33,15 @@ namespace KolveniershofBACKEND
             #endregion
 
             #region DBContext
-            //services.AddDbContext<DBContext>(options =>
-            //{
-            //    // Change 'TyboConnection' to 'DefaultConnection', my SQL-server instance name is different than default
-            //    options.UseSqlServer(Configuration["ConnectionStrings:TyboConnection"]);
-            //});
+            services.AddDbContext<DBContext>(options =>
+            {
+                // Change 'TyboConnection' to 'DefaultConnection', my SQL-server instance name is different than default
+                options.UseSqlServer(Configuration["ConnectionStrings:TyboConnection"]);
+            });
             #endregion
 
             #region Dependency Injections
- 
+
             #endregion
 
             #region NSwag
