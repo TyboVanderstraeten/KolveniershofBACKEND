@@ -10,13 +10,12 @@ namespace KolveniershofBACKEND.Data.Mappers
         {
             builder.ToTable("Attendance");
             builder.HasKey(a => new { a.DayId, a.ActivityId, a.UserId });
-            builder.Property(a => a.DayActivity).IsRequired();
             builder.Property(a => a.Comment).IsRequired();
             builder.HasOne(a => a.DayActivity)
                 .WithMany(da => da.Attendances)
                 .IsRequired()
                 // Not sure if this works?
-                .HasForeignKey(a => new { a.DayId, a.ActivityId })
+                .HasForeignKey(a => new { a.DayId, a.ActivityId})
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }
