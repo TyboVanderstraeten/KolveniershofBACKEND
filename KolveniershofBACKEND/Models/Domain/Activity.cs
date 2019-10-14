@@ -15,7 +15,6 @@ namespace KolveniershofBACKEND.Models.Domain
 
         protected Activity()
         {
-
         }
 
         public Activity(ActivityType activityType, string name, string description, string pictogram)

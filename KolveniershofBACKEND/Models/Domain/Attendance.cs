@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace KolveniershofBACKEND.Models.Domain
 {
-    public class Presence
+    public class Attendance
     {
         public int DayId { get; set; }
         public int ActivityId { get; set; }
@@ -15,12 +15,12 @@ namespace KolveniershofBACKEND.Models.Domain
         // Nullable? Set value later?
         public string Comment { get; set; }
 
-        protected Presence()
+        protected Attendance()
         {
 
         }
 
-        public Presence(DayActivity dayActivity, User user, string comment)
+        public Attendance(DayActivity dayActivity, User user, string comment)
         {
             DayId = dayActivity.DayId;
             ActivityId = dayActivity.ActivityId;

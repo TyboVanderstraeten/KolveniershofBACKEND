@@ -12,10 +12,11 @@ namespace KolveniershofBACKEND.Models.Domain
         public Day Day { get; set; }
         public Activity Activity { get; set; }
         public TimeOfDay TimeOfDay { get; set; }
+        public ICollection<Attendance> Attendances { get; set; }
 
         protected DayActivity()
         {
-
+            Attendances = new List<Attendance>();
         }
 
         public DayActivity(Day day, Activity activity, TimeOfDay timeOfDay)
@@ -25,6 +26,7 @@ namespace KolveniershofBACKEND.Models.Domain
             Day = day;
             Activity = activity;
             TimeOfDay = timeOfDay;
+            Attendances = new List<Attendance>();
         }
     }
 }
