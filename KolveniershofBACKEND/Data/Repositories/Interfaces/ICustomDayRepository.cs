@@ -9,9 +9,9 @@ namespace KolveniershofBACKEND.Data.Repositories.Interfaces
     public interface ICustomDayRepository
     {
         IEnumerable<CustomDay> GetAll();
-        IEnumerable<Note> GetNotesFromCustomDay(int id);
+        IEnumerable<CustomDay> GetAllInRange(DateTime start, DateTime end);
         CustomDay GetById(int id);
-        CustomDay GetByIdWithNotes(int id);
+        CustomDay GetByDate(DateTime date);
         void Add(CustomDay customDay);
         void Remove(CustomDay customDay);
         void SaveChanges();
