@@ -1,11 +1,57 @@
-﻿using System;
+﻿using KolveniershofBACKEND.Data.Repositories.Interfaces;
+using KolveniershofBACKEND.Models.Domain;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace KolveniershofBACKEND.Data.Repositories.Concrete
 {
-    public class UserRepository
+    public class UserRepository : IUserRepository
     {
+        private DBContext _dbContext;
+        private DbSet<User> _users;
+
+        public UserRepository(DBContext dbContext)
+        {
+            _dbContext = dbContext;
+            _users = dbContext.Users;
+        }
+
+        public IEnumerable<User> GetAll()
+        {
+            return _users.ToList();
+        }
+
+        public IEnumerable<User> GetAllFromGroup(int group)
+        {
+            return _users.Where(u => u.Group == group).ToList();
+        }
+
+        public IEnumerable<Attendance> GetAttendancesFromUser(int id)
+        {
+            return _users.SingleOrDefault(u => u.UserId == id).Attendances.ToList();
+        }
+
+        public User GetById(int id)
+        {
+            return _users.SingleOrDefault(u => u.UserId == id);
+        }
+
+        public void Add(User user)
+        {
+            _users.Add(user);
+        }
+
+        public void Remove(User user)
+        {
+            _users.Remove(user);
+        }
+
+        public void SaveChanges()
+        {
+            _dbContext.SaveChanges();
+        }
     }
 }

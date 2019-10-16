@@ -9,6 +9,7 @@ namespace KolveniershofBACKEND.Models.Domain
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string ProfilePicture { get; set; }
+        //Nullable== in case of begeleiders enz pls fix dis ok
         public int? Group { get; set; }
         public ICollection<Attendance> Attendances { get; set; }
 
