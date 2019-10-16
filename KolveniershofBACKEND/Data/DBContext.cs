@@ -28,7 +28,6 @@ namespace KolveniershofBACKEND.Data
         public DbSet<Activity> Activities { get; set; }
         // 'new' because DBContext.Users is an existing namespace
         public new DbSet<User> Users { get; set; }
-        public DbSet<Note> Notes { get; set; }
         public DbSet<Day> Days { get; set; }
         public DbSet<CustomDay> CustomDays { get; set; }
     }
