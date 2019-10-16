@@ -1,4 +1,6 @@
-﻿namespace KolveniershofBACKEND.Models.Domain
+﻿using System.Collections.Generic;
+
+namespace KolveniershofBACKEND.Models.Domain
 {
     public class User
     {
@@ -8,9 +10,11 @@
         public string LastName { get; set; }
         public string ProfilePicture { get; set; }
         public int? Group { get; set; }
+        public ICollection<Attendance> Attendances { get; set; }
 
         protected User()
         {
+            Attendances = new List<Attendance>();
 
         }
 
@@ -21,6 +25,7 @@
             LastName = lastName;
             ProfilePicture = profilePicture;
             Group = group;
+            Attendances = new List<Attendance>();
         }
 
     }
