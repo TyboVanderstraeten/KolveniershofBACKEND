@@ -15,7 +15,12 @@ namespace KolveniershofBACKEND.Data.Mappers
                 .WithMany(da => da.Attendances)
                 .IsRequired()
                 // Not sure if this works?
-                .HasForeignKey(a => new { a.DayId, a.ActivityId})
+                .HasForeignKey(a => new { a.DayId, a.ActivityId })
+                .OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(a => a.User)
+                .WithMany(u => u.Attendances)
+                .IsRequired()
+                .HasForeignKey(a => a.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }
