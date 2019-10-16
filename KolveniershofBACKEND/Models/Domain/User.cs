@@ -15,7 +15,6 @@ namespace KolveniershofBACKEND.Models.Domain
         protected User()
         {
             Attendances = new List<Attendance>();
-
         }
 
         public User(UserType userType, string firstName, string lastName, string profilePicture, int? group)
