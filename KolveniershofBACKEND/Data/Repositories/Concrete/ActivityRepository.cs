@@ -19,8 +19,6 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
             _activities = dbContext.Activities;
         }
 
-
-
         public IEnumerable<Activity> GetAll()
         {
             return _activities.ToList();
