@@ -21,5 +21,15 @@ namespace KolveniershofBACKEND.Models.Domain
             Menu = menu;
             Notes = new List<Note>();
         }
+
+        public void AddNote(Note note)
+        {
+            Notes.Add(note);
+        }
+
+        public void RemoveNote(Note note)
+        {
+            Notes.Remove(note);
+        }
     }
 }

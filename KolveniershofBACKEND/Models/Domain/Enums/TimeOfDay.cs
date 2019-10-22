@@ -6,6 +6,7 @@
         VOORMIDDAG,
         MIDDAG,
         NAMIDDAG,
-        AVOND
+        AVOND,
+        VOLLEDIG
     }
 }

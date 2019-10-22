@@ -9,9 +9,10 @@ namespace KolveniershofBACKEND.Models.Domain
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string ProfilePicture { get; set; }
-        //Nullable== in case of begeleiders enz pls fix dis ok
         public int? Group { get; set; }
         public ICollection<Attendance> Attendances { get; set; }
+
+        public string Username { get => $"{FirstName.Replace(' ', '_')}.{LastName.Replace(' ', '_')}"; }
 
         protected User()
         {
@@ -28,5 +29,10 @@ namespace KolveniershofBACKEND.Models.Domain
             Attendances = new List<Attendance>();
         }
 
+        public void AddAttendance(DayActivity dayActivity, string comment = null)
+        {
+            Attendance attendance = new Attendance(dayActivity, this, comment);
+            Attendances.Add(attendance);
+        }
     }
 }
