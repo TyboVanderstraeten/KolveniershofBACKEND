@@ -14,15 +14,4 @@ namespace KolveniershofBACKEND.Models.DTO
         public DayActivity DayActivity { get; set; }
         public User User { get; set; }
         public string Comment { get; set; }
-
-        public AttendanceDTO(Attendance attendance)
-        {
-            DayId = attendance.DayId;
-            ActivityId = attendance.ActivityId;
-            UserId = attendance.UserId;
-            DayActivity = attendance.DayActivity;
-            User = attendance.User;
-            Comment = attendance.Comment;
-        }
-    }
 }
