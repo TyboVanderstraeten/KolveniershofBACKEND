@@ -39,6 +39,11 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
             return _users.SingleOrDefault(u => u.UserId == id);
         }
 
+        public User GetByUsername(string username)
+        {
+            return _users.SingleOrDefault(u => u.Username.ToLower().Equals(username.ToLower()));
+        }
+
         public void Add(User user)
         {
             _users.Add(user);

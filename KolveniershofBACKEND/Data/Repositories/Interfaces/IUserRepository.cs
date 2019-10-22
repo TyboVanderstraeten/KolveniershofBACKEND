@@ -12,6 +12,7 @@ namespace KolveniershofBACKEND.Data.Repositories.Interfaces
         IEnumerable<User> GetAllFromGroup(int group);
         IEnumerable<Attendance> GetAttendancesFromUser(int id);
         User GetById(int id);
+        User GetByUsername(string username);
         void Add(User user);
         void Remove(User user);
         void SaveChanges();
