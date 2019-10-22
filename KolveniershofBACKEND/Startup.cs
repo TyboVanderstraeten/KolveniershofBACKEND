@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Text;
 using KolveniershofBACKEND.Data;
+using KolveniershofBACKEND.Data.Repositories.Concrete;
+using KolveniershofBACKEND.Data.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -42,7 +44,11 @@ namespace KolveniershofBACKEND
 
             #region Dependency Injections
             services
-                .AddScoped<DBInitializer>();
+                .AddScoped<DBInitializer>()
+                .AddScoped<IActivityRepository, ActivityRepository>()
+                .AddScoped<ICustomDayRepository, CustomDayRepository>()
+                .AddScoped<IDayRepository, DayRepository>()
+                .AddScoped<IUserRepository, UserRepository>();
             #endregion
 
             #region NSwag
@@ -126,7 +132,7 @@ namespace KolveniershofBACKEND
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env,DBInitializer dbInitializer)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, DBInitializer dbInitializer)
         {
             if (env.IsDevelopment())
             {
