@@ -1,6 +1,7 @@
 ﻿using KolveniershofBACKEND.Models.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace KolveniershofBACKEND.Data.Mappers
 {
@@ -10,7 +11,7 @@ namespace KolveniershofBACKEND.Data.Mappers
         {
             builder.ToTable("Activity");
             builder.HasKey(a => a.ActivityId);
-            builder.Property(a => a.ActivityType).IsRequired();
+            builder.Property(a => a.ActivityType).HasConversion(new EnumToStringConverter<ActivityType>()).IsRequired();
             builder.Property(a => a.Name).IsRequired();
             builder.Property(a => a.Description).IsRequired();
             builder.Property(a => a.Pictogram).IsRequired();

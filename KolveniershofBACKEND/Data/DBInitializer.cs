@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using KolveniershofBACKEND.Models.Domain;
+using Microsoft.AspNetCore.Identity;
 
 namespace KolveniershofBACKEND.Data
 {
@@ -18,7 +19,12 @@ namespace KolveniershofBACKEND.Data
             _dbContext.Database.EnsureDeleted();
             if (_dbContext.Database.EnsureCreated())
             {
+                #region Activities
+                Activity a1 = new Activity(ActivityType.ATELIER, "Testatelier", "Dit is een testatelier", "test.picto");
+                _dbContext.Activities.Add(a1);
+                #endregion
 
+                _dbContext.SaveChanges();
             }
         }
     }

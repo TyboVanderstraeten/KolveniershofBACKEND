@@ -1,6 +1,7 @@
 ﻿using KolveniershofBACKEND.Models.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace KolveniershofBACKEND.Data.Mappers
 {
@@ -10,7 +11,7 @@ namespace KolveniershofBACKEND.Data.Mappers
         {
             builder.ToTable("Note");
             builder.HasKey(n => n.NoteId);
-            builder.Property(n => n.NoteType).IsRequired();
+            builder.Property(n => n.NoteType).HasConversion(new EnumToStringConverter<NoteType>()).IsRequired();
             builder.Property(n => n.Content).IsRequired();
         }
     }
