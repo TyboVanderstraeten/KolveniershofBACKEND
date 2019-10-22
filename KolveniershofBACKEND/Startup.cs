@@ -55,9 +55,9 @@ namespace KolveniershofBACKEND
             services.AddOpenApiDocument(d =>
             {
                 d.Description = "Back-end API written for Kolveniershof application";
-                d.DocumentName = "Kolveniershof-API";
+                d.DocumentName = "KolveniershofAPI";
                 d.Version = "Development";
-                d.Title = "Kolveniershof-API";
+                d.Title = "KolveniershofAPI";
                 d.DocumentProcessors.Add(new SecurityDefinitionAppender("JWT Token", new SwaggerSecurityScheme
                 {
                     Type = SwaggerSecuritySchemeType.ApiKey,
@@ -72,32 +72,28 @@ namespace KolveniershofBACKEND
             #region Default identity
             services.AddIdentity<IdentityUser, IdentityRole>(options =>
             {
-                //options.User.RequireUniqueEmail = true;
+                options.User.RequireUniqueEmail = true;
             }).AddEntityFrameworkStores<DBContext>();
             #endregion
 
             #region Authentication
-            //services.AddAuthentication(x =>
-            //{
-            //    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            //    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            //}).AddJwtBearer(x =>
-            //{
-            //    x.RequireHttpsMetadata = false;
-            //    x.SaveToken = true;
-            //    x.TokenValidationParameters = new TokenValidationParameters
-            //    {
-            //        ValidateIssuerSigningKey = true,
-            //        // Make sure to add a (long-enough) token to user-secrets!
-            //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:Key"])),
-            //        ValidateIssuer = false,
-            //        ValidateAudience = false
-            //    };
-            //});
-            #endregion
-
-            #region Authorization
-
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(x =>
+            {
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    // Make sure to add a (long-enough) token to user-secrets!
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:Key"])),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+            });
             #endregion
 
             #region Identity Configuration
