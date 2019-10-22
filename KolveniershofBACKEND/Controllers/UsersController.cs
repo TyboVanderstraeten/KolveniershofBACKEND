@@ -34,7 +34,7 @@ namespace KolveniershofBACKEND.Controllers
         }
 
         [HttpGet]
-        [Route("current")]
+        [Route("Current")]
         public ActionResult<UserDTO> GetLoggedInUser()
         {
             string username = User.Identity.Name;
@@ -48,42 +48,41 @@ namespace KolveniershofBACKEND.Controllers
         }
 
         [HttpGet]
-        [Route("users")]
         public ActionResult<IEnumerable<UserDTO>> GetAll()
         {
             return _userRepository.GetAll().Select(u => new UserDTO(u)).ToList();
         }
 
         [HttpGet]
-        [Route("users/group/{id}")]
+        [Route("Group/{Id}")]
         public ActionResult<IEnumerable<UserDTO>> GetAllFromGroup(int id)
         {
             return _userRepository.GetAllFromGroup(id).Select(u => new UserDTO(u)).ToList();
         }
 
         [HttpGet]
-        [Route("users/{id}/attendances")]
+        [Route("{Id}/Attendances")]
         public ActionResult<IEnumerable<AttendanceDTO>> GetAttendancesFromUser(int id)
         {
             return _userRepository.GetAttendancesFromUser(id).Select(a => new AttendanceDTO(a)).ToList();
         }
 
         [HttpGet]
-        [Route("users/{id}")]
+        [Route("{Id}")]
         public ActionResult<UserDTO> GetById(int id)
         {
             return new UserDTO(_userRepository.GetById(id));
         }
 
         [HttpGet]
-        [Route("users/{username}")]
+        [Route("{Username}")]
         public ActionResult<UserDTO> GetByUsername(string username)
         {
             return new UserDTO(_userRepository.GetByUsername(username));
         }
 
         [HttpPost]
-        [Route("users/login")]
+        [Route("Login")]
         public async Task<ActionResult<string>> Login(LoginDTO model)
         {
             IdentityUser user = await GetUser(model.Username);
