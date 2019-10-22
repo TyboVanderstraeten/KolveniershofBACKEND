@@ -14,7 +14,7 @@ namespace KolveniershofBACKEND.Models.DTO
         public string LastName { get; set; }
         public string ProfilePicture { get; set; }
         public int? Group { get; set; }
-        public ICollection<Attendance> Attendances { get; set; }
+        public ICollection<AttendanceDTO> Attendances { get; set; }
 
         public UserDTO(User user)
         {
@@ -24,7 +24,7 @@ namespace KolveniershofBACKEND.Models.DTO
             LastName = user.LastName;
             ProfilePicture = user.ProfilePicture;
             Group = user.Group;
-            Attendances = user.Attendances;
+            Attendances = user.Attendances.Select(a => new AttendanceDTO(a)).ToList();
         }
 
     }

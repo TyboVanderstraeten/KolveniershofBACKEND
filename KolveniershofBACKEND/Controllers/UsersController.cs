@@ -33,23 +33,6 @@ namespace KolveniershofBACKEND.Controllers
             _userRepository = userRepository;
         }
 
-        private async Task<string> GetToken(IdentityUser user)
-        {
-            var claims = new List<Claim>() {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Email),
-                new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName)
-            };
-            claims.AddRange(await _userManager.GetClaimsAsync(user));
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Tokens:Key"]));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var token = new JwtSecurityToken(
-                null, null, claims.ToArray(),
-                expires: DateTime.Now.AddMinutes(30),
-                signingCredentials: creds
-            );
-            return new JwtSecurityTokenHandler().WriteToken(token);
-        }
-
         [HttpGet]
         [Route("current")]
         public ActionResult<UserDTO> GetLoggedInUser()
@@ -113,6 +96,23 @@ namespace KolveniershofBACKEND.Controllers
                 }
             }
             return BadRequest("Username or password is incorrect");
+        }
+
+        private async Task<string> GetToken(IdentityUser user)
+        {
+            var claims = new List<Claim>() {
+                new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+                new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName)
+            };
+            claims.AddRange(await _userManager.GetClaimsAsync(user));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Tokens:Key"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var token = new JwtSecurityToken(
+                null, null, claims.ToArray(),
+                expires: DateTime.Now.AddMinutes(30),
+                signingCredentials: creds
+            );
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
         private async Task<IdentityUser> GetUser(string username)
