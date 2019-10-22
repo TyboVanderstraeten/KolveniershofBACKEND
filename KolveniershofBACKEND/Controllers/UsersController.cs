@@ -35,7 +35,7 @@ namespace KolveniershofBACKEND.Controllers
 
         [HttpGet]
         [Route("Current")]
-        public ActionResult<UserDTO> GetLoggedInUser()
+        public ActionResult<User> GetLoggedInUser()
         {
             string username = User.Identity.Name;
             User user = _userRepository.GetByUsername(username);
@@ -44,41 +44,41 @@ namespace KolveniershofBACKEND.Controllers
             {
                 return NotFound("We couldn't find the user you're looking for");
             }
-            return new UserDTO(user);
+            return user;
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<UserDTO>> GetAll()
+        public ActionResult<IEnumerable<User>> GetAll()
         {
-            return _userRepository.GetAll().Select(u => new UserDTO(u)).ToList();
+            return _userRepository.GetAll().ToList();
         }
 
         [HttpGet]
         [Route("Group/{Id}")]
-        public ActionResult<IEnumerable<UserDTO>> GetAllFromGroup(int id)
+        public ActionResult<IEnumerable<User>> GetAllFromGroup(int id)
         {
-            return _userRepository.GetAllFromGroup(id).Select(u => new UserDTO(u)).ToList();
+            return _userRepository.GetAllFromGroup(id).ToList();
         }
 
         [HttpGet]
         [Route("{Id}/Attendances")]
-        public ActionResult<IEnumerable<AttendanceDTO>> GetAttendancesFromUser(int id)
+        public ActionResult<IEnumerable<Attendance>> GetAttendancesFromUser(int id)
         {
-            return _userRepository.GetAttendancesFromUser(id).Select(a => new AttendanceDTO(a)).ToList();
+            return _userRepository.GetAttendancesFromUser(id).ToList();
         }
 
         [HttpGet]
         [Route("{Id}")]
-        public ActionResult<UserDTO> GetById(int id)
+        public ActionResult<User> GetById(int id)
         {
-            return new UserDTO(_userRepository.GetById(id));
+            return _userRepository.GetById(id);
         }
 
         [HttpGet]
         [Route("{Username}")]
-        public ActionResult<UserDTO> GetByUsername(string username)
+        public ActionResult<User> GetByUsername(string username)
         {
-            return new UserDTO(_userRepository.GetByUsername(username));
+            return _userRepository.GetByUsername(username);
         }
 
         [HttpPost]
