@@ -28,11 +28,5 @@ namespace KolveniershofBACKEND.Models.Domain
             Group = group;
             Attendances = new List<Attendance>();
         }
-
-        public void AddAttendance(DayActivity dayActivity, string comment = null)
-        {
-            Attendance attendance = new Attendance(dayActivity, this, comment);
-            Attendances.Add(attendance);
-        }
     }
 }
