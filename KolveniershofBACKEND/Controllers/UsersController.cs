@@ -34,7 +34,7 @@ namespace KolveniershofBACKEND.Controllers
         }
 
         [HttpGet]
-        [Route("Current")]
+        [Route("current")]
         public ActionResult<User> GetLoggedInUser()
         {
             string username = User.Identity.Name;
@@ -54,35 +54,35 @@ namespace KolveniershofBACKEND.Controllers
         }
 
         [HttpGet]
-        [Route("Group/{Id}")]
+        [Route("group/{id}")]
         public ActionResult<IEnumerable<User>> GetAllFromGroup(int id)
         {
             return _userRepository.GetAllFromGroup(id).ToList();
         }
 
         [HttpGet]
-        [Route("{Id}/Attendances")]
+        [Route("{id}/attendances")]
         public ActionResult<IEnumerable<Attendance>> GetAttendancesFromUser(int id)
         {
             return _userRepository.GetAttendancesFromUser(id).ToList();
         }
 
         [HttpGet]
-        [Route("{Id}")]
+        [Route("{id}")]
         public ActionResult<User> GetById(int id)
         {
             return _userRepository.GetById(id);
         }
 
         [HttpGet]
-        [Route("{Username}")]
+        [Route("{username}")]
         public ActionResult<User> GetByUsername(string username)
         {
             return _userRepository.GetByUsername(username);
         }
 
         [HttpPost]
-        [Route("Login")]
+        [Route("login")]
         public async Task<ActionResult<string>> Login(LoginDTO model)
         {
             IdentityUser user = await GetUser(model.Username);

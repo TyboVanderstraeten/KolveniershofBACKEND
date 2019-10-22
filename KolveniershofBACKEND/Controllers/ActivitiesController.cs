@@ -27,7 +27,7 @@ namespace KolveniershofBACKEND.Controllers
         }
 
         [HttpGet]
-        [Route("{Id}")]
+        [Route("{id}")]
         public ActionResult<Activity> GetById(int id)
         {
             return _activityRepository.GetById(id);
@@ -55,7 +55,7 @@ namespace KolveniershofBACKEND.Controllers
         }
 
         [HttpDelete]
-        [Route("{Id}")]
+        [Route("{id}")]
         public ActionResult<Activity> Remove(int id)
         {
             Activity activityToDelete = _activityRepository.GetById(id);

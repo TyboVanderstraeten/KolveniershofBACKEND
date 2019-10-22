@@ -14,4 +14,5 @@ namespace KolveniershofBACKEND.Models.DTO
         public DayActivity DayActivity { get; set; }
         public User User { get; set; }
         public string Comment { get; set; }
+    }
 }
