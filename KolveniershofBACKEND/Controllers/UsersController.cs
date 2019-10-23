@@ -100,20 +100,53 @@ namespace KolveniershofBACKEND.Controllers
         [HttpPost]
         public ActionResult<User> Add(UserDTO model)
         {
-            return null;
+            try
+            {
+                User userToCreate = new User(
+                    model.UserType,
+                    model.FirstName,
+                    model.LastName,
+                    model.ProfilePicture,
+                    model.Group);
+
+                _userRepository.Add(userToCreate);
+                _userRepository.SaveChanges();
+                return CreatedAtAction(nameof(GetById), new { id = userToCreate.UserId }, userToCreate);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut]
         public ActionResult<User> Edit(UserDTO model)
         {
-            return null;
+            User userToEdit = _userRepository.GetById(model.UserId);
+            userToEdit.UserType = model.UserType;
+            userToEdit.FirstName = model.FirstName;
+            userToEdit.LastName = model.LastName;
+            userToEdit.ProfilePicture = model.ProfilePicture;
+            userToEdit.Group = model.Group;
+            _userRepository.SaveChanges();
+            return Ok(userToEdit);
         }
 
         [HttpDelete]
         [Route("{id}")]
         public ActionResult<User> Remove(int id)
         {
-            return null;
+            User userToDelete = _userRepository.GetById(id);
+            if (userToDelete == null)
+            {
+                return NoContent();
+            }
+            else
+            {
+                _userRepository.Remove(userToDelete);
+                _userRepository.SaveChanges();
+                return Ok(userToDelete);
+            }
         }
 
         private async Task<string> GetToken(IdentityUser user)
