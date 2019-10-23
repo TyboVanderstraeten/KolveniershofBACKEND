@@ -153,27 +153,33 @@ namespace KolveniershofBACKEND.Controllers
         public ActionResult<User> Edit(UserDTO model)
         {
             User userToEdit = _userRepository.GetById(model.UserId);
+            IdentityUser identityUserToEdit = GetUser(userToEdit.Username).GetAwaiter().GetResult();
             userToEdit.UserType = model.UserType;
             userToEdit.FirstName = model.FirstName;
             userToEdit.LastName = model.LastName;
             userToEdit.Birthdate = model.Birthdate;
             userToEdit.ProfilePicture = model.ProfilePicture;
             userToEdit.Group = model.Group;
+
+            identityUserToEdit.UserName = userToEdit.Username;
             _userRepository.SaveChanges();
             return Ok(userToEdit);
         }
 
         [HttpDelete]
         [Route("{id}")]
-        public ActionResult<User> Remove(int id)
+        public async Task<ActionResult<User>> Remove(int id)
         {
             User userToDelete = _userRepository.GetById(id);
+
             if (userToDelete == null)
             {
                 return NoContent();
             }
             else
             {
+                IdentityUser identityUserToDelete = GetUser(userToDelete.Username).GetAwaiter().GetResult();
+                await _userManager.DeleteAsync(identityUserToDelete);
                 _userRepository.Remove(userToDelete);
                 _userRepository.SaveChanges();
                 return Ok(userToDelete);
