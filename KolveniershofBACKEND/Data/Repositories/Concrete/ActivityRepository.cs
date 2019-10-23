@@ -31,7 +31,7 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
 
         public void Add(Activity activity)
         {
-            _activities.Remove(activity);
+            _activities.Add(activity);
         }
 
         public void Remove(Activity activity)

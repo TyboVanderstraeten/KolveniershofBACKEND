@@ -14,7 +14,7 @@ namespace KolveniershofBACKEND.Data.Mappers
             builder.Property(a => a.ActivityType).HasConversion(new EnumToStringConverter<ActivityType>()).IsRequired();
             builder.Property(a => a.Name).IsRequired();
             builder.Property(a => a.Description).IsRequired();
-            builder.Property(a => a.Pictogram).IsRequired();
+            builder.Property(a => a.Pictogram).IsRequired();                
         }
     }
 }
