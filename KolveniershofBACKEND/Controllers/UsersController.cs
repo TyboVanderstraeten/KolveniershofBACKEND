@@ -61,7 +61,7 @@ namespace KolveniershofBACKEND.Controllers
         }
 
         [HttpGet]
-        [Route("type")]
+        [Route("type/{type}")]
         public ActionResult<IEnumerable<User>> GetAllWithType(string type)
         {
             if (Enum.IsDefined(typeof(UserType), type.ToUpper()))
@@ -89,7 +89,7 @@ namespace KolveniershofBACKEND.Controllers
         }
 
         [HttpGet]
-        [Route("{username}")]
+        [Route("username/{username}")]
         public ActionResult<User> GetByUsername(string username)
         {
             return _userRepository.GetByUsername(username);
