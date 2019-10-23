@@ -28,5 +28,15 @@ namespace KolveniershofBACKEND.Models.Domain
             Group = group;
             Attendances = new List<Attendance>();
         }
+
+        public void AddAttendance(Attendance attendance)
+        {
+            Attendances.Add(attendance);
+        }
+
+        public void RemoveAttendance(Attendance attendance)
+        {
+            Attendances.Remove(attendance);
+        }
     }
 }

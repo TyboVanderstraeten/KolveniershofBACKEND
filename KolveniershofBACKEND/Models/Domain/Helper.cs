@@ -1,6 +1,5 @@
 ﻿namespace KolveniershofBACKEND.Models.Domain
 {
-    // This class' purpose is to link interns and volunteers to a day planning (first piece of text on the paper example)
     public class Helper
     {
         public int DayId { get; set; }

@@ -33,5 +33,15 @@ namespace KolveniershofBACKEND.Models.Domain
         {
             Helpers.Remove(helper);
         }
+
+        public void AddDayActivity(DayActivity dayActivity)
+        {
+            DayActivities.Add(dayActivity);
+        }
+
+        public void RemoveDayActivity(DayActivity dayActivity)
+        {
+            DayActivities.Remove(dayActivity);
+        }
     }
 }
