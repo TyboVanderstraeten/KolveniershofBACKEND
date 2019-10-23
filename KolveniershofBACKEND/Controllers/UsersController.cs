@@ -1,4 +1,5 @@
-﻿using KolveniershofBACKEND.Data.Repositories.Interfaces;
+﻿using KolveniershofBACKEND.Data;
+using KolveniershofBACKEND.Data.Repositories.Interfaces;
 using KolveniershofBACKEND.Models.Domain;
 using KolveniershofBACKEND.Models.DTO;
 using Microsoft.AspNetCore.Identity;
@@ -112,7 +113,7 @@ namespace KolveniershofBACKEND.Controllers
         }
 
         [HttpPost]
-        public ActionResult<User> Add(UserDTO model)
+        public async Task<ActionResult<User>> Add(UserDTO model)
         {
             try
             {
@@ -120,12 +121,27 @@ namespace KolveniershofBACKEND.Controllers
                     model.UserType,
                     model.FirstName,
                     model.LastName,
+                    model.Birthdate,
                     model.ProfilePicture,
                     model.Group);
 
+                //Temp
+                if (_userRepository.GetByUsername(userToCreate.Username) != null)
+                {
+                    return BadRequest("User already exists");
+                }
+
+                IdentityUser identityUserToCreate = new IdentityUser()
+                {
+                    UserName = userToCreate.Username,
+                    LockoutEnabled = true
+                };
+
+                await _userManager.CreateAsync(identityUserToCreate, "P@ssword1");
                 _userRepository.Add(userToCreate);
                 _userRepository.SaveChanges();
                 return CreatedAtAction(nameof(GetById), new { id = userToCreate.UserId }, userToCreate);
+
             }
             catch (Exception ex)
             {
@@ -140,6 +156,7 @@ namespace KolveniershofBACKEND.Controllers
             userToEdit.UserType = model.UserType;
             userToEdit.FirstName = model.FirstName;
             userToEdit.LastName = model.LastName;
+            userToEdit.Birthdate = model.Birthdate;
             userToEdit.ProfilePicture = model.ProfilePicture;
             userToEdit.Group = model.Group;
             _userRepository.SaveChanges();
