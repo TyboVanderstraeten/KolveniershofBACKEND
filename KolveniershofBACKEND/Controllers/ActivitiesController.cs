@@ -38,7 +38,7 @@ namespace KolveniershofBACKEND.Controllers
             try
             {
                 Activity activityToCreate = new Activity(
-                    (ActivityType)model.ActivityType,
+                    model.ActivityType,
                     model.Name,
                     model.Description,
                     model.Pictogram);
@@ -51,6 +51,18 @@ namespace KolveniershofBACKEND.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpPut]
+        public ActionResult<Activity> Edit(ActivityDTO model)
+        {
+            Activity activityToEdit = _activityRepository.GetById(model.ActivityId);
+            activityToEdit.ActivityType = model.ActivityType;
+            activityToEdit.Name = model.Name;
+            activityToEdit.Description = model.Description;
+            activityToEdit.Pictogram = model.Pictogram;
+            _activityRepository.SaveChanges();
+            return Ok(activityToEdit);
         }
 
         [HttpDelete]
