@@ -27,6 +27,11 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
             return _users.Where(u => u.Group == group).ToList();
         }
 
+        public IEnumerable<User> GetAllWithType(UserType userType)
+        {
+            return _users.Where(u => u.UserType == userType).ToList();
+        }
+
         public IEnumerable<Attendance> GetAttendancesFromUser(int id)
         {
             return _users.SingleOrDefault(u => u.UserId == id).Attendances.ToList();

@@ -7,6 +7,7 @@ namespace KolveniershofBACKEND.Data.Repositories.Interfaces
     {
         IEnumerable<User> GetAll();
         IEnumerable<User> GetAllFromGroup(int group);
+        IEnumerable<User> GetAllWithType(UserType userType);
         IEnumerable<Attendance> GetAttendancesFromUser(int id);
         User GetById(int id);
         User GetByUsername(string username);

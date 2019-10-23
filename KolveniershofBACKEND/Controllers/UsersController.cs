@@ -61,6 +61,20 @@ namespace KolveniershofBACKEND.Controllers
         }
 
         [HttpGet]
+        [Route("type")]
+        public ActionResult<IEnumerable<User>> GetAllWithType(string type)
+        {
+            if (Enum.IsDefined(typeof(UserType), type.ToUpper()))
+            {
+                return _userRepository.GetAllWithType((UserType)Enum.Parse(typeof(UserType), type.ToUpper())).ToList();
+            }
+            else
+            {
+                return BadRequest("Type is incorrect");
+            }
+        }
+
+        [HttpGet]
         [Route("{id}/attendances")]
         public ActionResult<IEnumerable<Attendance>> GetAttendancesFromUser(int id)
         {
