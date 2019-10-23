@@ -4,6 +4,7 @@ namespace KolveniershofBACKEND.Models.DTO
 {
     public class DayDTO
     {
+        public int DayId { get; set; }
         public int WeekNr { get; set; }
         public int DayNr { get; set; }
         public ICollection<DayActivityDTO> DayActivities { get; set; }

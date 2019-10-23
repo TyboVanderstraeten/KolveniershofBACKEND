@@ -5,6 +5,7 @@ namespace KolveniershofBACKEND.Models.DTO
 {
     public class UserDTO
     {
+        public int UserId { get; set; }
         public UserType UserType { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
