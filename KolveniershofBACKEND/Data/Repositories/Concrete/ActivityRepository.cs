@@ -1,25 +1,21 @@
 ﻿using KolveniershofBACKEND.Data.Repositories.Interfaces;
 using KolveniershofBACKEND.Models.Domain;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace KolveniershofBACKEND.Data.Repositories.Concrete
 {
     public class ActivityRepository : IActivityRepository
     {
-        private DBContext _dbContext;
-        private DbSet<Activity> _activities;
+        private readonly DBContext _dbContext;
+        private readonly DbSet<Activity> _activities;
 
         public ActivityRepository(DBContext dbContext)
         {
             _dbContext = dbContext;
             _activities = dbContext.Activities;
         }
-
-
 
         public IEnumerable<Activity> GetAll()
         {
@@ -33,7 +29,7 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
 
         public void Add(Activity activity)
         {
-            _activities.Remove(activity);
+            _activities.Add(activity);
         }
 
         public void Remove(Activity activity)

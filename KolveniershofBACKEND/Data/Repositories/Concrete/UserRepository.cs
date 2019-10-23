@@ -1,17 +1,15 @@
 ﻿using KolveniershofBACKEND.Data.Repositories.Interfaces;
 using KolveniershofBACKEND.Models.Domain;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace KolveniershofBACKEND.Data.Repositories.Concrete
 {
     public class UserRepository : IUserRepository
     {
-        private DBContext _dbContext;
-        private DbSet<User> _users;
+        private readonly DBContext _dbContext;
+        private readonly DbSet<User> _users;
 
         public UserRepository(DBContext dbContext)
         {
@@ -29,6 +27,11 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
             return _users.Where(u => u.Group == group).ToList();
         }
 
+        public IEnumerable<User> GetAllWithType(UserType userType)
+        {
+            return _users.Where(u => u.UserType == userType).ToList();
+        }
+
         public IEnumerable<Attendance> GetAttendancesFromUser(int id)
         {
             return _users.SingleOrDefault(u => u.UserId == id).Attendances.ToList();
@@ -37,6 +40,11 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
         public User GetById(int id)
         {
             return _users.SingleOrDefault(u => u.UserId == id);
+        }
+
+        public User GetByUsername(string username)
+        {
+            return _users.SingleOrDefault(u => u.Username.ToLower().Equals(username.ToLower()));
         }
 
         public void Add(User user)

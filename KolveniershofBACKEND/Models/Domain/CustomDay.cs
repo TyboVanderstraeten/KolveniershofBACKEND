@@ -6,7 +6,6 @@ namespace KolveniershofBACKEND.Models.Domain
     public class CustomDay : Day
     {
         public DateTime Date { get; set; }
-        // Menu nullable? Set value later?
         public string Menu { get; set; }
         public ICollection<Note> Notes { get; set; }
 
@@ -20,6 +19,16 @@ namespace KolveniershofBACKEND.Models.Domain
             Date = date;
             Menu = menu;
             Notes = new List<Note>();
+        }
+
+        public void AddNote(Note note)
+        {
+            Notes.Add(note);
+        }
+
+        public void RemoveNote(Note note)
+        {
+            Notes.Remove(note);
         }
     }
 }

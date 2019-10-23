@@ -14,6 +14,7 @@ namespace KolveniershofBACKEND.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            builder.ApplyConfiguration(new ActivityConfiguration());
             builder.ApplyConfiguration(new UserConfiguration());
             builder.ApplyConfiguration(new AttendanceConfiguration());
             builder.ApplyConfiguration(new CustomDayConfiguration());
@@ -21,8 +22,6 @@ namespace KolveniershofBACKEND.Data
             builder.ApplyConfiguration(new DayConfiguration());
             builder.ApplyConfiguration(new HelperConfiguration());
             builder.ApplyConfiguration(new NoteConfiguration());
-            builder.ApplyConfiguration(new ActivityConfiguration());
-
         }
 
         public DbSet<Activity> Activities { get; set; }

@@ -4,14 +4,13 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace KolveniershofBACKEND.Data.Repositories.Concrete
 {
     public class CustomDayRepository : ICustomDayRepository
     {
-        private DBContext _dbContext;
-        private DbSet<CustomDay> _customDays;
+        private readonly DBContext _dbContext;
+        private readonly DbSet<CustomDay> _customDays;
 
         public CustomDayRepository(DBContext dbContext)
         {

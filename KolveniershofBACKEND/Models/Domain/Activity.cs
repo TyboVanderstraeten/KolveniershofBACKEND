@@ -14,7 +14,7 @@
 
         public Activity(ActivityType activityType, string name, string description, string pictogram)
         {
-            ActivityType = ActivityType;
+            ActivityType = activityType;
             Name = name;
             Description = description;
             Pictogram = pictogram;

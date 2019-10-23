@@ -25,5 +25,15 @@ namespace KolveniershofBACKEND.Models.Domain
             TimeOfDay = timeOfDay;
             Attendances = new List<Attendance>();
         }
+
+        public void AddAttendance(Attendance attendance)
+        {
+            Attendances.Add(attendance);
+        }
+
+        public void RemoveAttendance(Attendance attendance)
+        {
+            Attendances.Remove(attendance);
+        }
     }
 }

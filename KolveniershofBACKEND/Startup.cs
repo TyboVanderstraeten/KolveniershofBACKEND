@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Text;
 using KolveniershofBACKEND.Data;
+using KolveniershofBACKEND.Data.Repositories.Concrete;
+using KolveniershofBACKEND.Data.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -42,16 +44,20 @@ namespace KolveniershofBACKEND
 
             #region Dependency Injections
             services
-                .AddScoped<DBInitializer>();
+                .AddScoped<DBInitializer>()
+                .AddScoped<IActivityRepository, ActivityRepository>()
+                .AddScoped<ICustomDayRepository, CustomDayRepository>()
+                .AddScoped<IDayRepository, DayRepository>()
+                .AddScoped<IUserRepository, UserRepository>();
             #endregion
 
             #region NSwag
             services.AddOpenApiDocument(d =>
             {
                 d.Description = "Back-end API written for Kolveniershof application";
-                d.DocumentName = "Kolveniershof-API";
+                d.DocumentName = "KolveniershofAPI";
                 d.Version = "Development";
-                d.Title = "Kolveniershof-API";
+                d.Title = "KolveniershofAPI";
                 d.DocumentProcessors.Add(new SecurityDefinitionAppender("JWT Token", new SwaggerSecurityScheme
                 {
                     Type = SwaggerSecuritySchemeType.ApiKey,
@@ -66,32 +72,27 @@ namespace KolveniershofBACKEND
             #region Default identity
             services.AddIdentity<IdentityUser, IdentityRole>(options =>
             {
-                //options.User.RequireUniqueEmail = true;
             }).AddEntityFrameworkStores<DBContext>();
             #endregion
 
             #region Authentication
-            //services.AddAuthentication(x =>
-            //{
-            //    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            //    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            //}).AddJwtBearer(x =>
-            //{
-            //    x.RequireHttpsMetadata = false;
-            //    x.SaveToken = true;
-            //    x.TokenValidationParameters = new TokenValidationParameters
-            //    {
-            //        ValidateIssuerSigningKey = true,
-            //        // Make sure to add a (long-enough) token to user-secrets!
-            //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:Key"])),
-            //        ValidateIssuer = false,
-            //        ValidateAudience = false
-            //    };
-            //});
-            #endregion
-
-            #region Authorization
-
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(x =>
+            {
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    // Make sure to add a (long-enough) token to user-secrets!
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:Key"])),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+            });
             #endregion
 
             #region Identity Configuration
@@ -113,7 +114,6 @@ namespace KolveniershofBACKEND
                 // User settings.
                 options.User.AllowedUserNameCharacters =
                 "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
-                options.User.RequireUniqueEmail = true;
             });
             #endregion
 
@@ -126,7 +126,7 @@ namespace KolveniershofBACKEND
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env,DBInitializer dbInitializer)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, DBInitializer dbInitializer)
         {
             if (env.IsDevelopment())
             {

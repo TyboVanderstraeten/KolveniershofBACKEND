@@ -1,6 +1,7 @@
 ﻿using KolveniershofBACKEND.Models.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace KolveniershofBACKEND.Data.Mappers
 {
@@ -10,7 +11,7 @@ namespace KolveniershofBACKEND.Data.Mappers
         {
             builder.ToTable("DayActivity");
             builder.HasKey(da => new { da.DayId, da.ActivityId });
-            builder.Property(da => da.TimeOfDay).IsRequired();
+            builder.Property(da => da.TimeOfDay).HasConversion(new EnumToStringConverter<TimeOfDay>()).IsRequired();
             builder.HasOne(da => da.Day)
                 .WithMany(d => d.DayActivities)
                 .IsRequired()

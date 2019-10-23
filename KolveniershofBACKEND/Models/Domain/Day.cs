@@ -23,5 +23,25 @@ namespace KolveniershofBACKEND.Models.Domain
             DayActivities = new List<DayActivity>();
             Helpers = new List<Helper>();
         }
+
+        public void AddHelper(Helper helper)
+        {
+            Helpers.Add(helper);
+        }
+
+        public void RemoveHelper(Helper helper)
+        {
+            Helpers.Remove(helper);
+        }
+
+        public void AddDayActivity(DayActivity dayActivity)
+        {
+            DayActivities.Add(dayActivity);
+        }
+
+        public void RemoveDayActivity(DayActivity dayActivity)
+        {
+            DayActivities.Remove(dayActivity);
+        }
     }
 }

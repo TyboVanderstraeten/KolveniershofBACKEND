@@ -7,7 +7,6 @@
         public int UserId { get; set; }
         public DayActivity DayActivity { get; set; }
         public User User { get; set; }
-        // Nullable? Set value later?
         public string Comment { get; set; }
 
         protected Attendance()
@@ -15,14 +14,13 @@
 
         }
 
-        public Attendance(DayActivity dayActivity, User user, string comment)
+        public Attendance(DayActivity dayActivity, User user)
         {
             DayId = dayActivity.DayId;
             ActivityId = dayActivity.ActivityId;
             UserId = user.UserId;
             DayActivity = dayActivity;
             User = user;
-            Comment = comment;
         }
     }
 }
