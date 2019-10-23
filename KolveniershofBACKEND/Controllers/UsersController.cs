@@ -149,6 +149,8 @@ namespace KolveniershofBACKEND.Controllers
             }
         }
 
+        // Works 90% off the time, sometimes produces an error: using result of async call to edit somewhere else, doesn't always happen fast enough
+        // NEED TO FIX
         [HttpPut]
         public ActionResult<User> Edit(UserDTO model)
         {
@@ -166,6 +168,8 @@ namespace KolveniershofBACKEND.Controllers
             return Ok(userToEdit);
         }
 
+        // Works 90% off the time, sometimes produces an error: using result of async call to remove user, doesn't always happen fast enough
+        // NEED TO FIX
         [HttpDelete]
         [Route("{id}")]
         public async Task<ActionResult<User>> Remove(int id)
