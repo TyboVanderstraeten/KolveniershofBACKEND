@@ -10,8 +10,8 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
 {
     public class ActivityRepository : IActivityRepository
     {
-        private DBContext _dbContext;
-        private DbSet<Activity> _activities;
+        private readonly DBContext _dbContext;
+        private readonly DbSet<Activity> _activities;
 
         public ActivityRepository(DBContext dbContext)
         {

@@ -10,8 +10,8 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
 {
     public class UserRepository : IUserRepository
     {
-        private DBContext _dbContext;
-        private DbSet<User> _users;
+        private readonly DBContext _dbContext;
+        private readonly DbSet<User> _users;
 
         public UserRepository(DBContext dbContext)
         {

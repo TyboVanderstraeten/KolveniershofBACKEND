@@ -10,8 +10,8 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
 {
     public class DayRepository : IDayRepository
     {
-        private DBContext _dbContext;
-        private DbSet<Day> _days;
+        private readonly DBContext _dbContext;
+        private readonly DbSet<Day> _days;
 
         public DayRepository(DBContext dbContext)
         {

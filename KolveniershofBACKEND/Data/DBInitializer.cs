@@ -5,8 +5,8 @@ namespace KolveniershofBACKEND.Data
 {
     public class DBInitializer
     {
-        private DBContext _dbContext;
-        private UserManager<IdentityUser> _userManager;
+        private readonly DBContext _dbContext;
+        private readonly UserManager<IdentityUser> _userManager;
 
         public DBInitializer(DBContext dbContext, UserManager<IdentityUser> userManager)
         {
