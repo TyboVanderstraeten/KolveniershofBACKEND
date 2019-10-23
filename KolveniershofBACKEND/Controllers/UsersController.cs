@@ -97,6 +97,25 @@ namespace KolveniershofBACKEND.Controllers
             return BadRequest("Username or password is incorrect");
         }
 
+        [HttpPost]
+        public ActionResult<User> Add(UserDTO model)
+        {
+            return null;
+        }
+
+        [HttpPut]
+        public ActionResult<User> Edit(UserDTO model)
+        {
+            return null;
+        }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public ActionResult<User> Remove(int id)
+        {
+            return null;
+        }
+
         private async Task<string> GetToken(IdentityUser user)
         {
             var claims = new List<Claim>() {
