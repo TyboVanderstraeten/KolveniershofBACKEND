@@ -189,6 +189,17 @@ namespace KolveniershofBACKEND.Controllers
              */
         }
 
+        [HttpPost]
+        [Route("custom/day/add/note/{date}")]
+        public ActionResult<Note> AddNoteToDay(DateTime date, NoteDTO model)
+        {
+            CustomDay customDayToEdit = _customDayRepository.GetByDate(date);
+            Note noteToAdd = new Note(model.NoteType, model.Content);
+            customDayToEdit.AddNote(noteToAdd);
+            _customDayRepository.SaveChanges();
+            return noteToAdd;
+        }
+
         #endregion
     }
 }

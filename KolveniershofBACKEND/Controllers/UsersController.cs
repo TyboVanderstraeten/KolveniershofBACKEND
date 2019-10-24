@@ -2,6 +2,8 @@
 using KolveniershofBACKEND.Data.Repositories.Interfaces;
 using KolveniershofBACKEND.Models.Domain;
 using KolveniershofBACKEND.Models.DTO;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
