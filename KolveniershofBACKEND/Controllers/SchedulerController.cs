@@ -104,6 +104,34 @@ namespace KolveniershofBACKEND.Controllers
             return _customDayRepository.GetByDate(date);
         }
 
+        [HttpGet]
+        [Route("custom/absent/{date}")]
+        public ActionResult<IEnumerable<User>> GetAbsentUsersForDay(DateTime date)
+        {
+            return _customDayRepository.GetAbsentUsersForDay(date).ToList();
+        }
+
+        [HttpGet]
+        [Route("custom/sick/{date}")]
+        public ActionResult<IEnumerable<User>> GetSickUsersForDay(DateTime date)
+        {
+            return _customDayRepository.GetSickUsersForDay(date).ToList();
+        }
+
+        [HttpGet]
+        [Route("custom/notes/{date}")]
+        public ActionResult<IEnumerable<Note>> GetNotesForDay(DateTime date)
+        {
+            return _customDayRepository.GetNotesForDay(date).ToList();
+        }
+
+        [HttpGet]
+        [Route("custom/helpers/{date}")]
+        public ActionResult<IEnumerable<Helper>> GetHelpersForDay(DateTime date)
+        {
+            return _customDayRepository.GetHelpersForDay(date).ToList();
+        }
+
         #endregion
     }
 }
