@@ -150,7 +150,7 @@ namespace KolveniershofBACKEND
 
             app.UseCors("AllowAllOrigins");
 
-            dbInitializer.seedDatabase();
+            dbInitializer.seedDatabase().Wait();
         }
     }
 }
