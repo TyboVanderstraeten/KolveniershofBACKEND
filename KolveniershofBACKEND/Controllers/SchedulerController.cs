@@ -2,6 +2,7 @@
 using KolveniershofBACKEND.Models.Domain;
 using KolveniershofBACKEND.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -80,6 +81,27 @@ namespace KolveniershofBACKEND.Controllers
         public ActionResult<IEnumerable<Day>> GetAllCustomDays()
         {
             return _customDayRepository.GetAll().ToList();
+        }
+
+        [HttpGet]
+        [Route("custom/range/{start}/{end}")]
+        public ActionResult<IEnumerable<Day>> GetAllCustomDaysInRange(DateTime start, DateTime end)
+        {
+            return _customDayRepository.GetAllInRange(start, end).ToList();
+        }
+
+        [HttpGet]
+        [Route("custom/day/{id}")]
+        public ActionResult<Day> GetCustomDayById(int id)
+        {
+            return _customDayRepository.GetById(id);
+        }
+
+        [HttpGet]
+        [Route("custom/day/date/{date}")]
+        public ActionResult<Day> GetCustomDayByDate(DateTime date)
+        {
+            return _customDayRepository.GetByDate(date);
         }
 
         #endregion
