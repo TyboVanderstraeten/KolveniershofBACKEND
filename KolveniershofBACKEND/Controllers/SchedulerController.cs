@@ -132,6 +132,25 @@ namespace KolveniershofBACKEND.Controllers
             return _customDayRepository.GetHelpersForDay(date).ToList();
         }
 
+        [HttpPost]
+        [Route("custom/day/new")]
+        public ActionResult<CustomDay> AddCustomDay(CustomDayDTO model)
+        {
+            // Choose template day
+            Day templateDayChosen = _dayRepository.GetByWeekAndDay(model.WeekNr, model.DayNr);
+
+            // Create custom day
+            CustomDay customDayToCreate = new CustomDay(templateDayChosen.WeekNr, templateDayChosen.DayNr, model.Date, model.Menu);
+
+            // Inject template collections into customday collections
+            customDayToCreate.DayActivities = templateDayChosen.DayActivities;
+            customDayToCreate.Helpers = templateDayChosen.Helpers;
+
+            _customDayRepository.Add(customDayToCreate);
+            _customDayRepository.SaveChanges();
+            return customDayToCreate;
+        }
+
         #endregion
     }
 }
