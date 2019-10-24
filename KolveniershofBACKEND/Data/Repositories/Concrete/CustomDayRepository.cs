@@ -87,7 +87,7 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
         public IEnumerable<Helper> GetHelpersForDay(DateTime date)
         {
             return _customDays.Where(d => d.Date.Date == date.Date)
-                              .SelectMany(d => d.Helpers)
+                              .SelectMany(d => d.Helpers).Include(h => h.User)
                               .ToList();
         }
 
