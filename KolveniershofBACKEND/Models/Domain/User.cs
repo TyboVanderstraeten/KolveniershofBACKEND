@@ -13,10 +13,12 @@ namespace KolveniershofBACKEND.Models.Domain
         public string ProfilePicture { get; set; }
         public int? Group { get; set; }
         public ICollection<Attendance> Attendances { get; set; }
+        public ICollection<CustomWeekendDay> CustomWeekendDays { get; set; }
 
         protected User()
         {
             Attendances = new List<Attendance>();
+            CustomWeekendDays = new List<CustomWeekendDay>();
         }
 
         public User(UserType userType, string firstName, string lastName, string email, string profilePicture, int? group)
@@ -28,6 +30,7 @@ namespace KolveniershofBACKEND.Models.Domain
             ProfilePicture = profilePicture;
             Group = group;
             Attendances = new List<Attendance>();
+            CustomWeekendDays = new List<CustomWeekendDay>();
         }
 
         public void AddAttendance(Attendance attendance)
@@ -38,6 +41,16 @@ namespace KolveniershofBACKEND.Models.Domain
         public void RemoveAttendance(Attendance attendance)
         {
             Attendances.Remove(attendance);
+        }
+
+        public void AddCustomWeekendDay(CustomWeekendDay customWeekendDay)
+        {
+            CustomWeekendDays.Add(customWeekendDay);
+        }
+
+        public void RemoveCustomWeekendDay(CustomWeekendDay customWeekendDay)
+        {
+            CustomWeekendDays.Remove(customWeekendDay);
         }
     }
 }
