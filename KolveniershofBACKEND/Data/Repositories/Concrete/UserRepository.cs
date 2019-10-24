@@ -42,9 +42,9 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
             return _users.SingleOrDefault(u => u.UserId == id);
         }
 
-        public User GetByUsername(string username)
+        public User GetByEmail(string email)
         {
-            return _users.SingleOrDefault(u => u.Username.ToLower().Equals(username.ToLower()));
+            return _users.SingleOrDefault(u => u.Email.ToLower().Equals(email.ToLower()));
         }
 
         public void Add(User user)

@@ -10,7 +10,7 @@ namespace KolveniershofBACKEND.Data.Repositories.Interfaces
         IEnumerable<User> GetAllWithType(UserType userType);
         IEnumerable<Attendance> GetAttendancesFromUser(int id);
         User GetById(int id);
-        User GetByUsername(string username);
+        User GetByEmail(string email);
         void Add(User user);
         void Remove(User user);
         void SaveChanges();
