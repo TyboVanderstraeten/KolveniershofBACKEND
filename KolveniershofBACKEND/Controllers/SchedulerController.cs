@@ -156,6 +156,14 @@ namespace KolveniershofBACKEND.Controllers
              * 
              * :))
              */
+
+            /*
+             * Now you can call other methods, for instance:
+             * - Adding helpers
+             * - Adding activities
+             * - Adding notes
+             * - ...
+             */
         }
 
         #endregion
