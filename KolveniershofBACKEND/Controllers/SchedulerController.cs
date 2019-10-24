@@ -52,21 +52,21 @@ namespace KolveniershofBACKEND.Controllers
         }
 
         [HttpPost]
-        [Route("template")]
+        [Route("template/new")]
         public ActionResult<Day> AddTemplateDay(DayDTO model)
         {
             return null;
         }
 
         [HttpPut]
-        [Route("template")]
+        [Route("template/edit")]
         public ActionResult<Day> EditTemplateDay(DayDTO model)
         {
             return null;
         }
 
         [HttpDelete]
-        [Route("template/{id}")]
+        [Route("template/remove/{id}")]
         public ActionResult<Day> RemoveTemplateDay(int id)
         {
             return null;
@@ -105,28 +105,28 @@ namespace KolveniershofBACKEND.Controllers
         }
 
         [HttpGet]
-        [Route("custom/absent/{date}")]
+        [Route("custom/day/absent/{date}")]
         public ActionResult<IEnumerable<User>> GetAbsentUsersForDay(DateTime date)
         {
             return _customDayRepository.GetAbsentUsersForDay(date).ToList();
         }
 
         [HttpGet]
-        [Route("custom/sick/{date}")]
+        [Route("custom/day/sick/{date}")]
         public ActionResult<IEnumerable<User>> GetSickUsersForDay(DateTime date)
         {
             return _customDayRepository.GetSickUsersForDay(date).ToList();
         }
 
         [HttpGet]
-        [Route("custom/notes/{date}")]
+        [Route("custom/day/notes/{date}")]
         public ActionResult<IEnumerable<Note>> GetNotesForDay(DateTime date)
         {
             return _customDayRepository.GetNotesForDay(date).ToList();
         }
 
         [HttpGet]
-        [Route("custom/helpers/{date}")]
+        [Route("custom/day/helpers/{date}")]
         public ActionResult<IEnumerable<Helper>> GetHelpersForDay(DateTime date)
         {
             return _customDayRepository.GetHelpersForDay(date).ToList();
