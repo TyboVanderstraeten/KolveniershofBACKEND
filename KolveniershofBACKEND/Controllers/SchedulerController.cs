@@ -149,6 +149,13 @@ namespace KolveniershofBACKEND.Controllers
             _customDayRepository.Add(customDayToCreate);
             _customDayRepository.SaveChanges();
             return customDayToCreate;
+
+            /*
+             * You see boys, if you think good about the structure of your backend,
+             * doing nice things becomes trivial
+             * 
+             * :))
+             */
         }
 
         #endregion
