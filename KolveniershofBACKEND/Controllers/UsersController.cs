@@ -49,6 +49,7 @@ namespace KolveniershofBACKEND.Controllers
         }
 
         [HttpGet]
+        [Route("all")]
         public ActionResult<IEnumerable<User>> GetAll()
         {
             return _userRepository.GetAll().ToList();
@@ -113,6 +114,7 @@ namespace KolveniershofBACKEND.Controllers
         }
 
         [HttpPost]
+        [Route("new")]
         public async Task<ActionResult<User>> Add(UserDTO model)
         {
             try
@@ -152,6 +154,7 @@ namespace KolveniershofBACKEND.Controllers
         // Works 90% off the time, sometimes produces an error: using result of async call to edit somewhere else, doesn't always happen fast enough
         // NEED TO FIX
         [HttpPut]
+        [Route("edit")]
         public ActionResult<User> Edit(UserDTO model)
         {
             User userToEdit = _userRepository.GetById(model.UserId);
@@ -171,7 +174,7 @@ namespace KolveniershofBACKEND.Controllers
         // Works 90% off the time, sometimes produces an error: using result of async call to remove user, doesn't always happen fast enough
         // NEED TO FIX
         [HttpDelete]
-        [Route("{id}")]
+        [Route("remove/{id}")]
         public async Task<ActionResult<User>> Remove(int id)
         {
             User userToDelete = _userRepository.GetById(id);
