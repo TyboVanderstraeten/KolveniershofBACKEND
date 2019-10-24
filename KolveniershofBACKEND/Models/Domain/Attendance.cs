@@ -5,6 +5,7 @@
         public int DayId { get; set; }
         public int ActivityId { get; set; }
         public int UserId { get; set; }
+        public TimeOfDay TimeOfDay { get; set; }
         public DayActivity DayActivity { get; set; }
         public User User { get; set; }
         public string Comment { get; set; }
@@ -19,6 +20,7 @@
             DayId = dayActivity.DayId;
             ActivityId = dayActivity.ActivityId;
             UserId = user.UserId;
+            TimeOfDay = dayActivity.TimeOfDay;
             DayActivity = dayActivity;
             User = user;
         }
