@@ -10,7 +10,7 @@ namespace KolveniershofBACKEND.Data.Mappers
         public void Configure(EntityTypeBuilder<DayActivity> builder)
         {
             builder.ToTable("DayActivity");
-            builder.HasKey(da => new { da.DayId, da.ActivityId });
+            builder.HasKey(da => new { da.DayId, da.ActivityId, da.TimeOfDay });
             builder.Property(da => da.TimeOfDay).HasConversion(new EnumToStringConverter<TimeOfDay>()).IsRequired();
             builder.HasOne(da => da.Day)
                 .WithMany(d => d.DayActivities)
