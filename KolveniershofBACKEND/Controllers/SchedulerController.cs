@@ -14,11 +14,16 @@ namespace KolveniershofBACKEND.Controllers
     {
         private readonly IDayRepository _dayRepository;
         private readonly ICustomDayRepository _customDayRepository;
+        private readonly IActivityRepository _activityRepository;
+        private readonly IUserRepository _userRepository;
 
-        public SchedulerController(IDayRepository dayRepository, ICustomDayRepository customDayRepository)
+        public SchedulerController(IDayRepository dayRepository, ICustomDayRepository customDayRepository,
+            IActivityRepository activityRepository, IUserRepository userRepository)
         {
             _dayRepository = dayRepository;
             _customDayRepository = customDayRepository;
+            _activityRepository = activityRepository;
+            _userRepository = userRepository;
         }
 
         #region Template methods
@@ -187,6 +192,30 @@ namespace KolveniershofBACKEND.Controllers
              * - Adding notes
              * - ...
              */
+        }
+
+        [HttpPost]
+        [Route("custom/day/add/activity/{date}")]
+        public ActionResult<DayActivity> AddActivityToDay(DateTime date, DayActivityDTO model)
+        {
+            CustomDay customDayToEdit = _customDayRepository.GetByDate(date);
+            Activity activity = _activityRepository.GetById(model.ActivityId);
+            DayActivity dayActivityToAdd = new DayActivity(customDayToEdit, activity, model.TimeOfDay);
+            customDayToEdit.AddDayActivity(dayActivityToAdd);
+            _customDayRepository.SaveChanges();
+            return dayActivityToAdd;
+        }
+
+        [HttpPost]
+        [Route("custom/day/add/helper/{date}")]
+        public ActionResult<Helper> AddHelperToDay(DateTime date, HelperDTO model)
+        {
+            CustomDay customDayToEdit = _customDayRepository.GetByDate(date);
+            User user = _userRepository.GetById(model.UserId);
+            Helper helperToAdd = new Helper(customDayToEdit, user);
+            customDayToEdit.AddHelper(helperToAdd);
+            _customDayRepository.SaveChanges();
+            return helperToAdd;
         }
 
         [HttpPost]
