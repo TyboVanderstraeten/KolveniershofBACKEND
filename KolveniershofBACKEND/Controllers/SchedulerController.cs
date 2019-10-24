@@ -119,6 +119,20 @@ namespace KolveniershofBACKEND.Controllers
         }
 
         [HttpGet]
+        [Route("custom/day/activity/attended/clients/{date}/{id}")]
+        public ActionResult<IEnumerable<User>> GetAttendedClientsForActivity(DateTime date, int id)
+        {
+            return _customDayRepository.GetAttendedClientsForActivity(date, id).ToList();
+        }
+
+        [HttpGet]
+        [Route("custom/day/activity/attended/personnel/{date}/{id}")]
+        public ActionResult<IEnumerable<User>> GetAttendedPersonnelForActivity(DateTime date, int id)
+        {
+            return _customDayRepository.GetAttendedPersonnelForActivity(date, id).ToList();
+        }
+
+        [HttpGet]
         [Route("custom/day/notes/{date}")]
         public ActionResult<IEnumerable<Note>> GetNotesForDay(DateTime date)
         {
