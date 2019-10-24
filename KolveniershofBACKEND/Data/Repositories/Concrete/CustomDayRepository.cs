@@ -47,22 +47,26 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
 
         public IEnumerable<User> GetSickUsersForDay(DateTime date)
         {
-            return null;
+            return (IEnumerable<User>)_customDays.Where(d => d.Date.Date == date.Date)
+                                                 .Select(d => d.DayActivities
+                                                       .Where(da => da.Activity.ActivityType.Equals(ActivityType.ZIEK))
+                                                       .Select(da => da.Attendances
+                                                           .Select(a => a.User)))
+                                                 .ToList();
         }
 
         public IEnumerable<Note> GetNotesForDay(DateTime date)
         {
-            //return _customDays.Where(d => d.Date.Date == date.Date)
-            //                   .Select(d => d.Notes);
-            return null;
+            return (IEnumerable<Note>)_customDays.Where(d => d.Date.Date == date.Date)
+                                                 .Select(d => d.Notes)
+                                                 .ToList();
         }
 
         public IEnumerable<Helper> GetHelpersForDay(DateTime date)
         {
-            //return _customDays.Where(d => d.Date.Date == date.Date)
-            //                  .Select(d => d.Helpers)
-            //                  .ToList();
-            return null;
+            return (IEnumerable<Helper>)_customDays.Where(d => d.Date.Date == date.Date)
+                                                   .Select(d => d.Helpers)
+                                                   .ToList();
         }
 
         public CustomDay GetByDate(DateTime date)
