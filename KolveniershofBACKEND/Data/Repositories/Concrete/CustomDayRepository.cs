@@ -28,7 +28,7 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
 
         public IEnumerable<CustomDay> GetAllInRange(DateTime start, DateTime end)
         {
-            return _customDays.Where(cd => cd.Date >= start && cd.Date <= end)
+            return _customDays.Where(cd => cd.Date.Date >= start.Date && cd.Date.Date <= end.Date)
                               .Include(cd => cd.Notes)
                               .Include(cd => cd.DayActivities)
                               .Include(cd => cd.Helpers)
@@ -40,7 +40,7 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
             return _customDays.Include(cd => cd.Notes)
                               .Include(cd => cd.DayActivities)
                               .Include(cd => cd.Helpers)
-                              .SingleOrDefault(cd => cd.Date == date);
+                              .SingleOrDefault(cd => cd.Date.Date == date.Date);
         }
 
         public CustomDay GetById(int id)
