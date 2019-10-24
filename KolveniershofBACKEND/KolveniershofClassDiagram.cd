@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="KolveniershofBACKEND.Models.Domain.Activity">
+    <Position X="17.75" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAEAAAAAAAAQAACAAAAAAAAAAAAgAAAA=</HashCode>
+      <FileName>Models\Domain\Activity.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ActivityType" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="KolveniershofBACKEND.Models.Domain.Attendance">
+    <Position X="15" Y="4.75" Width="2.25" />
+    <AssociationLine Name="DayActivity" Type="KolveniershofBACKEND.Models.Domain.DayActivity">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.765" Y="0.289" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAABAAAEAAAAAEAAAAAAAAgAAAAAAAAAIAAAAAABAAA=</HashCode>
+      <FileName>Models\Domain\Attendance.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="DayActivity" />
+      <Property Name="User" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="KolveniershofBACKEND.Models.Domain.CustomDay">
+    <Position X="3" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAAAAAAAAAAAAAAIAAABAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Domain\CustomDay.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Notes" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="KolveniershofBACKEND.Models.Domain.Day">
+    <Position X="7.5" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAAAAAAAAAAAAAAEAAACACAAAAAAAAAAABAAA=</HashCode>
+      <FileName>Models\Domain\Day.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Helpers" />
+      <Property Name="DayActivities" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="KolveniershofBACKEND.Models.Domain.DayActivity">
+    <Position X="14" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAIAAAAEAAAAAAAEAAAAAAAAAAAAAAAEABAAA=</HashCode>
+      <FileName>Models\Domain\DayActivity.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Activity" />
+      <Property Name="Day" />
+      <Property Name="TimeOfDay" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Attendances" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="KolveniershofBACKEND.Models.Domain.Helper">
+    <Position X="7.5" Y="4.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAIAAAAAAAAAAAAAgAAAAAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>Models\Domain\Helper.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="User" />
+      <Property Name="Day" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="KolveniershofBACKEND.Models.Domain.Note">
+    <Position X="3" Y="3.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAgAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Domain\Note.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="NoteType" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="KolveniershofBACKEND.Models.Domain.User">
+    <Position X="11.25" Y="4.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAAAAAAAAgAAAAACAAABAAAAAAAAAg=</HashCode>
+      <FileName>Models\Domain\User.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="UserType" />
+    </ShowAsAssociation>
+  </Class>
+  <Enum Name="KolveniershofBACKEND.Models.Domain.ActivityType">
+    <Position X="17.75" Y="3.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAgAAAAAAAEAAAAAAAAAAAAAAAAAAEAAAAgAAAA=</HashCode>
+      <FileName>Models\Domain\Enums\ActivityType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="KolveniershofBACKEND.Models.Domain.NoteType">
+    <Position X="3" Y="5.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAQCAAAAAAAAIAAAAAAAAAAgAAAAgAAAAAAA=</HashCode>
+      <FileName>Models\Domain\Enums\NoteType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="KolveniershofBACKEND.Models.Domain.TimeOfDay">
+    <Position X="11.25" Y="2.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAACACABAAAAACAAAAAAAgAA=</HashCode>
+      <FileName>Models\Domain\Enums\TimeOfDay.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="KolveniershofBACKEND.Models.Domain.UserType">
+    <Position X="11.25" Y="7.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAgAAgEAAAAA=</HashCode>
+      <FileName>Models\Domain\Enums\UserType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
