@@ -15,7 +15,7 @@
         public Helper(Day day, User user)
         {
             DayId = day.DayId;
-            UserId = User.UserId;
+            UserId = user.UserId; 
             Day = day;
             User = user;
         }

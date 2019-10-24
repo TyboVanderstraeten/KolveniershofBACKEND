@@ -143,8 +143,17 @@ namespace KolveniershofBACKEND.Controllers
             CustomDay customDayToCreate = new CustomDay(templateDayChosen.WeekNr, templateDayChosen.DayNr, model.Date, model.Menu);
 
             // Inject template collections into customday collections
-            customDayToCreate.DayActivities = templateDayChosen.DayActivities;
-            customDayToCreate.Helpers = templateDayChosen.Helpers;
+            foreach (DayActivity dayActivity in templateDayChosen.DayActivities)
+            {
+                DayActivity dayActivityToAdd = new DayActivity(customDayToCreate, dayActivity.Activity, dayActivity.TimeOfDay);
+                customDayToCreate.AddDayActivity(dayActivityToAdd);
+            }
+
+            foreach (Helper helper in templateDayChosen.Helpers)
+            {
+                Helper helperToAdd = new Helper(customDayToCreate, helper.User);
+                customDayToCreate.AddHelper(helperToAdd);
+            }
 
             _customDayRepository.Add(customDayToCreate);
             _customDayRepository.SaveChanges();

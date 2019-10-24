@@ -22,24 +22,21 @@ namespace KolveniershofBACKEND.Data
             {
                 #region Activities
                 Activity a1 = new Activity(ActivityType.ATELIER, "Testatelier", "Dit is een testatelier", "test.picto");
+                Activity a2 = new Activity(ActivityType.ATELIER, "Koken", "We gaan koken", "koken.picto");
                 _dbContext.Activities.Add(a1);
                 #endregion
 
                 #region Day
                 Day day11 = new Day(1, 1);
-                Day day12 = new Day(1, 2);
+                DayActivity da1 = new DayActivity(day11, a1, TimeOfDay.VOORMIDDAG);
+                DayActivity da2 = new DayActivity(day11, a2, TimeOfDay.NAMIDDAG);
+                day11.AddDayActivity(da1);
+                day11.AddDayActivity(da2);
+                day11.AddHelper(new Helper(day11, new User(UserType.STAGIAIR, "Tybo",
+                    "Vanderstraeten", "tybo@hotmail.com", "string.jpeg", null)));
                 _dbContext.Days.Add(day11);
-                _dbContext.Days.Add(day12);
                 #endregion
 
-                #region CustomDay
-                CustomDay cday11 = new CustomDay(day11.WeekNr, day11.DayNr,
-                    DateTime.Now, "French fries");
-                CustomDay cday12 = new CustomDay(day12.WeekNr, day12.DayNr,
-                 DateTime.Now.AddDays(1), "Hot dog");
-                _dbContext.CustomDays.Add(cday11);
-                _dbContext.CustomDays.Add(cday12);
-                #endregion
                 _dbContext.SaveChanges();
             }
         }
