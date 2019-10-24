@@ -37,36 +37,36 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
 
         public IEnumerable<User> GetAbsentUsersForDay(DateTime date)
         {
-            return (IEnumerable<User>)_customDays.Where(d => d.Date.Date == date.Date)
-                                                 .Select(d => d.DayActivities
-                                                       .Where(da => da.Activity.ActivityType.Equals(ActivityType.AFWEZIG))
-                                                       .Select(da => da.Attendances
-                                                           .Select(a => a.User)))
-                                                 .ToList();
+            return _customDays.Where(d => d.Date.Date == date.Date)
+                              .SelectMany(d => d.DayActivities
+                                    .Where(da => da.Activity.ActivityType.Equals(ActivityType.AFWEZIG))
+                                    .SelectMany(da => da.Attendances
+                                            .Select(a => a.User)))
+                              .ToList();
         }
 
         public IEnumerable<User> GetSickUsersForDay(DateTime date)
         {
-            return (IEnumerable<User>)_customDays.Where(d => d.Date.Date == date.Date)
-                                                 .Select(d => d.DayActivities
-                                                       .Where(da => da.Activity.ActivityType.Equals(ActivityType.ZIEK))
-                                                       .Select(da => da.Attendances
-                                                           .Select(a => a.User)))
-                                                 .ToList();
+            return _customDays.Where(d => d.Date.Date == date.Date)
+                              .SelectMany(d => d.DayActivities
+                                    .Where(da => da.Activity.ActivityType.Equals(ActivityType.ZIEK))
+                                    .SelectMany(da => da.Attendances
+                                            .Select(a => a.User)))
+                              .ToList();
         }
 
         public IEnumerable<Note> GetNotesForDay(DateTime date)
         {
-            return (IEnumerable<Note>)_customDays.Where(d => d.Date.Date == date.Date)
-                                                 .Select(d => d.Notes)
-                                                 .ToList();
+            return _customDays.Where(d => d.Date.Date == date.Date)
+                              .SelectMany(d => d.Notes)
+                              .ToList();
         }
 
         public IEnumerable<Helper> GetHelpersForDay(DateTime date)
         {
-            return (IEnumerable<Helper>)_customDays.Where(d => d.Date.Date == date.Date)
-                                                   .Select(d => d.Helpers)
-                                                   .ToList();
+            return _customDays.Where(d => d.Date.Date == date.Date)
+                              .SelectMany(d => d.Helpers)
+                              .ToList();
         }
 
         public CustomDay GetByDate(DateTime date)
