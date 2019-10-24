@@ -20,30 +20,33 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
 
         public IEnumerable<Day> GetAll()
         {
-            return _days.Include(d => d.DayActivities)
-                        .Include(d => d.Helpers)
+            return _days.Where(d => !(d is CustomDay))
+                        .Include(d => d.DayActivities).ThenInclude(da => da.Activity)
+                        .Include(d => d.Helpers).ThenInclude(h => h.User)
                         .ToList();
         }
 
         public IEnumerable<Day> GetAllByWeek(int weekNr)
         {
-            return _days.Where(d => d.WeekNr == weekNr)
-                        .Include(d => d.DayActivities)
-                        .Include(d => d.Helpers)
+            return _days.Where(d => !(d is CustomDay) && d.WeekNr == weekNr)
+                        .Include(d => d.DayActivities).ThenInclude(da => da.Activity)
+                        .Include(d => d.Helpers).ThenInclude(h => h.User)
                         .ToList();
         }
 
         public Day GetById(int id)
         {
-            return _days.Include(d => d.DayActivities)
-                        .Include(d => d.Helpers)
+            return _days.Where(d => !(d is CustomDay))
+                        .Include(d => d.DayActivities).ThenInclude(da => da.Activity)
+                        .Include(d => d.Helpers).ThenInclude(h => h.User)
                         .SingleOrDefault(d => d.DayId == id);
         }
 
         public Day GetByWeekAndDay(int weekNr, int dayNr)
         {
-            return _days.Include(d => d.DayActivities)
-                        .Include(d => d.Helpers)
+            return _days.Where(d => !(d is CustomDay))
+                        .Include(d => d.DayActivities).ThenInclude(da => da.Activity)
+                        .Include(d => d.Helpers).ThenInclude(h=>h.User)
                         .SingleOrDefault(d => d.WeekNr == weekNr && d.DayNr == dayNr);
         }
 

@@ -72,6 +72,7 @@ namespace KolveniershofBACKEND
             #region Default identity
             services.AddIdentity<IdentityUser, IdentityRole>(options =>
             {
+                options.User.RequireUniqueEmail = true;
             }).AddEntityFrameworkStores<DBContext>();
             #endregion
 
@@ -114,6 +115,7 @@ namespace KolveniershofBACKEND
                 // User settings.
                 options.User.AllowedUserNameCharacters =
                 "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+                options.User.RequireUniqueEmail = true;
             });
             #endregion
 
@@ -148,7 +150,7 @@ namespace KolveniershofBACKEND
 
             app.UseCors("AllowAllOrigins");
 
-            dbInitializer.seedDatabase();
+            dbInitializer.seedDatabase().Wait();
         }
     }
 }
