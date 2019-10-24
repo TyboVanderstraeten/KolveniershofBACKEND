@@ -86,6 +86,13 @@ namespace KolveniershofBACKEND.Controllers
         }
 
         [HttpGet]
+        [Route("{id}/days/weekend")]
+        public ActionResult<IEnumerable<CustomWeekendDay>> GetCustomWeekendDaysFromUser(int id)
+        {
+            return _userRepository.GetCustomWeekendDaysFromUser(id).ToList();
+        }
+
+        [HttpGet]
         [Route("{id}")]
         public ActionResult<User> GetById(int id)
         {

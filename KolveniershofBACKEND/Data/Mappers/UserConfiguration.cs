@@ -21,7 +21,7 @@ namespace KolveniershofBACKEND.Data.Mappers
                 .WithOne()
                 .IsRequired()
                 .HasForeignKey(a => a.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
