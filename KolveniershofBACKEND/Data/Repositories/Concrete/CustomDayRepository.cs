@@ -35,6 +35,36 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
                               .ToList();
         }
 
+        public IEnumerable<User> GetAbsentUsersForDay(DateTime date)
+        {
+            return (IEnumerable<User>)_customDays.Where(d => d.Date.Date == date.Date)
+                                                 .Select(d => d.DayActivities
+                                                       .Where(da => da.Activity.ActivityType.Equals(ActivityType.AFWEZIG))
+                                                       .Select(da => da.Attendances
+                                                           .Select(a => a.User)))
+                                                 .ToList();
+        }
+
+        public IEnumerable<User> GetSickUsersForDay(DateTime date)
+        {
+            return null;
+        }
+
+        public IEnumerable<Note> GetNotesForDay(DateTime date)
+        {
+            //return _customDays.Where(d => d.Date.Date == date.Date)
+            //                   .Select(d => d.Notes);
+            return null;
+        }
+
+        public IEnumerable<Helper> GetHelpersForDay(DateTime date)
+        {
+            //return _customDays.Where(d => d.Date.Date == date.Date)
+            //                  .Select(d => d.Helpers)
+            //                  .ToList();
+            return null;
+        }
+
         public CustomDay GetByDate(DateTime date)
         {
             return _customDays.Include(cd => cd.Notes)
