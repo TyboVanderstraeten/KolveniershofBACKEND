@@ -144,7 +144,9 @@ namespace KolveniershofBACKEND.Controllers
                 IdentityUser identityUserToCreate = new IdentityUser()
                 {
                     Email = userToCreate.Email,
+                    NormalizedEmail = userToCreate.Email,
                     UserName = userToCreate.Email,
+                    NormalizedUserName = userToCreate.Email,
                     LockoutEnabled = true,
                     EmailConfirmed = true
                 };
@@ -177,7 +179,9 @@ namespace KolveniershofBACKEND.Controllers
             userToEdit.Group = model.Group;
 
             identityUserToEdit.Email = userToEdit.Email;
+            identityUserToEdit.NormalizedEmail = userToEdit.Email;
             identityUserToEdit.UserName = userToEdit.Email;
+            identityUserToEdit.NormalizedUserName = userToEdit.Email;
             _userRepository.SaveChanges();
             return Ok(userToEdit);
         }

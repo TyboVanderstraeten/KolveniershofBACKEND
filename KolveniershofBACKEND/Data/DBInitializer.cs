@@ -30,7 +30,7 @@ namespace KolveniershofBACKEND.Data
                 #region User
 
                 User u1 = new User(UserType.BEGELEIDER, "Tybo", "Vanderstraeten", "tybo@hotmail.com", "string.jpeg", null);
-                await _userManager.CreateAsync(new IdentityUser() { Email = u1.Email, UserName = u1.Email }, "P@ssword1");
+                await _userManager.CreateAsync(new IdentityUser() { Email = u1.Email, UserName = u1.Email, EmailConfirmed = true, }, "P@ssword1");
                 #endregion
 
                 #region Day
