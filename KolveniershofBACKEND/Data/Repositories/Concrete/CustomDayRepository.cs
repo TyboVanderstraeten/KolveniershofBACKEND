@@ -21,8 +21,8 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
         public IEnumerable<CustomDay> GetAll()
         {
             return _customDays.Include(cd => cd.Notes)
-                              .Include(cd => cd.DayActivities)
-                              .Include(cd => cd.Helpers)
+                              .Include(cd => cd.DayActivities).ThenInclude(da=>da.Activity)
+                              .Include(cd => cd.Helpers).ThenInclude(h=>h.User)
                               .ToList();
         }
 
@@ -30,8 +30,8 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
         {
             return _customDays.Where(cd => cd.Date.Date >= start.Date && cd.Date.Date <= end.Date)
                               .Include(cd => cd.Notes)
-                              .Include(cd => cd.DayActivities)
-                              .Include(cd => cd.Helpers)
+                              .Include(cd => cd.DayActivities).ThenInclude(da => da.Activity)
+                              .Include(cd => cd.Helpers).ThenInclude(h => h.User)
                               .ToList();
         }
 
@@ -72,16 +72,16 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
         public CustomDay GetByDate(DateTime date)
         {
             return _customDays.Include(cd => cd.Notes)
-                              .Include(cd => cd.DayActivities)
-                              .Include(cd => cd.Helpers)
+                              .Include(cd => cd.DayActivities).ThenInclude(da => da.Activity)
+                              .Include(cd => cd.Helpers).ThenInclude(h => h.User)
                               .SingleOrDefault(cd => cd.Date.Date == date.Date);
         }
 
         public CustomDay GetById(int id)
         {
             return _customDays.Include(cd => cd.Notes)
-                              .Include(cd => cd.DayActivities)
-                              .Include(cd => cd.Helpers)
+                              .Include(cd => cd.DayActivities).ThenInclude(da => da.Activity)
+                              .Include(cd => cd.Helpers).ThenInclude(h => h.User)
                               .SingleOrDefault(cd => cd.DayId == id);
         }
 
