@@ -49,7 +49,7 @@ namespace KolveniershofBACKEND.Controllers
         {
             return _dayRepository.GetByWeekAndDay(weekNr, dayNr);
         }
-    
+
         [HttpPost]
         [Route("template")]
         public ActionResult<Day> AddTemplateDay(DayDTO model)
@@ -69,6 +69,17 @@ namespace KolveniershofBACKEND.Controllers
         public ActionResult<Day> RemoveTemplateDay(int id)
         {
             return null;
+        }
+
+        #endregion
+
+        #region CustomDay methods
+
+        [HttpGet]
+        [Route("custom/all")]
+        public ActionResult<IEnumerable<Day>> GetAllCustomDays()
+        {
+            return _customDayRepository.GetAll().ToList();
         }
 
         #endregion
