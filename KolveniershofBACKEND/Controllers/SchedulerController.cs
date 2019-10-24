@@ -1,5 +1,6 @@
 ﻿using KolveniershofBACKEND.Data.Repositories.Interfaces;
 using KolveniershofBACKEND.Models.Domain;
+using KolveniershofBACKEND.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +23,7 @@ namespace KolveniershofBACKEND.Controllers
         #region Template methods
 
         [HttpGet]
-        [Route("template")]
+        [Route("template/all")]
         public ActionResult<IEnumerable<Day>> GetAllTemplateDays()
         {
             return _dayRepository.GetAll().ToList();
@@ -48,7 +49,27 @@ namespace KolveniershofBACKEND.Controllers
         {
             return _dayRepository.GetByWeekAndDay(weekNr, dayNr);
         }
- 
+    
+        [HttpPost]
+        [Route("template")]
+        public ActionResult<Day> AddTemplateDay(DayDTO model)
+        {
+            return null;
+        }
+
+        [HttpPut]
+        [Route("template")]
+        public ActionResult<Day> EditTemplateDay(DayDTO model)
+        {
+            return null;
+        }
+
+        [HttpDelete]
+        [Route("template/{id}")]
+        public ActionResult<Day> RemoveTemplateDay(int id)
+        {
+            return null;
+        }
 
         #endregion
     }
