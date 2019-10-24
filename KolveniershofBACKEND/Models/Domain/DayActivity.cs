@@ -1,11 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace KolveniershofBACKEND.Models.Domain
 {
+    [JsonObject(MemberSerialization.OptOut)]
     public class DayActivity
     {
         public int DayId { get; set; }
         public int ActivityId { get; set; }
+        [JsonIgnore]
         public Day Day { get; set; }
         public Activity Activity { get; set; }
         public TimeOfDay TimeOfDay { get; set; }
