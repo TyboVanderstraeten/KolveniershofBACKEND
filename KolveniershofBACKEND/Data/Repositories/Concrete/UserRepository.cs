@@ -49,7 +49,9 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
 
         public User GetByEmail(string email)
         {
-            return _users.SingleOrDefault(u => u.Email.ToLower().Equals(email.ToLower()));
+            
+            User user =  _users.SingleOrDefault(u => u.Email.Equals(email));
+            return user;
         }
 
         public void Add(User user)
