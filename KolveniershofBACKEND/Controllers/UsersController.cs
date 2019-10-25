@@ -2,6 +2,8 @@
 using KolveniershofBACKEND.Data.Repositories.Interfaces;
 using KolveniershofBACKEND.Models.Domain;
 using KolveniershofBACKEND.Models.DTO;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -38,8 +40,8 @@ namespace KolveniershofBACKEND.Controllers
         [Route("current")]
         public ActionResult<User> GetLoggedInUser()
         {
-            string username = User.Identity.Name;
-            User user = _userRepository.GetByUsername(username);
+            string email = User.Identity.Name;
+            User user = _userRepository.GetByEmail(email);
 
             if (user == null)
             {
@@ -49,6 +51,7 @@ namespace KolveniershofBACKEND.Controllers
         }
 
         [HttpGet]
+        [Route("all")]
         public ActionResult<IEnumerable<User>> GetAll()
         {
             return _userRepository.GetAll().ToList();
@@ -83,6 +86,13 @@ namespace KolveniershofBACKEND.Controllers
         }
 
         [HttpGet]
+        [Route("{id}/days/weekend")]
+        public ActionResult<IEnumerable<CustomWeekendDay>> GetCustomWeekendDaysFromUser(int id)
+        {
+            return _userRepository.GetCustomWeekendDaysFromUser(id).ToList();
+        }
+
+        [HttpGet]
         [Route("{id}")]
         public ActionResult<User> GetById(int id)
         {
@@ -90,17 +100,25 @@ namespace KolveniershofBACKEND.Controllers
         }
 
         [HttpGet]
-        [Route("username/{username}")]
-        public ActionResult<User> GetByUsername(string username)
+        [Route("email/{email}")]
+        public ActionResult<User> GetByEmail(string email)
         {
-            return _userRepository.GetByUsername(username);
+            return _userRepository.GetByEmail(email);
+        }
+
+        [HttpGet]
+        [Route("email/available")]
+        public async Task<ActionResult<bool>> CheckAvailibilityEmail(string email)
+        {
+            IdentityUser identityUser = await _userManager.FindByEmailAsync(email);
+            return identityUser == null;
         }
 
         [HttpPost]
         [Route("login")]
         public async Task<ActionResult<string>> Login(LoginDTO model)
         {
-            IdentityUser user = await GetUser(model.Username);
+            IdentityUser user = await GetUser(model.Email);
             if (user != null)
             {
                 if (await CheckPassword(user, model.Password))
@@ -109,10 +127,11 @@ namespace KolveniershofBACKEND.Controllers
                     return Created("", token);
                 }
             }
-            return BadRequest("Username or password is incorrect");
+            return BadRequest("E-mail or password is incorrect");
         }
 
         [HttpPost]
+        [Route("new")]
         public async Task<ActionResult<User>> Add(UserDTO model)
         {
             try
@@ -121,20 +140,24 @@ namespace KolveniershofBACKEND.Controllers
                     model.UserType,
                     model.FirstName,
                     model.LastName,
-                    model.Birthdate,
+                    model.Email,
                     model.ProfilePicture,
                     model.Group);
 
                 //Temp
-                if (_userRepository.GetByUsername(userToCreate.Username) != null)
+                if (_userRepository.GetByEmail(userToCreate.Email) != null)
                 {
                     return BadRequest("User already exists");
                 }
 
                 IdentityUser identityUserToCreate = new IdentityUser()
                 {
-                    UserName = userToCreate.Username,
-                    LockoutEnabled = true
+                    Email = userToCreate.Email,
+                    NormalizedEmail = userToCreate.Email,
+                    UserName = userToCreate.Email,
+                    NormalizedUserName = userToCreate.Email,
+                    LockoutEnabled = true,
+                    EmailConfirmed = true
                 };
 
                 await _userManager.CreateAsync(identityUserToCreate, "P@ssword1");
@@ -152,18 +175,22 @@ namespace KolveniershofBACKEND.Controllers
         // Works 90% off the time, sometimes produces an error: using result of async call to edit somewhere else, doesn't always happen fast enough
         // NEED TO FIX
         [HttpPut]
+        [Route("edit")]
         public ActionResult<User> Edit(UserDTO model)
         {
             User userToEdit = _userRepository.GetById(model.UserId);
-            IdentityUser identityUserToEdit = GetUser(userToEdit.Username).GetAwaiter().GetResult();
+            IdentityUser identityUserToEdit = GetUser(userToEdit.Email).GetAwaiter().GetResult();
             userToEdit.UserType = model.UserType;
             userToEdit.FirstName = model.FirstName;
             userToEdit.LastName = model.LastName;
-            userToEdit.Birthdate = model.Birthdate;
+            userToEdit.Email = model.Email;
             userToEdit.ProfilePicture = model.ProfilePicture;
             userToEdit.Group = model.Group;
 
-            identityUserToEdit.UserName = userToEdit.Username;
+            identityUserToEdit.Email = userToEdit.Email;
+            identityUserToEdit.NormalizedEmail = userToEdit.Email;
+            identityUserToEdit.UserName = userToEdit.Email;
+            identityUserToEdit.NormalizedUserName = userToEdit.Email;
             _userRepository.SaveChanges();
             return Ok(userToEdit);
         }
@@ -171,7 +198,7 @@ namespace KolveniershofBACKEND.Controllers
         // Works 90% off the time, sometimes produces an error: using result of async call to remove user, doesn't always happen fast enough
         // NEED TO FIX
         [HttpDelete]
-        [Route("{id}")]
+        [Route("remove/{id}")]
         public async Task<ActionResult<User>> Remove(int id)
         {
             User userToDelete = _userRepository.GetById(id);
@@ -182,7 +209,7 @@ namespace KolveniershofBACKEND.Controllers
             }
             else
             {
-                IdentityUser identityUserToDelete = GetUser(userToDelete.Username).GetAwaiter().GetResult();
+                IdentityUser identityUserToDelete = GetUser(userToDelete.Email).GetAwaiter().GetResult();
                 await _userManager.DeleteAsync(identityUserToDelete);
                 _userRepository.Remove(userToDelete);
                 _userRepository.SaveChanges();
@@ -193,8 +220,7 @@ namespace KolveniershofBACKEND.Controllers
         private async Task<string> GetToken(IdentityUser user)
         {
             var claims = new List<Claim>() {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Email),
-                new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName)
+                new Claim(JwtRegisteredClaimNames.Sub, user.Email)
             };
             claims.AddRange(await _userManager.GetClaimsAsync(user));
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Tokens:Key"]));
@@ -207,9 +233,9 @@ namespace KolveniershofBACKEND.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        private async Task<IdentityUser> GetUser(string username)
+        private async Task<IdentityUser> GetUser(string email)
         {
-            return await _userManager.FindByNameAsync(username);
+            return await _userManager.FindByEmailAsync(email);
         }
 
         private async Task<bool> CheckPassword(IdentityUser identityUser, string password)

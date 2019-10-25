@@ -4,8 +4,9 @@
     {
         ATELIER,
         EVENEMENT,
-        AFWEZIG,
         VERVOER,
+        KOFFIE,
+        AFWEZIG,
         ZIEK
     }
 }

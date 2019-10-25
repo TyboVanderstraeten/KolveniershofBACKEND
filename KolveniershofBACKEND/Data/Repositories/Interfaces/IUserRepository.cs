@@ -9,8 +9,10 @@ namespace KolveniershofBACKEND.Data.Repositories.Interfaces
         IEnumerable<User> GetAllFromGroup(int group);
         IEnumerable<User> GetAllWithType(UserType userType);
         IEnumerable<Attendance> GetAttendancesFromUser(int id);
+        // This is going to need some other method as well
+        IEnumerable<CustomWeekendDay> GetCustomWeekendDaysFromUser(int id);
         User GetById(int id);
-        User GetByUsername(string username);
+        User GetByEmail(string email);
         void Add(User user);
         void Remove(User user);
         void SaveChanges();
