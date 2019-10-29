@@ -18,9 +18,9 @@ namespace KolveniershofBACKEND.Data
 
         public async Task seedDatabase()
         {
-            //_dbContext.Database.EnsureDeleted();
-            //if (_dbContext.Database.EnsureCreated())
-            //{
+            _dbContext.Database.EnsureDeleted();
+            if (_dbContext.Database.EnsureCreated())
+            {
                 #region Activities
                 Activity a1 = new Activity(ActivityType.ATELIER, "Testatelier", "Dit is een testatelier", "test.picto");
                 Activity a2 = new Activity(ActivityType.ATELIER, "Koken", "We gaan koken", "koken.picto");
@@ -66,7 +66,7 @@ namespace KolveniershofBACKEND.Data
                 {
                     for (int j = 0; j < 5; j++)
                     {
-                        Day day = new Day(i+1, j + 1);
+                        Day day = new Day(i + 1, j + 1);
                         DayActivity dayActivity1 = new DayActivity(day, a1, TimeOfDay.VOORMIDDAG);
                         DayActivity dayActivity2 = new DayActivity(day, a2, TimeOfDay.VOORMIDDAG);
                         DayActivity dayActivity3 = new DayActivity(day, a3, TimeOfDay.NAMIDDAG);
@@ -95,7 +95,7 @@ namespace KolveniershofBACKEND.Data
                 #endregion
 
                 _dbContext.SaveChanges();
-            //}
+            }
         }
     }
 }

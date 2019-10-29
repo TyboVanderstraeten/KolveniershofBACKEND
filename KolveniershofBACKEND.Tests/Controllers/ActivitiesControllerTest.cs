@@ -6,5 +6,6 @@ namespace KolveniershofBACKEND.Tests.Controllers
 {
     class ActivitiesControllerTest
     {
+
     }
 }

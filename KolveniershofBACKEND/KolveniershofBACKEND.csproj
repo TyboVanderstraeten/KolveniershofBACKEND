@@ -23,4 +23,8 @@
     <PackageReference Include="NSwag.AspNetCore" Version="12.0.14" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\KolveniershofBACKEND.Tests\KolveniershofBACKEND.Tests.csproj" />
+  </ItemGroup>
+
 </Project>
