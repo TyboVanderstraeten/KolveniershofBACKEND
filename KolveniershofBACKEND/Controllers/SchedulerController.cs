@@ -63,6 +63,30 @@ namespace KolveniershofBACKEND.Controllers
             return null;
         }
 
+        [HttpPost]
+        [Route("template/activity/new/{weekNr}/{dayNr")]
+        public ActionResult<DayActivity> AddActivityToTemplateDay(int weekNr, int dayNr, DayActivityDTO model)
+        {
+            Day dayToEdit = _dayRepository.GetByWeekAndDay(weekNr, dayNr);
+            Activity activity = _activityRepository.GetById(model.ActivityId);
+            DayActivity dayActivityToAdd = new DayActivity(dayToEdit, activity, model.TimeOfDay);
+            dayToEdit.AddDayActivity(dayActivityToAdd);
+            _dayRepository.SaveChanges();
+            return dayActivityToAdd;
+        }
+
+        [HttpPost]
+        [Route("template/helper/new/{weekNr}/{dayNr")]
+        public ActionResult<Helper> AddHelperToTemplateDay(int weekNr, int dayNr, HelperDTO model)
+        {
+            Day dayToEdit = _dayRepository.GetByWeekAndDay(weekNr, dayNr);
+            User user = _userRepository.GetById(model.UserId);
+            Helper helperToAdd = new Helper(dayToEdit, user);
+            dayToEdit.AddHelper(helperToAdd);
+            _dayRepository.SaveChanges();
+            return helperToAdd;
+        }
+
         [HttpPut]
         [Route("template/edit")]
         public ActionResult<Day> EditTemplateDay(DayDTO model)
@@ -177,13 +201,6 @@ namespace KolveniershofBACKEND.Controllers
             _customDayRepository.Add(customDayToCreate);
             _customDayRepository.SaveChanges();
             return customDayToCreate;
-
-            /*
-             * You see boys, if you think good about the structure of your backend,
-             * doing nice things becomes trivial
-             * 
-             * :))
-             */
 
             /*
              * Now you can call other methods, for instance:
