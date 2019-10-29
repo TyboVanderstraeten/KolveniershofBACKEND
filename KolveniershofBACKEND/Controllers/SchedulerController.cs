@@ -87,6 +87,30 @@ namespace KolveniershofBACKEND.Controllers
             return helperToAdd;
         }
 
+
+        [HttpDelete]
+        [Route("template/activity/delete/{weekNr}/{dayNr}/{id}]
+        public ActionResult<DayActivity> RemoveActivityFromTemplateDay(int weekNr, int dayNr, int id)
+        {
+            Day dayToEdit = _dayRepository.GetByWeekAndDay(weekNr, dayNr);
+            DayActivity dayActivityToRemove =
+                    dayToEdit.DayActivities.SingleOrDefault(da => da.DayId == dayToEdit.DayId && da.ActivityId == id);
+            dayToEdit.RemoveDayActivity(dayActivityToRemove);
+            _dayRepository.SaveChanges();
+            return dayActivityToRemove;
+        }
+
+        [HttpDelete]
+        [Route("template/helper/delete/{weekNr}/{dayNr}/{id}")]
+        public ActionResult<Helper> RemoveHelperFromTemplateDay(int weekNr, int dayNr, int id)
+        {
+            Day dayToEdit = _dayRepository.GetByWeekAndDay(weekNr, dayNr);
+            Helper helperToRemove = dayToEdit.Helpers.SingleOrDefault(h => h.DayId = dayToEdit.DayId && h.UserId == id);
+            dayToEdit.RemoveHelper(helperToRemove);
+            _dayRepository.SaveChanges();
+            return helperToRemove;
+        }
+
         [HttpPut]
         [Route("template/edit")]
         public ActionResult<Day> EditTemplateDay(DayDTO model)
