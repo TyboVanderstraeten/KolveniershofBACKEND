@@ -64,7 +64,7 @@ namespace KolveniershofBACKEND.Controllers
         }
 
         [HttpPost]
-        [Route("template/activity/new/{weekNr}/{dayNr")]
+        [Route("template/activity/new/{weekNr}/{dayNr}")]
         public ActionResult<DayActivity> AddActivityToTemplateDay(int weekNr, int dayNr, DayActivityDTO model)
         {
             Day dayToEdit = _dayRepository.GetByWeekAndDay(weekNr, dayNr);
@@ -76,7 +76,7 @@ namespace KolveniershofBACKEND.Controllers
         }
 
         [HttpPost]
-        [Route("template/helper/new/{weekNr}/{dayNr")]
+        [Route("template/helper/new/{weekNr}/{dayNr}")]
         public ActionResult<Helper> AddHelperToTemplateDay(int weekNr, int dayNr, HelperDTO model)
         {
             Day dayToEdit = _dayRepository.GetByWeekAndDay(weekNr, dayNr);
@@ -87,9 +87,8 @@ namespace KolveniershofBACKEND.Controllers
             return helperToAdd;
         }
 
-
         [HttpDelete]
-        [Route("template/activity/delete/{weekNr}/{dayNr}/{id}]
+        [Route("template/activity/delete/{weekNr}/{dayNr}/{id}")]
         public ActionResult<DayActivity> RemoveActivityFromTemplateDay(int weekNr, int dayNr, int id)
         {
             Day dayToEdit = _dayRepository.GetByWeekAndDay(weekNr, dayNr);
@@ -105,24 +104,31 @@ namespace KolveniershofBACKEND.Controllers
         public ActionResult<Helper> RemoveHelperFromTemplateDay(int weekNr, int dayNr, int id)
         {
             Day dayToEdit = _dayRepository.GetByWeekAndDay(weekNr, dayNr);
-            Helper helperToRemove = dayToEdit.Helpers.SingleOrDefault(h => h.DayId = dayToEdit.DayId && h.UserId == id);
+            Helper helperToRemove = dayToEdit.Helpers.SingleOrDefault(h => h.DayId == dayToEdit.DayId && h.UserId == id);
             dayToEdit.RemoveHelper(helperToRemove);
             _dayRepository.SaveChanges();
             return helperToRemove;
         }
 
         [HttpPut]
-        [Route("template/edit")]
-        public ActionResult<Day> EditTemplateDay(DayDTO model)
+        [Route("template/edit/{weekNr}/{dayNr}")]
+        public ActionResult<Day> EditTemplateDay(int weekNr, int dayNr, DayDTO model)
         {
-            return null;
+            Day dayToEdit = _dayRepository.GetByWeekAndDay(weekNr, dayNr);
+            dayToEdit.WeekNr = model.WeekNr;
+            dayToEdit.DayNr = model.DayNr;
+            _dayRepository.SaveChanges();
+            return dayToEdit; 
         }
 
         [HttpDelete]
-        [Route("template/remove/{id}")]
-        public ActionResult<Day> RemoveTemplateDay(int id)
+        [Route("template/remove/{weekNr}/{dayNr}")]
+        public ActionResult<Day> RemoveTemplateDay(int weekNr, int dayNr)
         {
-            return null;
+            Day dayToRemove = _dayRepository.GetByWeekAndDay(weekNr, dayNr);
+            _dayRepository.Remove(dayToRemove);
+            _dayRepository.SaveChanges();
+            return dayToRemove;
         }
 
         #endregion
