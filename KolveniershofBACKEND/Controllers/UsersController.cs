@@ -37,20 +37,6 @@ namespace KolveniershofBACKEND.Controllers
         }
 
         [HttpGet]
-        [Route("current")]
-        public ActionResult<User> GetLoggedInUser()
-        {
-            string email = User.Identity.Name;
-            User user = _userRepository.GetByEmail(email);
-
-            if (user == null)
-            {
-                return NotFound("We couldn't find the user you're looking for");
-            }
-            return user;
-        }
-
-        [HttpGet]
         [Route("all")]
         public ActionResult<IEnumerable<User>> GetAll()
         {
