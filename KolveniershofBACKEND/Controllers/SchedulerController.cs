@@ -278,13 +278,39 @@ namespace KolveniershofBACKEND.Controllers
 
 
         [HttpDelete]
-        [Route("custom/day/delete/activity/{date}")]
+        [Route("custom/activity/delete/{date}/{id}")]
+        public ActionResult<DayActivity> RemoveActivityFromDay(DateTime date, int id)
+        {
+            CustomDay dayToEdit = _customDayRepository.GetByDate(date);
+            DayActivity dayActivityToRemove =
+                    dayToEdit.DayActivities.SingleOrDefault(da => da.DayId == dayToEdit.DayId && da.ActivityId == id);
+            dayToEdit.RemoveDayActivity(dayActivityToRemove);
+            _customDayRepository.SaveChanges();
+            return dayActivityToRemove;
+        }
+
+        //querying for dayId necessary? since it's the specific day..
+        [HttpDelete]
+        [Route("custom/helper/delete/{date}/{id}")]
+        public ActionResult<Helper> RemoveHelperFromDay(DateTime date, int id)
+        {
+            CustomDay dayToEdit = _customDayRepository.GetByDate(date);
+            Helper helperToRemove = dayToEdit.Helpers.SingleOrDefault(h => h.DayId == dayToEdit.DayId && h.UserId == id);
+            dayToEdit.RemoveHelper(helperToRemove);
+            _customDayRepository.SaveChanges();
+            return helperToRemove;
+        }
 
         [HttpDelete]
-        [Route("custom/day/delete/helper/{date}")]
-
-        [HttpDelete]
-        [Route("custom/day/delete/note/{date}")]
+        [Route("custom/day/delete/note/{date}/{id}")]
+        public ActionResult<Note> RemoveNoteFromDay(DateTime date, int id)
+        {
+            CustomDay dayToEdit = _customDayRepository.GetByDate(date);
+            Note noteToRemove = dayToEdit.Notes.SingleOrDefault(n => n.NoteId == id);
+            dayToEdit.RemoveNote(noteToRemove);
+            _customDayRepository.SaveChanges();
+            return null;
+        }
 
         [HttpPut]
         [Route("custom/day/edit/{date}")]
