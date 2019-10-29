@@ -18,9 +18,9 @@ namespace KolveniershofBACKEND.Data
 
         public async Task seedDatabase()
         {
-            _dbContext.Database.EnsureDeleted();
-            if (_dbContext.Database.EnsureCreated())
-            {
+            //_dbContext.Database.EnsureDeleted();
+            //if (_dbContext.Database.EnsureCreated())
+            //{
                 #region Activities
                 Activity a1 = new Activity(ActivityType.ATELIER, "Testatelier", "Dit is een testatelier", "test.picto");
                 Activity a2 = new Activity(ActivityType.ATELIER, "Koken", "We gaan koken", "koken.picto");
@@ -95,7 +95,7 @@ namespace KolveniershofBACKEND.Data
                 #endregion
 
                 _dbContext.SaveChanges();
-            }
+            //}
         }
     }
 }

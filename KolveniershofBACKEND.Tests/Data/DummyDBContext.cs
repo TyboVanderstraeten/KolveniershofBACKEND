@@ -29,6 +29,8 @@ namespace KolveniershofBACKEND.Tests.Data
         public Activity[] Activities { get; }
         #endregion
 
+        public Day Day1 { get; }
+
         public DummyDBContext()
         {
             #region init Users
@@ -53,9 +55,6 @@ namespace KolveniershofBACKEND.Tests.Data
 
             Activities = new[] { Activity1, Activity2, Activity3, Activity4, Activity5, Activity6, Activity7 }; 
             #endregion
-
-
-
 
         }
 
