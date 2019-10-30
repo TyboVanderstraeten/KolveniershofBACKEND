@@ -68,12 +68,36 @@ namespace KolveniershofBACKEND.Tests.Controllers
             };
             
             ActionResult<Activity> actionResult = _controller.Add(activityDTO);
-            CreatedAtActionResult actionResult2 = actionResult.Result as CreatedAtActionResult;
+            CreatedAtActionResult actionResult2 = actionResult.Result as CreatedAtActionResult; //good? --> not isolated?
             Activity activity = actionResult2.Value as Activity;
             Assert.Equal("GetById", actionResult2.ActionName);
             Assert.Equal("Zwemmen", activity.Name);
-            
+        }
+
+        //when validation is added --> new test for badrequest!
+
+
+        [Fact]
+        public void EditActivity_Succeeds()
+        {
+            ActivityDTO activityDTO = new ActivityDTO()
+            {
+                ActivityId = 2,
+                ActivityType = ActivityType.ATELIER,
+                Name = "Zwemmen",
+                Description = "",
+                Pictogram = null
+            };
+            _activityRepository.Setup(m => m.GetById(activityDTO.ActivityId)).Returns(_dummyDBContext.Activity2);
+
+            ActionResult<Activity> actionResult = _controller.Edit(activityDTO);
+            OkObjectResult actionResult2 = actionResult.Result as OkObjectResult;
+            Activity activity = actionResult2.Value as Activity;
+
+            Assert.Equal("Zwemmen", activity.Name);
+            Assert.Equal("", activity.Description);
 
         }
+
     }
 }
