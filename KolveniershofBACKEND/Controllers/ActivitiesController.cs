@@ -35,7 +35,7 @@ namespace KolveniershofBACKEND.Controllers
 
         [HttpPost]
         [Route("new")]
-        public ActionResult<Activity> Add(ActivityDTO model)
+        public IActionResult Add(ActivityDTO model)
         {
             try
             {

@@ -1,6 +1,7 @@
 ﻿using KolveniershofBACKEND.Controllers;
 using KolveniershofBACKEND.Data.Repositories.Interfaces;
 using KolveniershofBACKEND.Models.Domain;
+using KolveniershofBACKEND.Models.DTO;
 using KolveniershofBACKEND.Tests.Data;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -22,10 +23,11 @@ namespace KolveniershofBACKEND.Tests.Controllers
             _controller = new ActivitiesController(_activityRepository.Object);
             _dummyDBContext = new DummyDBContext();
         }
-        #region Index
+
+        #region Get
 
         [Fact]
-        public void Index_GetAllActivities()
+        public void GetAllActivities()
         {
             _activityRepository.Setup(a => a.GetAll()).Returns(_dummyDBContext.Activities);
             ActionResult<IEnumerable<Activity>> actionResult = _controller.GetAll();
@@ -34,7 +36,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
         }
 
         [Fact]
-        public void Index_GetById_GivesActivity()
+        public void GetById_GivesActivity()
         {
             int activityId = 1;
             _activityRepository.Setup(a => a.GetById(activityId)).Returns(_dummyDBContext.Activity1);
@@ -44,13 +46,34 @@ namespace KolveniershofBACKEND.Tests.Controllers
         }
 
         [Fact]
-        public void Index_GetById_GivesNull()
+        public void GetById_GivesNull()
         {
             int activityId = 8;
             _activityRepository.Setup(a => a.GetById(activityId)).Returns((Activity)null);
             ActionResult<Activity> actionResult = _controller.GetById(activityId);
             Assert.Null(actionResult.Value);
-        } 
+        }
         #endregion
-    } 
+
+        [Fact]
+        public void AddActivity_Succeeds()
+        {
+
+            ActivityDTO activityDTO = new ActivityDTO()
+            {
+                ActivityType = ActivityType.ATELIER,
+                Name = "Zwemmen",
+                Description = "Samen met de vriendengroep gaan zwemmen in het stedelijk zwembad",
+                Pictogram = null
+            };
+            
+            ActionResult<Activity> actionResult = _controller.Add(activityDTO);
+            CreatedAtActionResult actionResult2 = actionResult.Result as CreatedAtActionResult;
+            Activity activity = actionResult2.Value as Activity;
+            Assert.Equal("GetById", actionResult2.ActionName);
+            Assert.Equal("Zwemmen", activity.Name);
+            
+
+        }
+    }
 }
