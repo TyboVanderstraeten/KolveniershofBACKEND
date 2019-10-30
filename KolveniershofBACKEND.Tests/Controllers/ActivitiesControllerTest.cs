@@ -55,6 +55,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
         }
         #endregion
 
+        #region Add
         [Fact]
         public void AddActivity_Succeeds()
         {
@@ -66,7 +67,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
                 Description = "Samen met de vriendengroep gaan zwemmen in het stedelijk zwembad",
                 Pictogram = null
             };
-            
+
             ActionResult<Activity> actionResult = _controller.Add(activityDTO);
             CreatedAtActionResult actionResult2 = actionResult.Result as CreatedAtActionResult; //good? --> not isolated?
             Activity activity = actionResult2.Value as Activity;
@@ -76,7 +77,9 @@ namespace KolveniershofBACKEND.Tests.Controllers
 
         //when validation is added --> new test for badrequest!
 
+        #endregion
 
+        #region Edit
         [Fact]
         public void EditActivity_Succeeds()
         {
@@ -96,8 +99,36 @@ namespace KolveniershofBACKEND.Tests.Controllers
 
             Assert.Equal("Zwemmen", activity.Name);
             Assert.Equal("", activity.Description);
-
         }
+        //when validation is added --> new test for badrequest! 
+        #endregion
+
+        #region Remove
+        [Fact]
+        public void RemoveActivity_Succeeds()
+        {
+
+            int activityId = 1;
+            _activityRepository.Setup(a => a.GetById(activityId)).Returns(_dummyDBContext.Activity1);
+
+            ActionResult<Activity> actionResult = _controller.Remove(activityId);
+            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
+            Activity activity = okObjectResult.Value as Activity;
+            Assert.Equal("Testatelier", activity.Name);
+            Assert.NotNull(activity);
+        }
+
+        [Fact]
+        public void RemoveActivity_Fails_AcitivyDoesntExist()
+        {
+            int activityId = 100;
+            _activityRepository.Setup(a => a.GetById(activityId)).Returns((Activity)null);
+
+            ActionResult<Activity> actionResult = _controller.Remove(activityId);
+            Assert.IsType<NoContentResult>(actionResult.Result);
+
+        } 
+        #endregion
 
     }
 }
