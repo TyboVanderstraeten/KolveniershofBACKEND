@@ -38,16 +38,6 @@ namespace KolveniershofBACKEND.Models.Domain
             WeekendDays = new List<WeekendDay>();
         }
 
-        public void AddAttendance(Attendance attendance)
-        {
-            Attendances.Add(attendance);
-        }
-
-        public void RemoveAttendance(Attendance attendance)
-        {
-            Attendances.Remove(attendance);
-        }
-
         public void AddWeekendDay(WeekendDay weekendDays)
         {
             WeekendDays.Add(weekendDays);
