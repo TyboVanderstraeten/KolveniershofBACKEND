@@ -17,7 +17,7 @@ namespace KolveniershofBACKEND.Data.Mappers
                 .HasForeignKey(a => new { a.DayId, a.ActivityId, a.TimeOfDay })
                 .OnDelete(DeleteBehavior.Cascade);
             builder.HasOne(a => a.User)
-                .WithMany(u => u.Attendances)
+                .WithMany()
                 .IsRequired()
                 .HasForeignKey(a => a.UserId)
                 .OnDelete(DeleteBehavior.Cascade);

@@ -13,7 +13,6 @@ namespace KolveniershofBACKEND.Models.DTO
         public string Email { get; set; }
         public string ProfilePicture { get; set; }
         public int? Group { get; set; }
-        public ICollection<AttendanceDTO> Attendances { get; set; }
         public ICollection<CustomWeekendDayDTO> CustomWeekendDays { get; set; }
     }
 }

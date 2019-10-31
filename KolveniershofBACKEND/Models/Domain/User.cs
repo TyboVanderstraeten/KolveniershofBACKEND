@@ -16,12 +16,10 @@ namespace KolveniershofBACKEND.Models.Domain
        // [Column(TypeName = "Binary")]
         public string ProfilePicture { get; set; }
         public int? Group { get; set; }
-        public ICollection<Attendance> Attendances { get; set; }
         public ICollection<WeekendDay> WeekendDays { get; set; }
 
         protected User()
         {
-            Attendances = new List<Attendance>();
             WeekendDays = new List<WeekendDay>();
         }
 
@@ -34,7 +32,6 @@ namespace KolveniershofBACKEND.Models.Domain
             Email = email;
             ProfilePicture = profilePicture;
             Group = group;
-            Attendances = new List<Attendance>();
             WeekendDays = new List<WeekendDay>();
         }
 
