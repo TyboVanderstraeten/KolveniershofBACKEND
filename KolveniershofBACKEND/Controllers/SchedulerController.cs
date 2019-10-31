@@ -88,12 +88,12 @@ namespace KolveniershofBACKEND.Controllers
         }
 
         [HttpDelete]
-        [Route("template/activity/delete/{weekNr}/{dayNr}/{id}")]
-        public ActionResult<DayActivity> RemoveActivityFromTemplateDay(int weekNr, int dayNr, int id)
+        [Route("template/activity/delete/{weekNr}/{dayNr}/{id}/{timeOfDay}")]
+        public ActionResult<DayActivity> RemoveActivityFromTemplateDay(int weekNr, int dayNr, int id, TimeOfDay timeOfDay)
         {
             Day dayToEdit = _dayRepository.GetByWeekAndDay(weekNr, dayNr);
             DayActivity dayActivityToRemove =
-                    dayToEdit.DayActivities.SingleOrDefault(da => da.DayId == dayToEdit.DayId && da.ActivityId == id);
+                    dayToEdit.DayActivities.SingleOrDefault(da => da.DayId == dayToEdit.DayId && da.ActivityId == id && da.TimeOfDay.Equals(timeOfDay));
             dayToEdit.RemoveDayActivity(dayActivityToRemove);
             _dayRepository.SaveChanges();
             return dayActivityToRemove;
