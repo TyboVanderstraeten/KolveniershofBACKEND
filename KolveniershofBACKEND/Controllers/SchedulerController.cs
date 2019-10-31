@@ -110,17 +110,6 @@ namespace KolveniershofBACKEND.Controllers
             return helperToRemove;
         }
 
-        [HttpPut]
-        [Route("template/edit/{weekNr}/{dayNr}")]
-        public ActionResult<Day> EditTemplateDay(int weekNr, int dayNr, DayDTO model)
-        {
-            Day dayToEdit = _dayRepository.GetByWeekAndDay(weekNr, dayNr);
-            dayToEdit.WeekNr = model.WeekNr;
-            dayToEdit.DayNr = model.DayNr;
-            _dayRepository.SaveChanges();
-            return dayToEdit;
-        }
-
         [HttpDelete]
         [Route("template/remove/{weekNr}/{dayNr}")]
         public ActionResult<Day> RemoveTemplateDay(int weekNr, int dayNr)
