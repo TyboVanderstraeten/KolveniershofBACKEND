@@ -18,6 +18,7 @@ namespace KolveniershofBACKEND.Data
             builder.ApplyConfiguration(new UserConfiguration());
             builder.ApplyConfiguration(new AttendanceConfiguration());
             builder.ApplyConfiguration(new CustomDayConfiguration());
+            builder.ApplyConfiguration(new WeekendDayConfiguration());
             builder.ApplyConfiguration(new DayActivityConfiguration());
             builder.ApplyConfiguration(new DayConfiguration());
             builder.ApplyConfiguration(new HelperConfiguration());

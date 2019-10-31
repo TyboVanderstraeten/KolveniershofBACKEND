@@ -37,9 +37,9 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
             return _users.SingleOrDefault(u => u.UserId == id).Attendances.ToList();
         }
 
-        public IEnumerable<CustomWeekendDay> GetCustomWeekendDaysFromUser(int id)
+        public IEnumerable<WeekendDay> GetWeekendDaysFromUser(int id)
         {
-            return _users.SingleOrDefault(u => u.UserId == id).CustomWeekendDays.ToList();
+            return _users.SingleOrDefault(u => u.UserId == id).WeekendDays.ToList();
         }
 
         public User GetById(int id)
@@ -49,8 +49,8 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
 
         public User GetByEmail(string email)
         {
-            
-            User user =  _users.SingleOrDefault(u => u.Email.Equals(email));
+
+            User user = _users.SingleOrDefault(u => u.Email.Equals(email));
             return user;
         }
 
