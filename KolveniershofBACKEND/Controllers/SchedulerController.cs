@@ -267,8 +267,8 @@ namespace KolveniershofBACKEND.Controllers
 
 
         [HttpDelete]
-        [Route("custom/activity/delete/{date}/{id}")]
-        public ActionResult<DayActivity> RemoveActivityFromDay(DateTime date, int id)
+        [Route("custom/activity/delete/{date}/{id}/{timeOfDay}")]
+        public ActionResult<DayActivity> RemoveActivityFromDay(DateTime date, int id, TimeOfDay timeOfDay)
         {
             CustomDay dayToEdit = _customDayRepository.GetByDate(date);
             DayActivity dayActivityToRemove =
@@ -295,10 +295,10 @@ namespace KolveniershofBACKEND.Controllers
         public ActionResult<Note> RemoveNoteFromDay(DateTime date, int id)
         {
             CustomDay dayToEdit = _customDayRepository.GetByDate(date);
-            Note noteToRemove = dayToEdit.Notes.SingleOrDefault(n => n.NoteId == id);
+            Note noteToRemove = dayToEdit.Notes.SingleOrDefault(n => n.DayId == dayToEdit.DayId && n.NoteId == id);
             dayToEdit.RemoveNote(noteToRemove);
             _customDayRepository.SaveChanges();
-            return null;
+            return noteToRemove;
         }
 
         [HttpPut]
