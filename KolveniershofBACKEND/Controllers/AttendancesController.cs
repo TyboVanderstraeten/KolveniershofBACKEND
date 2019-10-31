@@ -13,15 +13,17 @@ namespace KolveniershofBACKEND.Controllers
     public class AttendancesController : ControllerBase
     {
         private readonly ICustomDayRepository _customDayRepository;
+        private readonly IUserRepository _userRepository;
 
-        public AttendancesController(ICustomDayRepository customDayRepository)
+        public AttendancesController(ICustomDayRepository customDayRepository, IUserRepository userRepository)
         {
             _customDayRepository = customDayRepository;
+            _userRepository = userRepository;
         }
 
         [HttpGet]
         [Route("activity/{date}/{id}/{timeOfDay}")]
-        public ActionResult<IEnumerable<Attendance>> GetAllForActivity(DateTime date, int id, TimeOfDay timeOfDay)
+        public ActionResult<IEnumerable<Attendance>> GetAllAttendancesForActivity(DateTime date, int id, TimeOfDay timeOfDay)
         {
             DayActivity dayActivity = _customDayRepository
                                             .GetByDate(date)
@@ -30,7 +32,20 @@ namespace KolveniershofBACKEND.Controllers
             return dayActivity.Attendances.ToList();
         }
 
-        
+        [HttpPost]
+        [Route("activity/{date}/{timeOfDay}/{activityId}/{userId}")]
+        public ActionResult<Attendance> AddAttendanceToActivity(DateTime date, TimeOfDay timeOfDay, int activityId, int userId)
+        {
+            DayActivity dayActivity = _customDayRepository
+                                            .GetByDate(date)
+                                            .DayActivities
+                                            .SingleOrDefault(da => da.ActivityId == activityId && da.TimeOfDay.Equals(timeOfDay));
+            User user = _userRepository.GetById(userId);
+            Attendance attendanceToAdd = new Attendance(dayActivity, user);
+            dayActivity.AddAttendance(attendanceToAdd);
+            _customDayRepository.SaveChanges();
+            return attendanceToAdd;
+        }
 
     }
 }
