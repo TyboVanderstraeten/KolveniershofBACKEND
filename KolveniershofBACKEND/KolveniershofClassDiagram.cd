@@ -26,9 +26,9 @@
       <FileName>Models\Domain\Attendance.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
+      <Property Name="TimeOfDay" />
       <Property Name="DayActivity" />
       <Property Name="User" />
-      <Property Name="TimeOfDay" />
     </ShowAsAssociation>
   </Class>
   <Class Name="KolveniershofBACKEND.Models.Domain.CustomDay">
@@ -86,7 +86,7 @@
   <Class Name="KolveniershofBACKEND.Models.Domain.Note">
     <Position X="3.5" Y="3.25" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAAACAAAgAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAACAAAgAAAAAAAAAAAAAAACAAAAAAAAAAAAABAAA=</HashCode>
       <FileName>Models\Domain\Note.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -95,27 +95,28 @@
   </Class>
   <Class Name="KolveniershofBACKEND.Models.Domain.User">
     <Position X="12.25" Y="4.75" Width="2.25" />
-    <AssociationLine Name="CustomWeekendDays" Type="KolveniershofBACKEND.Models.Domain.CustomWeekendDay">
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="-0.838" Y="0.477" />
-      </MemberNameLabel>
+    <AssociationLine Name="WeekendDays" Type="KolveniershofBACKEND.Models.Domain.WeekendDay" FixedToPoint="true">
+      <Path>
+        <Point X="12.25" Y="6.812" />
+        <Point X="8.25" Y="6.812" />
+      </Path>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAAAAECAACAAAAAAAAAIAAgAAAAgCAAABCAAAAQAQAg=</HashCode>
+      <HashCode>AAAAQECAACAAAAAAAAAIAAgAAAAACAAABAAIAAQAAAg=</HashCode>
       <FileName>Models\Domain\User.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="UserType" />
     </ShowAsAssociation>
     <ShowAsCollectionAssociation>
-      <Property Name="CustomWeekendDays" />
+      <Property Name="WeekendDays" />
     </ShowAsCollectionAssociation>
   </Class>
-  <Class Name="KolveniershofBACKEND.Models.Domain.CustomWeekendDay">
-    <Position X="6" Y="2" Width="2" />
+  <Class Name="KolveniershofBACKEND.Models.Domain.WeekendDay">
+    <Position X="6" Y="4.75" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAEAAAAAAAAAAAAAAgAAAAAAAABAAAAAAAAAAA=</HashCode>
-      <FileName>Models\Domain\CustomWeekendDay.cs</FileName>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAAgAAAAAAAABABAAAAAAAAA=</HashCode>
+      <FileName>Models\Domain\WeekendDay.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Enum Name="KolveniershofBACKEND.Models.Domain.ActivityType">

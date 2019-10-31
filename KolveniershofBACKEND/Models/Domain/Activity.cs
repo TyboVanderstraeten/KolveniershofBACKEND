@@ -1,8 +1,12 @@
-﻿namespace KolveniershofBACKEND.Models.Domain
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+
+namespace KolveniershofBACKEND.Models.Domain
 {
     public class Activity
     {
         public int ActivityId { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
         public ActivityType ActivityType { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }

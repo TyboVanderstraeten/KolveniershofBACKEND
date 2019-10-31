@@ -1,27 +1,32 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace KolveniershofBACKEND.Models.Domain
 {
     public class User
     {
         public int UserId { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
         public UserType UserType { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
+       // [Column(TypeName = "Binary")]
         public string ProfilePicture { get; set; }
         public int? Group { get; set; }
         public ICollection<Attendance> Attendances { get; set; }
-        public ICollection<CustomWeekendDay> CustomWeekendDays { get; set; }
+        public ICollection<WeekendDay> WeekendDays { get; set; }
 
         protected User()
         {
             Attendances = new List<Attendance>();
-            CustomWeekendDays = new List<CustomWeekendDay>();
+            WeekendDays = new List<WeekendDay>();
         }
 
-        public User(UserType userType, string firstName, string lastName, string email, string profilePicture, int? group)
+        public User(UserType userType, string firstName, string lastName,
+            string email, string profilePicture, int? group)
         {
             UserType = userType;
             FirstName = firstName;
@@ -30,7 +35,7 @@ namespace KolveniershofBACKEND.Models.Domain
             ProfilePicture = profilePicture;
             Group = group;
             Attendances = new List<Attendance>();
-            CustomWeekendDays = new List<CustomWeekendDay>();
+            WeekendDays = new List<WeekendDay>();
         }
 
         public void AddAttendance(Attendance attendance)
@@ -43,14 +48,14 @@ namespace KolveniershofBACKEND.Models.Domain
             Attendances.Remove(attendance);
         }
 
-        public void AddCustomWeekendDay(CustomWeekendDay customWeekendDay)
+        public void AddWeekendDay(WeekendDay weekendDays)
         {
-            CustomWeekendDays.Add(customWeekendDay);
+            WeekendDays.Add(weekendDays);
         }
 
-        public void RemoveCustomWeekendDay(CustomWeekendDay customWeekendDay)
+        public void RemoveWeekendDay(WeekendDay weekendDays)
         {
-            CustomWeekendDays.Remove(customWeekendDay);
+            WeekendDays.Remove(weekendDays);
         }
     }
 }
