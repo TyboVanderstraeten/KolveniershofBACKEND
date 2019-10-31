@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using System;
 using System.Collections.Generic;
 
 namespace KolveniershofBACKEND.Models.Domain
@@ -24,7 +23,8 @@ namespace KolveniershofBACKEND.Models.Domain
             WeekendDays = new List<WeekendDay>();
         }
 
-        public User(UserType userType, string firstName, string lastName, string email, byte?[] profilePicture, int? group)
+        public User(UserType userType, string firstName, string lastName,
+            string email, byte?[] profilePicture, int? group)
         {
             UserType = userType;
             FirstName = firstName;
