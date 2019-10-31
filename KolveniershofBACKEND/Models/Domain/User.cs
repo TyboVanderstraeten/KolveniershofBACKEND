@@ -13,7 +13,7 @@ namespace KolveniershofBACKEND.Models.Domain
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
-        public string ProfilePicture { get; set; }
+        public byte?[] ProfilePicture { get; set; }
         public int? Group { get; set; }
         public ICollection<Attendance> Attendances { get; set; }
         public ICollection<WeekendDay> WeekendDays { get; set; }
@@ -24,7 +24,7 @@ namespace KolveniershofBACKEND.Models.Domain
             WeekendDays = new List<WeekendDay>();
         }
 
-        public User(UserType userType, string firstName, string lastName, string email, string profilePicture, int? group)
+        public User(UserType userType, string firstName, string lastName, string email, byte?[] profilePicture, int? group)
         {
             UserType = userType;
             FirstName = firstName;
