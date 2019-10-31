@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace KolveniershofBACKEND.Models.Domain
 {
@@ -12,7 +13,8 @@ namespace KolveniershofBACKEND.Models.Domain
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
-        public byte?[] ProfilePicture { get; set; }
+       // [Column(TypeName = "Binary")]
+        public string ProfilePicture { get; set; }
         public int? Group { get; set; }
         public ICollection<Attendance> Attendances { get; set; }
         public ICollection<WeekendDay> WeekendDays { get; set; }
@@ -24,7 +26,7 @@ namespace KolveniershofBACKEND.Models.Domain
         }
 
         public User(UserType userType, string firstName, string lastName,
-            string email, byte?[] profilePicture, int? group)
+            string email, string profilePicture, int? group)
         {
             UserType = userType;
             FirstName = firstName;
