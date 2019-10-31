@@ -77,6 +77,23 @@ namespace KolveniershofBACKEND.Tests.Controllers
 
         //when validation is added --> new test for badrequest!
 
+       [Fact] 
+       public void AddActivity_Fails_NameIsNull()
+        {
+            ActivityDTO activityDTO = new ActivityDTO()
+            {
+                ActivityType = ActivityType.ATELIER,
+                Name = null,
+                Description = "Samen met de vriendengroep gaan zwemmen in het stedelijk zwembad",
+                Pictogram = null
+            };
+
+            ActionResult<Activity> actionResult = _controller.Add(activityDTO);
+            Assert.IsType<BadRequestResult>(actionResult.Result);
+        } // FAILS --> normal because it isn't fixed yet
+
+
+
         #endregion
 
         #region Edit
@@ -100,7 +117,23 @@ namespace KolveniershofBACKEND.Tests.Controllers
             Assert.Equal("Zwemmen", activity.Name);
             Assert.Equal("", activity.Description);
         }
-        //when validation is added --> new test for badrequest! 
+
+        [Fact]
+        public void EditActivity_Fails_NameIsNull()
+        {
+            ActivityDTO activityDTO = new ActivityDTO()
+            {
+                ActivityId = 2,
+                ActivityType = ActivityType.ATELIER,
+                Name = "",
+                Description = "",
+                Pictogram = null
+            };
+            _activityRepository.Setup(m => m.GetById(activityDTO.ActivityId)).Returns(_dummyDBContext.Activity2);
+
+            ActionResult<Activity> actionResult = _controller.Edit(activityDTO);
+            Assert.IsType<BadRequestResult>(actionResult.Result);
+        }// FAILS --> normal because it isn't fixed yet
         #endregion
 
         #region Remove
