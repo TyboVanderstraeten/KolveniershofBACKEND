@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace KolveniershofBACKEND.Models.Domain
 {
@@ -8,6 +9,7 @@ namespace KolveniershofBACKEND.Models.Domain
         public int DayId { get; set; }
         public int ActivityId { get; set; }
         public int UserId { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
         public TimeOfDay TimeOfDay { get; set; }
         [JsonIgnore]
         public DayActivity DayActivity { get; set; }

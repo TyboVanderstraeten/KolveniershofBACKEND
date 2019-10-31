@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System;
 using System.Collections.Generic;
 
 namespace KolveniershofBACKEND.Models.Domain
@@ -6,6 +8,7 @@ namespace KolveniershofBACKEND.Models.Domain
     public class User
     {
         public int UserId { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
         public UserType UserType { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }

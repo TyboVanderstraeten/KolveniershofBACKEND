@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System.Collections.Generic;
 
 namespace KolveniershofBACKEND.Models.Domain
@@ -11,6 +12,7 @@ namespace KolveniershofBACKEND.Models.Domain
         [JsonIgnore]
         public Day Day { get; set; }
         public Activity Activity { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
         public TimeOfDay TimeOfDay { get; set; }
         public ICollection<Attendance> Attendances { get; set; }
 
