@@ -47,5 +47,21 @@ namespace KolveniershofBACKEND.Controllers
             return attendanceToAdd;
         }
 
+        [HttpDelete]
+        [Route("activitiy/{date}/{timeOfDay}/{activityId}/{userId}")]
+        public ActionResult<Attendance> RemoveAttendanceFromActivity(DateTime date, TimeOfDay timeOfDay, int activityId, int userId)
+        {
+            DayActivity dayActivity = _customDayRepository
+                                            .GetByDate(date)
+                                            .DayActivities
+                                            .SingleOrDefault(da => da.ActivityId == activityId && da.TimeOfDay.Equals(timeOfDay));
+            Attendance attendanceToRemove = dayActivity
+                                                .Attendances
+                                                .SingleOrDefault(a => a.UserId == userId);
+            dayActivity.RemoveAttendance(attendanceToRemove);
+            _customDayRepository.SaveChanges();
+            return attendanceToRemove;
+        }
+
     }
 }
