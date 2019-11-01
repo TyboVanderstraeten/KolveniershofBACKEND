@@ -19,17 +19,17 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
 
         public IEnumerable<User> GetAll()
         {
-            return _users.ToList();
+            return _users.Include(u=>u.WeekendDays).ToList();
         }
 
         public IEnumerable<User> GetAllFromGroup(int group)
         {
-            return _users.Where(u => u.Group == group).ToList();
+            return _users.Include(u => u.WeekendDays).Where(u => u.Group == group).ToList();
         }
 
         public IEnumerable<User> GetAllWithType(UserType userType)
         {
-            return _users.Where(u => u.UserType == userType).ToList();
+            return _users.Include(u => u.WeekendDays).Where(u => u.UserType == userType).ToList();
         }
 
         public IEnumerable<WeekendDay> GetWeekendDaysFromUser(int id)
@@ -39,14 +39,13 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
 
         public User GetById(int id)
         {
-            return _users.SingleOrDefault(u => u.UserId == id);
+            return _users.Include(u => u.WeekendDays).SingleOrDefault(u => u.UserId == id);
         }
 
         public User GetByEmail(string email)
         {
 
-            User user = _users.SingleOrDefault(u => u.Email.Equals(email));
-            return user;
+            return _users.Include(u => u.WeekendDays).SingleOrDefault(u => u.Email.Equals(email));
         }
 
         public void Add(User user)

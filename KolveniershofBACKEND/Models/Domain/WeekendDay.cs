@@ -17,7 +17,7 @@ namespace KolveniershofBACKEND.Models.Domain
 
         }
 
-        public WeekendDay(DateTime date, string comment = "")
+        public WeekendDay(DateTime date, string comment)
         {
             Date = date;
             Comment = comment;
