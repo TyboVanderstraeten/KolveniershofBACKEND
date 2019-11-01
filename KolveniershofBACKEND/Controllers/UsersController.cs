@@ -26,14 +26,15 @@ namespace KolveniershofBACKEND.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IConfiguration _configuration;
         private readonly IUserRepository _userRepository;
-
+        private readonly ICustomDayRepository _customDayRepository;
         public UsersController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager,
-            IConfiguration configuration, IUserRepository userRepository)
+            IConfiguration configuration, IUserRepository userRepository, ICustomDayRepository customDayRepository)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _configuration = configuration;
             _userRepository = userRepository;
+            _customDayRepository = customDayRepository;
         }
 
         [HttpGet]
@@ -41,6 +42,30 @@ namespace KolveniershofBACKEND.Controllers
         public ActionResult<IEnumerable<User>> GetAll()
         {
             return _userRepository.GetAll().ToList();
+        }
+
+        [HttpGet]
+        [Route("day/user/{userId}/{date}")]
+        public ActionResult<CustomDay> GetDayFromUser(int userId, DateTime date)
+        {
+            // Get the customday with the date
+            CustomDay customDay = _customDayRepository.GetByDate(date);
+            // DayActivities that our user attends
+            IEnumerable<DayActivity> dayActivitiesAttended = customDay.DayActivities.Where(da => da.Attendances.Any(a => a.UserId == userId)).ToList();
+            // Create new customday object, set values to customday, set dayactivities to those dayactivities attended by our user
+            CustomDay customDayUser = new CustomDay(
+                customDay.WeekNr,
+                customDay.DayNr,
+                customDay.Date,
+                customDay.PreDish,
+                customDay.MainDish,
+                customDay.Dessert
+                );
+            customDayUser.DayId = customDay.DayId;
+            customDayUser.DayActivities = dayActivitiesAttended.ToList();
+            customDayUser.Helpers = customDay.Helpers;
+            customDayUser.Notes = customDay.Notes;
+            return customDayUser;
         }
 
         [HttpGet]
