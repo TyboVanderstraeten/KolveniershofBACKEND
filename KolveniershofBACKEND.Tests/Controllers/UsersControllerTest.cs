@@ -1,6 +1,7 @@
 ﻿using KolveniershofBACKEND.Controllers;
 using KolveniershofBACKEND.Data.Repositories.Interfaces;
 using KolveniershofBACKEND.Models.Domain;
+using KolveniershofBACKEND.Models.DTO;
 using KolveniershofBACKEND.Tests.Data;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
@@ -221,8 +222,65 @@ namespace KolveniershofBACKEND.Tests.Controllers
 
             ActionResult<bool> actionResult = await _controller.CheckAvailibilityEmail(email);
             Assert.True(actionResult.Value);
-        } 
+        }
         #endregion
+
+        //[Fact]
+        //public async Task LoginUser_SucceedsAsync()
+        //{
+        //    LoginDTO loginDTO = new LoginDTO()
+        //    {
+        //        Email = "tybo@hotmail.com",
+        //        Password = "P@ssword1"
+        //    };
+
+
+
+
+        //    _userManager.Setup(u => u.FindByEmailAsync(loginDTO.Email)).ReturnsAsync(identityUser);
+        //    _signInManager.Setup(u => u.CheckPasswordSignInAsync(identityUser, loginDTO.Password, false)).ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Success);
+        //    _userManager.Setup(u => u.GetClaimsAsync(identityUser)).ReturnsAsync(user.Claims.ToList() as IList<Claim>);
+        //    ActionResult<string> actionResult = await _controller.Login(loginDTO);
+        //    Assert.NotNull(actionResult.Value);//token has been returned
+
+        //}
+
+        [Fact]
+        public async Task AddUser_SucceedsAsync_Succeeds()
+        {
+            UserDTO userDTO = new UserDTO()
+            {
+                UserType = UserType.BEGELEIDER,
+                FirstName = "Florian",
+                LastName = "Landuyt",
+                Email = "florian@hotmail.com",
+                ProfilePicture = null,
+                Group = null
+            };
+            User user = new User(UserType.BEGELEIDER, "Florian", "Landuyt", "florian@hotmail.com", null, null);
+            _userRepository.Setup(u => u.GetByEmail(user.Email)).Returns((User)null);
+            ActionResult<User> actionResult = await _controller.Add(userDTO);
+            CreatedAtActionResult actionResult2 = actionResult.Result as CreatedAtActionResult;
+            User userResult = actionResult2.Value as User;
+            Assert.Equal(userDTO.Email, userResult.Email);
+        }
+
+        [Fact]
+        public async Task AddUser_SucceedsAsync_Fails_UserAlreadyExist()
+        {
+            UserDTO userDTO = new UserDTO()
+            {
+                UserType = UserType.BEGELEIDER,
+                FirstName = "Tybo",
+                LastName = "Vanderstraeten",
+                Email = "tybo@hotmail.com",
+                ProfilePicture = null,
+                Group = null
+            };
+            _userRepository.Setup(u => u.GetByEmail(userDTO.Email)).Returns(_dummyDBContext.U2);
+            ActionResult<User> actionResult = await _controller.Add(userDTO);
+            Assert.IsType<BadRequestObjectResult>(actionResult.Result);
+        }
 
     }
 }
