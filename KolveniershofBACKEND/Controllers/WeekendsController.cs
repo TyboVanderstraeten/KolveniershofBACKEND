@@ -21,7 +21,7 @@ namespace KolveniershofBACKEND.Controllers
         }
 
         [HttpGet]
-        [Route("weekendday/{date}/{userid}")]
+        [Route("weekendday/{date}/{userId}")]
         public ActionResult<WeekendDay> GetWeekendDayFromUser(DateTime date, int userId)
         {
             return _userRepository.GetById(userId).WeekendDays.SingleOrDefault(wd => wd.Date.Date == date.Date);
