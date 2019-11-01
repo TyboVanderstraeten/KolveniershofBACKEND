@@ -32,6 +32,29 @@ namespace KolveniershofBACKEND.Controllers
             return dayActivity.Attendances.ToList();
         }
 
+        [HttpGet]
+        [Route("activity/clients/{date}/{id}/{timeOfDay}")]
+        public ActionResult<IEnumerable<Attendance>> GetAllAttendedClientsForActivity(DateTime date, int id, TimeOfDay timeOfDay)
+        {
+            DayActivity dayActivity = _customDayRepository
+                                            .GetByDate(date)
+                                            .DayActivities
+                                            .SingleOrDefault(da => da.ActivityId == id && da.TimeOfDay.Equals(timeOfDay));
+            return dayActivity.Attendances.Where(a => a.User.UserType.Equals(UserType.CLIENT)).ToList();
+        }
+
+
+        [HttpGet]
+        [Route("activity/personnel/{date}/{id}/{timeOfDay}")]
+        public ActionResult<IEnumerable<Attendance>> GetAllAttendedPersonnelForActivity(DateTime date, int id, TimeOfDay timeOfDay)
+        {
+            DayActivity dayActivity = _customDayRepository
+                                            .GetByDate(date)
+                                            .DayActivities
+                                            .SingleOrDefault(da => da.ActivityId == id && da.TimeOfDay.Equals(timeOfDay));
+            return dayActivity.Attendances.Where(a => !(a.User.UserType.Equals(UserType.CLIENT))).ToList();
+        }
+
         [HttpPost]
         [Route("activity/{date}/{timeOfDay}/{activityId}/{userId}")]
         public ActionResult<Attendance> AddAttendanceToActivity(DateTime date, TimeOfDay timeOfDay, int activityId, int userId)
@@ -62,6 +85,8 @@ namespace KolveniershofBACKEND.Controllers
             _customDayRepository.SaveChanges();
             return attendanceToRemove;
         }
+
+
 
     }
 }
