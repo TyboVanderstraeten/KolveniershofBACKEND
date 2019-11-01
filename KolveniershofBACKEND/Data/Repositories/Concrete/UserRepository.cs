@@ -32,11 +32,6 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
             return _users.Where(u => u.UserType == userType).ToList();
         }
 
-        public IEnumerable<Attendance> GetAttendancesFromUser(int id)
-        {
-            return _users.SingleOrDefault(u => u.UserId == id).Attendances.ToList();
-        }
-
         public IEnumerable<WeekendDay> GetWeekendDaysFromUser(int id)
         {
             return _users.SingleOrDefault(u => u.UserId == id).WeekendDays.ToList();

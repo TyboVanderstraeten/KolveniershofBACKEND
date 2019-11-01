@@ -22,6 +22,7 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
         {
             return _customDays.Include(cd => cd.Notes)
                               .Include(cd => cd.DayActivities).ThenInclude(da => da.Activity)
+                              .Include(cd => cd.DayActivities).ThenInclude(da => da.Attendances).ThenInclude(a=>a.User)
                               .Include(cd => cd.Helpers).ThenInclude(h => h.User)
                               .ToList();
         }
@@ -31,6 +32,7 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
             return _customDays.Where(cd => cd.Date.Date >= start.Date && cd.Date.Date <= end.Date)
                               .Include(cd => cd.Notes)
                               .Include(cd => cd.DayActivities).ThenInclude(da => da.Activity)
+                              .Include(cd => cd.DayActivities).ThenInclude(da => da.Attendances).ThenInclude(a => a.User)
                               .Include(cd => cd.Helpers).ThenInclude(h => h.User)
                               .ToList();
         }
@@ -95,6 +97,7 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
         {
             return _customDays.Include(cd => cd.Notes)
                               .Include(cd => cd.DayActivities).ThenInclude(da => da.Activity)
+                              .Include(cd => cd.DayActivities).ThenInclude(da => da.Attendances).ThenInclude(a => a.User)
                               .Include(cd => cd.Helpers).ThenInclude(h => h.User)
                               .SingleOrDefault(cd => cd.Date.Date == date.Date);
         }
@@ -103,6 +106,7 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
         {
             return _customDays.Include(cd => cd.Notes)
                               .Include(cd => cd.DayActivities).ThenInclude(da => da.Activity)
+                              .Include(cd => cd.DayActivities).ThenInclude(da => da.Attendances).ThenInclude(a => a.User)
                               .Include(cd => cd.Helpers).ThenInclude(h => h.User)
                               .SingleOrDefault(cd => cd.DayId == id);
         }

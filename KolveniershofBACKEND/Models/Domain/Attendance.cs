@@ -29,7 +29,7 @@ namespace KolveniershofBACKEND.Models.Domain
             UserId = user.UserId;
             DayActivity = dayActivity;
             User = user;
-            //TimeOfDay = dayActivity.TimeOfDay;
+            TimeOfDay = dayActivity.TimeOfDay;
         }
     }
 }
