@@ -1,5 +1,6 @@
 ﻿using KolveniershofBACKEND.Data.Repositories.Interfaces;
 using KolveniershofBACKEND.Models.Domain;
+using KolveniershofBACKEND.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -68,6 +69,20 @@ namespace KolveniershofBACKEND.Controllers
             dayActivity.AddAttendance(attendanceToAdd);
             _customDayRepository.SaveChanges();
             return attendanceToAdd;
+        }
+
+        [HttpPost]
+        [Route("activity/comment/{date}/{timeOfDay}/{activityId}/{userId}")]
+        public ActionResult<Attendance> AddCommentToAttendance(DateTime date, TimeOfDay timeOfDay, int activityId, int userId, CommentDTO model)
+        {
+            DayActivity dayActivity = _customDayRepository
+                                          .GetByDate(date)
+                                          .DayActivities
+                                          .SingleOrDefault(da => da.ActivityId == activityId && da.TimeOfDay.Equals(timeOfDay));
+            Attendance attendanceToEdit = dayActivity.Attendances.SingleOrDefault(a => a.UserId == userId);
+            attendanceToEdit.Comment = model.Comment;
+            _customDayRepository.SaveChanges();
+            return attendanceToEdit;
         }
 
         [HttpDelete]
