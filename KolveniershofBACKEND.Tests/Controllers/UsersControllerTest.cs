@@ -1,9 +1,12 @@
 ﻿using KolveniershofBACKEND.Controllers;
 using KolveniershofBACKEND.Data.Repositories.Interfaces;
+using KolveniershofBACKEND.Models.Domain;
 using KolveniershofBACKEND.Tests.Data;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -12,14 +15,12 @@ using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Text;
+using Xunit;
 
 namespace KolveniershofBACKEND.Tests.Controllers
 {
     public class UsersControllerTest
     {
-
-        //public UsersController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager,
-        //   IConfiguration configuration, IUserRepository userRepository)
 
         private Mock<IUserRepository> _userRepository;
         private UsersController _controller;
@@ -31,7 +32,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
         private ClaimsPrincipal user;
         private IdentityUser identityUser;
         private IdentityUser wrongIdentityUser;
-
+        private Mock<ControllerContext> _controllerContext;
 
         public UsersControllerTest()
         {
@@ -48,6 +49,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
               new Mock<IServiceProvider>().Object,
               new Mock<ILogger<UserManager<IdentityUser>>>().Object);
 
+            _controllerContext = new Mock<ControllerContext>();
+
             _signInManager = new Mock<SignInManager<IdentityUser>>(_userManager.Object,
                      new Mock<IHttpContextAccessor>().Object,
                      new Mock<IUserClaimsPrincipalFactory<IdentityUser>>().Object,
@@ -59,15 +62,36 @@ namespace KolveniershofBACKEND.Tests.Controllers
 
             user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
             {
-                new Claim(ClaimTypes.NameIdentifier, _dummyDBContext.U1.Email),
+                new Claim(ClaimTypes.NameIdentifier, _dummyDBContext.U2.Email),
             }));
 
-            identityUser = new IdentityUser() { Email = _dummyDBContext.U1.Email };
-            wrongIdentityUser = new IdentityUser() { Email = _dummyDBContext.U2.Email };
+            identityUser = new IdentityUser() { UserName = _dummyDBContext.U2.Email, Email = _dummyDBContext.U2.Email };
+            wrongIdentityUser = new IdentityUser() { UserName = _dummyDBContext.U2.Email , Email = _dummyDBContext.U1.Email};
 
 
-            _controller = new UsersController(_signInManager.Object, _userManager.Object,_configuration.Object, _userRepository.Object);
+            _controller = new UsersController(_signInManager.Object, _userManager.Object, _configuration.Object, _userRepository.Object)
+            {
+                ControllerContext = new ControllerContext()
+                {
+                    HttpContext = new DefaultHttpContext() { User = user }
+                }
+            };
         }
+
+        [Fact]
+        public void GetLoggedInUser_Succeeds()
+        {
+            User Tybo = _dummyDBContext.U1;
+
+            _userRepository.Setup(u => u.GetByEmail(identityUser.Email)).Returns(_dummyDBContext.U2);
+
+            ActionResult<User> actionResult =  _controller.GetLoggedInUser();
+            User user2 = actionResult.Value;
+            Assert.Equal(user2.Email, Tybo.Email);
+        }
+
+
+
 
 
     }
