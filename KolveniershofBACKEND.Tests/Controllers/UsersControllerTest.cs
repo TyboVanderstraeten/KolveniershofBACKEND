@@ -13,6 +13,7 @@ using Microsoft.Extensions.Options;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using Xunit;
@@ -62,11 +63,11 @@ namespace KolveniershofBACKEND.Tests.Controllers
 
             user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
             {
-                new Claim(ClaimTypes.NameIdentifier, _dummyDBContext.U2.Email),
+                new Claim(ClaimTypes.Name, _dummyDBContext.U2.Email),
             }));
 
             identityUser = new IdentityUser() { UserName = _dummyDBContext.U2.Email, Email = _dummyDBContext.U2.Email };
-            wrongIdentityUser = new IdentityUser() { UserName = _dummyDBContext.U2.Email , Email = _dummyDBContext.U1.Email};
+            wrongIdentityUser = new IdentityUser() { UserName = _dummyDBContext.U1.Email , Email = _dummyDBContext.U1.Email};
 
 
             _controller = new UsersController(_signInManager.Object, _userManager.Object, _configuration.Object, _userRepository.Object)
@@ -78,19 +79,53 @@ namespace KolveniershofBACKEND.Tests.Controllers
             };
         }
 
+        #region GetLoggedInUsers
         [Fact]
         public void GetLoggedInUser_Succeeds()
         {
-            User Tybo = _dummyDBContext.U1;
+            User Tybo = _dummyDBContext.U2;
 
-            _userRepository.Setup(u => u.GetByEmail(identityUser.Email)).Returns(_dummyDBContext.U2);
+            _userRepository.Setup(u => u.GetByEmail(identityUser.UserName)).Returns(_dummyDBContext.U2);
 
-            ActionResult<User> actionResult =  _controller.GetLoggedInUser();
+            ActionResult<User> actionResult = _controller.GetLoggedInUser();
             User user2 = actionResult.Value;
             Assert.Equal(user2.Email, Tybo.Email);
         }
 
+        [Fact]
+        public void GetLoggedInUser_Fails_UserNotKnown()
+        {
+            _userRepository.Setup(u => u.GetByEmail(wrongIdentityUser.UserName)).Returns((User)null);
 
+            ActionResult<User> actionResult = _controller.GetLoggedInUser();
+            Assert.IsType<NotFoundObjectResult>(actionResult.Result);
+        }
+        #endregion
+
+        #region GetAll
+        [Fact]
+        public void GetAllUsers_Succeeds()
+        {
+            _userRepository.Setup(u => u.GetAll()).Returns(_dummyDBContext.Users);
+            ActionResult<IEnumerable<User>> actionResult = _controller.GetAll();
+            IList<User> users = actionResult.Value as IList<User>;
+
+            Assert.Equal(3, users.Count);
+        }
+        #endregion
+
+        #region GetAllFromGroup
+        [Fact]
+        public void GetAllFromGroup_Succeeds()
+        {
+            int groupNr = 2;
+            IEnumerable<User> group2 = _dummyDBContext.Users.ToList().Where(u => u.Group == groupNr);
+            _userRepository.Setup(a => a.GetAllFromGroup(groupNr)).Returns(group2);
+            ActionResult<IEnumerable<User>> actionResult = _controller.GetAllFromGroup(groupNr);
+            IList<User> users = actionResult.Value as IList<User>;
+            Assert.Equal("Rob", users.ToList().First().FirstName); //there is only 1 user in this list!
+        } 
+        #endregion
 
 
 
