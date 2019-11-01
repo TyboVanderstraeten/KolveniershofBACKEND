@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace KolveniershofBACKEND.Tests.Controllers
@@ -198,10 +199,30 @@ namespace KolveniershofBACKEND.Tests.Controllers
             User user = actionResult.Value;
 
             Assert.Null(user);
-        } 
+        }
         #endregion
 
+        #region CheckAvailabilityEmail
+        [Fact]
+        public async Task CheckAvailibilityEmail_ReturnsFalse()
+        {
+            string email = "tybo@hotmail.com";
+            _userManager.Setup(u => u.FindByEmailAsync(email)).ReturnsAsync(identityUser);
 
+            ActionResult<bool> actionResult = await _controller.CheckAvailibilityEmail(email);
+            Assert.False(actionResult.Value);
+        }
+
+        [Fact]
+        public async Task CheckAvailibilityEmail_ReturnsTrue()
+        {
+            string email = "vybo@hotmail.com";
+            _userManager.Setup(u => u.FindByEmailAsync(email)).ReturnsAsync((IdentityUser)null);
+
+            ActionResult<bool> actionResult = await _controller.CheckAvailibilityEmail(email);
+            Assert.True(actionResult.Value);
+        } 
+        #endregion
 
     }
 }
