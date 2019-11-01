@@ -67,7 +67,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
             }));
 
             identityUser = new IdentityUser() { UserName = _dummyDBContext.U2.Email, Email = _dummyDBContext.U2.Email };
-            wrongIdentityUser = new IdentityUser() { UserName = _dummyDBContext.U1.Email , Email = _dummyDBContext.U1.Email};
+            wrongIdentityUser = new IdentityUser() { UserName = _dummyDBContext.U1.Email, Email = _dummyDBContext.U1.Email };
 
 
             _controller = new UsersController(_signInManager.Object, _userManager.Object, _configuration.Object, _userRepository.Object)
@@ -170,7 +170,38 @@ namespace KolveniershofBACKEND.Tests.Controllers
             User user = actionResult.Value;
 
             Assert.Null(user);
+        }
+        #endregion
+
+        #region GetByEmail
+        [Fact]
+        public void GetByMail_Succeeds()
+        {
+            string email = "tybo@hotmail.com";
+
+            _userRepository.Setup(u => u.GetByEmail(email)).Returns(_dummyDBContext.U1);
+
+            ActionResult<User> actionResult = _controller.GetByEmail(email);
+            User user = actionResult.Value;
+
+            Assert.Equal(email, user.Email);
+        }
+
+        [Fact]
+        public void GetByMail_ReturnsNull_UserDoesNotExist()
+        {
+            string email = "vybo@hotmail.com";
+
+            _userRepository.Setup(u => u.GetByEmail(email)).Returns((User)null);
+
+            ActionResult<User> actionResult = _controller.GetByEmail(email);
+            User user = actionResult.Value;
+
+            Assert.Null(user);
         } 
         #endregion
+
+
+
     }
 }
