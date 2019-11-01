@@ -202,7 +202,7 @@ namespace KolveniershofBACKEND.Controllers
             Day templateDayChosen = _dayRepository.GetByWeekAndDay(model.WeekNr, model.DayNr);
 
             // Create custom day
-            CustomDay customDayToCreate = new CustomDay(templateDayChosen.WeekNr, templateDayChosen.DayNr, model.Date, model.Menu);
+            CustomDay customDayToCreate = new CustomDay(templateDayChosen.WeekNr, templateDayChosen.DayNr, model.Date, model.PreDish, model.MainDish, model.Dessert);
 
             // Inject template collections into customday collections
             foreach (DayActivity dayActivity in templateDayChosen.DayActivities)
@@ -326,7 +326,9 @@ namespace KolveniershofBACKEND.Controllers
                 }
             }
             dayToEdit.Date = model.Date;
-            dayToEdit.Menu = model.Menu;
+            dayToEdit.PreDish = model.PreDish;
+            dayToEdit.MainDish = model.MainDish;
+            dayToEdit.Dessert = model.Dessert;
             _customDayRepository.SaveChanges();
             return dayToEdit;
         }
