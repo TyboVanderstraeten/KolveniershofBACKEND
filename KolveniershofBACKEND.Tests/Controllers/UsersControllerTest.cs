@@ -146,9 +146,31 @@ namespace KolveniershofBACKEND.Tests.Controllers
         {
             ActionResult<IEnumerable<User>> actionResult = _controller.GetAllWithType("wrongType");
             Assert.IsType<BadRequestObjectResult>(actionResult.Result);
-        } 
+        }
         #endregion
 
+        #region GetById
+        [Fact]
+        public void GetUserById_Succeeds()
+        {
+            int userId = 1;
+            _userRepository.Setup(u => u.GetById(userId)).Returns(_dummyDBContext.U1);
+            ActionResult<User> actionResult = _controller.GetById(userId);
+            User user = actionResult.Value;
 
+            Assert.Equal("Tybo", user.FirstName);
+        }
+
+        [Fact]
+        public void GetUserById_ReturnsNull_UserDoesNotExist()
+        {
+            int userId = 100;
+            _userRepository.Setup(u => u.GetById(userId)).Returns((User)null);
+            ActionResult<User> actionResult = _controller.GetById(userId);
+            User user = actionResult.Value;
+
+            Assert.Null(user);
+        } 
+        #endregion
     }
 }
