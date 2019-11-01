@@ -17,11 +17,11 @@ namespace KolveniershofBACKEND.Data.Mappers
             builder.Property(u => u.Email).IsRequired();
             builder.Property(u => u.ProfilePicture).IsRequired();
             builder.Property(u => u.Group).IsRequired(false);
-            builder.HasMany(u => u.CustomWeekendDays)
+            builder.HasMany(u => u.WeekendDays)
                 .WithOne()
                 .IsRequired()
-                .HasForeignKey(a => a.UserId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(w=>w.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

@@ -6,7 +6,9 @@ namespace KolveniershofBACKEND.Models.Domain
     public class CustomDay : Day
     {
         public DateTime Date { get; set; }
-        public string Menu { get; set; }
+        public string PreDish { get; set; }
+        public string MainDish { get; set; }
+        public string Dessert { get; set; }
         public ICollection<Note> Notes { get; set; }
 
         protected CustomDay() : base()
@@ -14,10 +16,12 @@ namespace KolveniershofBACKEND.Models.Domain
             Notes = new List<Note>();
         }
 
-        public CustomDay(int weekNr, int dayNr, DateTime date, string menu) : base(weekNr, dayNr)
+        public CustomDay(int weekNr, int dayNr, DateTime date, string preDish, string mainDish, string dessert) : base(weekNr, dayNr)
         {
             Date = date;
-            Menu = menu;
+            PreDish = preDish;
+            MainDish = mainDish;
+            Dessert = dessert;
             Notes = new List<Note>();
         }
 

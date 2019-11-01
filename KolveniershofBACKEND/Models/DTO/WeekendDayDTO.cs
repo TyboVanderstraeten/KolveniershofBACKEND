@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 
 namespace KolveniershofBACKEND.Models.DTO
 {
-    public class CustomWeekendDayDTO:DayDTO
+    public class WeekendDayDTO
     {
+        public int WeekendDayId { get; set; }
         public int UserId { get; set; }
         public DateTime Date { get; set; }
         public string Comment { get; set; }

@@ -63,18 +63,61 @@ namespace KolveniershofBACKEND.Controllers
             return null;
         }
 
-        [HttpPut]
-        [Route("template/edit")]
-        public ActionResult<Day> EditTemplateDay(DayDTO model)
+        [HttpPost]
+        [Route("template/activity/new/{weekNr}/{dayNr}")]
+        public ActionResult<DayActivity> AddActivityToTemplateDay(int weekNr, int dayNr, DayActivityDTO model)
         {
-            return null;
+            Day dayToEdit = _dayRepository.GetByWeekAndDay(weekNr, dayNr);
+            Activity activity = _activityRepository.GetById(model.ActivityId);
+            DayActivity dayActivityToAdd = new DayActivity(dayToEdit, activity, model.TimeOfDay);
+            dayToEdit.AddDayActivity(dayActivityToAdd);
+            _dayRepository.SaveChanges();
+            return dayActivityToAdd;
+        }
+
+        [HttpPost]
+        [Route("template/helper/new/{weekNr}/{dayNr}")]
+        public ActionResult<Helper> AddHelperToTemplateDay(int weekNr, int dayNr, HelperDTO model)
+        {
+            Day dayToEdit = _dayRepository.GetByWeekAndDay(weekNr, dayNr);
+            User user = _userRepository.GetById(model.UserId);
+            Helper helperToAdd = new Helper(dayToEdit, user);
+            dayToEdit.AddHelper(helperToAdd);
+            _dayRepository.SaveChanges();
+            return helperToAdd;
         }
 
         [HttpDelete]
-        [Route("template/remove/{id}")]
-        public ActionResult<Day> RemoveTemplateDay(int id)
+        [Route("template/activity/delete/{weekNr}/{dayNr}/{id}/{timeOfDay}")]
+        public ActionResult<DayActivity> RemoveActivityFromTemplateDay(int weekNr, int dayNr, int id, TimeOfDay timeOfDay)
         {
-            return null;
+            Day dayToEdit = _dayRepository.GetByWeekAndDay(weekNr, dayNr);
+            DayActivity dayActivityToRemove =
+                    dayToEdit.DayActivities.SingleOrDefault(da => da.DayId == dayToEdit.DayId && da.ActivityId == id && da.TimeOfDay.Equals(timeOfDay));
+            dayToEdit.RemoveDayActivity(dayActivityToRemove);
+            _dayRepository.SaveChanges();
+            return dayActivityToRemove;
+        }
+
+        [HttpDelete]
+        [Route("template/helper/delete/{weekNr}/{dayNr}/{id}")]
+        public ActionResult<Helper> RemoveHelperFromTemplateDay(int weekNr, int dayNr, int id)
+        {
+            Day dayToEdit = _dayRepository.GetByWeekAndDay(weekNr, dayNr);
+            Helper helperToRemove = dayToEdit.Helpers.SingleOrDefault(h => h.DayId == dayToEdit.DayId && h.UserId == id);
+            dayToEdit.RemoveHelper(helperToRemove);
+            _dayRepository.SaveChanges();
+            return helperToRemove;
+        }
+
+        [HttpDelete]
+        [Route("template/remove/{weekNr}/{dayNr}")]
+        public ActionResult<Day> RemoveTemplateDay(int weekNr, int dayNr)
+        {
+            Day dayToRemove = _dayRepository.GetByWeekAndDay(weekNr, dayNr);
+            _dayRepository.Remove(dayToRemove);
+            _dayRepository.SaveChanges();
+            return dayToRemove;
         }
 
         #endregion
@@ -159,7 +202,7 @@ namespace KolveniershofBACKEND.Controllers
             Day templateDayChosen = _dayRepository.GetByWeekAndDay(model.WeekNr, model.DayNr);
 
             // Create custom day
-            CustomDay customDayToCreate = new CustomDay(templateDayChosen.WeekNr, templateDayChosen.DayNr, model.Date, model.Menu);
+            CustomDay customDayToCreate = new CustomDay(templateDayChosen.WeekNr, templateDayChosen.DayNr, model.Date, model.PreDish, model.MainDish, model.Dessert);
 
             // Inject template collections into customday collections
             foreach (DayActivity dayActivity in templateDayChosen.DayActivities)
@@ -177,13 +220,6 @@ namespace KolveniershofBACKEND.Controllers
             _customDayRepository.Add(customDayToCreate);
             _customDayRepository.SaveChanges();
             return customDayToCreate;
-
-            /*
-             * You see boys, if you think good about the structure of your backend,
-             * doing nice things becomes trivial
-             * 
-             * :))
-             */
 
             /*
              * Now you can call other methods, for instance:
@@ -229,6 +265,83 @@ namespace KolveniershofBACKEND.Controllers
             return noteToAdd;
         }
 
+
+        [HttpDelete]
+        [Route("custom/activity/delete/{date}/{id}/{timeOfDay}")]
+        public ActionResult<DayActivity> RemoveActivityFromDay(DateTime date, int id, TimeOfDay timeOfDay)
+        {
+            CustomDay dayToEdit = _customDayRepository.GetByDate(date);
+            DayActivity dayActivityToRemove =
+                    dayToEdit.DayActivities.SingleOrDefault(da => da.DayId == dayToEdit.DayId && da.ActivityId == id);
+            dayToEdit.RemoveDayActivity(dayActivityToRemove);
+            _customDayRepository.SaveChanges();
+            return dayActivityToRemove;
+        }
+
+        //querying for dayId necessary? since it's the specific day..
+        [HttpDelete]
+        [Route("custom/helper/delete/{date}/{id}")]
+        public ActionResult<Helper> RemoveHelperFromDay(DateTime date, int id)
+        {
+            CustomDay dayToEdit = _customDayRepository.GetByDate(date);
+            Helper helperToRemove = dayToEdit.Helpers.SingleOrDefault(h => h.DayId == dayToEdit.DayId && h.UserId == id);
+            dayToEdit.RemoveHelper(helperToRemove);
+            _customDayRepository.SaveChanges();
+            return helperToRemove;
+        }
+
+        [HttpDelete]
+        [Route("custom/day/delete/note/{date}/{id}")]
+        public ActionResult<Note> RemoveNoteFromDay(DateTime date, int id)
+        {
+            CustomDay dayToEdit = _customDayRepository.GetByDate(date);
+            Note noteToRemove = dayToEdit.Notes.SingleOrDefault(n => n.DayId == dayToEdit.DayId && n.NoteId == id);
+            dayToEdit.RemoveNote(noteToRemove);
+            _customDayRepository.SaveChanges();
+            return noteToRemove;
+        }
+
+        [HttpPut]
+        [Route("custom/day/edit/{date}")]
+        public ActionResult<Day> EditDay(DateTime date, CustomDayDTO model)
+        {
+            CustomDay dayToEdit = _customDayRepository.GetByDate(date);
+            if ((dayToEdit.WeekNr != model.WeekNr) || (dayToEdit.DayNr != model.DayNr))
+            {
+                Day templateDayChosen = _dayRepository.GetByWeekAndDay(model.WeekNr, model.DayNr);
+                dayToEdit.WeekNr = templateDayChosen.WeekNr;
+                dayToEdit.DayNr = templateDayChosen.WeekNr;
+                dayToEdit.DayActivities = new List<DayActivity>();
+                dayToEdit.Helpers = new List<Helper>();
+                foreach (DayActivity dayActivity in templateDayChosen.DayActivities)
+                {
+                    DayActivity dayActivityToAdd = new DayActivity(dayToEdit, dayActivity.Activity, dayActivity.TimeOfDay);
+                    dayToEdit.AddDayActivity(dayActivityToAdd);
+                }
+
+                foreach (Helper helper in templateDayChosen.Helpers)
+                {
+                    Helper helperToAdd = new Helper(dayToEdit, helper.User);
+                    dayToEdit.AddHelper(helperToAdd);
+                }
+            }
+            dayToEdit.Date = model.Date;
+            dayToEdit.PreDish = model.PreDish;
+            dayToEdit.MainDish = model.MainDish;
+            dayToEdit.Dessert = model.Dessert;
+            _customDayRepository.SaveChanges();
+            return dayToEdit;
+        }
+
+        [HttpDelete]
+        [Route("custom/day/delete/{date}")]
+        public ActionResult<Day> RemoveDay(DateTime date)
+        {
+            CustomDay dayToRemove = _customDayRepository.GetByDate(date);
+            _customDayRepository.Remove(dayToRemove);
+            _customDayRepository.SaveChanges();
+            return dayToRemove;
+        }
         #endregion
     }
 }
