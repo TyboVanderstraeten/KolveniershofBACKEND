@@ -30,41 +30,41 @@ namespace KolveniershofBACKEND.Tests.Data
         #endregion
 
         #region TemplateDay
-        private Day Day1 { get; }
-        private Day Day2 { get; }
-        private Day Day3 { get; }
-        private Day[] Days { get; }
+        public Day Day1 { get; }
+        public Day Day2 { get; }
+        public Day Day3 { get; }
+        public Day[] Days { get; }
 
-        private DayActivity DayActivity1 { get; }
-        private DayActivity DayActivity2 { get; }
-        private DayActivity DayActivity3 { get; }
-        private DayActivity DayActivity4 { get; }
+        public DayActivity DayActivity1 { get; }
+        public DayActivity DayActivity2 { get; }
+        public DayActivity DayActivity3 { get; }
+        public DayActivity DayActivity4 { get; }
 
-        private DayActivity DayActivity5 { get; }
-        private DayActivity DayActivity6 { get; }
-        private DayActivity DayActivity7 { get; }
-        private DayActivity DayActivity8 { get; }
+        public DayActivity DayActivity5 { get; }
+        public DayActivity DayActivity6 { get; }
+        public DayActivity DayActivity7 { get; }
+        public DayActivity DayActivity8 { get; }
 
-        private DayActivity DayActivity9 { get; }
-        private DayActivity DayActivity10 { get; }
-        private DayActivity DayActivity11 { get; }
-        private DayActivity DayActivity12 { get; }
+        public DayActivity DayActivity9 { get; }
+        public DayActivity DayActivity10 { get; }
+        public DayActivity DayActivity11 { get; }
+        public DayActivity DayActivity12 { get; }
 
-        private DayActivity[] DayActivities1 { get; }
-        private DayActivity[] DayActivities2 { get; }
-        private DayActivity[] DayActivities3 { get; }
+        public DayActivity[] DayActivities1 { get; }
+        public DayActivity[] DayActivities2 { get; }
+        public DayActivity[] DayActivities3 { get; }
 
-        private Helper Helper1 { get; }
-        private Helper Helper2 { get; }
-        private Helper[] Helpers1 { get; }
+        public Helper Helper1 { get; }
+        public Helper Helper2 { get; }
+        public Helper[] Helpers1 { get; }
 
-        private Helper Helper3 { get; }
-        private Helper Helper4 { get; }
-        private Helper[] Helpers2 { get; }
+        public Helper Helper3 { get; }
+        public Helper Helper4 { get; }
+        public Helper[] Helpers2 { get; }
 
-        private Helper Helper5 { get; }
-        private Helper Helper6 { get; }
-        private Helper[] Helpers3 { get; }  
+        public Helper Helper5 { get; }
+        public Helper Helper6 { get; }
+        public Helper[] Helpers3 { get; }  
 
 
         #endregion
@@ -136,7 +136,9 @@ namespace KolveniershofBACKEND.Tests.Data
             Helper5 = new Helper(Day3, U1);
             Helper6 = new Helper(Day3, U3);
             Helpers3 = new[] { Helper5, Helper6 };
-            Day3.Helpers = Helpers3; 
+            Day3.Helpers = Helpers3;
+
+            Days = new[] { Day1, Day2, Day3 };
             #endregion
 
         }
