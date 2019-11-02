@@ -237,6 +237,43 @@ namespace KolveniershofBACKEND.Tests.Controllers
         } 
         #endregion
 
+        [Fact]
+        public void AddCustomDay_Succeeds()
+        {
+            
+            CustomDayDTO dayDTO = new CustomDayDTO()
+            {
+                DayNr = 1,
+                WeekNr = 2,
+                Date = DateTime.Today,
+                Menu = "Kip voor de gains",
+                Notes = null
+            };
+
+            _dayRepository.Setup(c => c.GetByWeekAndDay(dayDTO.WeekNr, dayDTO.DayNr)).Returns(_dummyDBContext.CustomDay2);
+
+            ActionResult<CustomDay> actionResult = _controller.AddCustomDay(dayDTO);
+            CustomDay customDay = actionResult.Value;
+            Assert.Equal(4, customDay.DayActivities.Count);
+        }
+
+        [Fact] //TODO MICHAEL
+        public void AddActivityToDay_Succeeds() 
+        {
+           
+        }
+
+        [Fact] //TODO MICHAEL
+        public void AddHelperToDay_Succeeds()
+        {
+
+        }
+
+        [Fact] //TODO MICHAEL
+        public void AddNoteToDay_Succeeds()
+        {
+
+        }
 
 
 

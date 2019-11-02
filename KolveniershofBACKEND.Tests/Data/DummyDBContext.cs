@@ -113,8 +113,8 @@ namespace KolveniershofBACKEND.Tests.Data
             Day2 = new Day(1, 2) { DayId = dayId++ };
             Day3 = new Day(1, 3) { DayId = dayId++ };
 
-            Attendance attendance = new Attendance(DayActivity1, U2);
-            DayActivity1 = new DayActivity(Day1, Activity5, TimeOfDay.VOLLEDIG) { Attendances = new[] { attendance } };
+            
+            DayActivity1 = new DayActivity(Day1, Activity5, TimeOfDay.VOLLEDIG);
             
             DayActivity2 = new DayActivity(Day1, Activity2, TimeOfDay.NAMIDDAG);
             DayActivity3 = new DayActivity(Day1, Activity3, TimeOfDay.OCHTEND);
