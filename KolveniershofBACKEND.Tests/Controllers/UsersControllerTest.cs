@@ -306,10 +306,39 @@ namespace KolveniershofBACKEND.Tests.Controllers
 
             ActionResult<User> actionResult = await _controller.Remove(userId);
             Assert.IsType<NoContentResult>(actionResult.Result);
+        }
+        #endregion
+
+
+        #region Edit
+        [Fact]
+        public void EditUser_Succeeds()
+        {
+
+
+            UserDTO userDTO = new UserDTO()
+            {
+                #region MyRegion
+
+                #endregion
+                UserId = 1,
+                UserType = UserType.BEGELEIDER,
+                FirstName = "Florian",
+                LastName = "Landuyt",
+                Email = "tybo@hotmail.com",
+                ProfilePicture = null,
+                Group = null
+            };
+
+            _userRepository.Setup(u => u.GetById(userDTO.UserId)).Returns(_dummyDBContext.U1);
+            _userManager.Setup(u => u.FindByEmailAsync(userDTO.Email)).ReturnsAsync(identityUser);
+
+            ActionResult<User> actionResult = _controller.Edit(userDTO);
+            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
+            User user = okObjectResult.Value as User;
+            Assert.Equal("Florian", user.FirstName);
         } 
         #endregion
-        
-
 
 
     }
