@@ -64,9 +64,20 @@ namespace KolveniershofBACKEND.Tests.Data
 
         public Helper Helper5 { get; }
         public Helper Helper6 { get; }
-        public Helper[] Helpers3 { get; }  
+        public Helper[] Helpers3 { get; }
 
 
+        #endregion
+
+        #region CustomDay
+        public CustomDay CustomDay1 { get; }
+        public CustomDay CustomDay2 { get; }
+        public CustomDay CustomDay3 { get; }
+        public CustomDay[] CustomDays { get; }
+
+        public Note Note1 { get; }
+        public Note Note2 { get; }
+        public Note[] Notes { get; } 
         #endregion
 
 
@@ -141,6 +152,26 @@ namespace KolveniershofBACKEND.Tests.Data
             Days = new[] { Day1, Day2, Day3 };
             #endregion
 
+            #region init CustomDays
+            Note1 = new Note(NoteType.VERVOER, "Florian neemt de bus niet vandaag");
+            Note2 = new Note(NoteType.VARIA, "Vandaag zullen er geen bekertjes aanwezig zijn");
+            Notes = new[] { Note1, Note2 };
+
+            CustomDay1 = new CustomDay(1, 1, DateTime.Today, "Kip zoetzuur");
+            CustomDay1.DayActivities = DayActivities1;
+            CustomDay1.Helpers = Helpers1;
+            CustomDay1.Notes = Notes;
+
+            CustomDay2 = new CustomDay(1, 2, DateTime.Today.AddDays(1), "Kip zoetzuur");
+            CustomDay2.DayActivities = DayActivities2;
+            CustomDay2.Helpers = Helpers2;
+            CustomDay2.Notes = Notes;
+
+            CustomDay3 = new CustomDay(1, 3, DateTime.Today.AddDays(2), "Kip zoetzuur");
+            CustomDay3.DayActivities = DayActivities3;
+            CustomDay3.Helpers = Helpers3;
+            CustomDay3.Notes = Notes;
+            #endregion
         }
 
 
