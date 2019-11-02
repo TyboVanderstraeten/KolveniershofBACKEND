@@ -245,6 +245,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
 
         //}
 
+        #region Add
         [Fact]
         public async Task AddUser_SucceedsAsync_Succeeds()
         {
@@ -280,7 +281,36 @@ namespace KolveniershofBACKEND.Tests.Controllers
             _userRepository.Setup(u => u.GetByEmail(userDTO.Email)).Returns(_dummyDBContext.U2);
             ActionResult<User> actionResult = await _controller.Add(userDTO);
             Assert.IsType<BadRequestObjectResult>(actionResult.Result);
+        } 
+        #endregion
+
+        #region Remove
+        [Fact]
+        public async void RemoveUser_Succeeds()
+        {
+            int userId = 1;
+            _userRepository.Setup(a => a.GetById(userId)).Returns(_dummyDBContext.U1);
+
+            ActionResult<User> actionResult = await _controller.Remove(userId);
+            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
+            User user = okObjectResult.Value as User;
+
+            Assert.Equal("Tybo", user.FirstName);
         }
+
+        [Fact]
+        public async void RemoveUser_Fails_UserDoesNotExist()
+        {
+            int userId = 100;
+            _userRepository.Setup(a => a.GetById(userId)).Returns((User)null);
+
+            ActionResult<User> actionResult = await _controller.Remove(userId);
+            Assert.IsType<NoContentResult>(actionResult.Result);
+        } 
+        #endregion
+        
+
+
 
     }
 }
