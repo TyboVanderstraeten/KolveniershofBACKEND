@@ -113,7 +113,9 @@ namespace KolveniershofBACKEND.Tests.Data
             Day2 = new Day(1, 2) { DayId = dayId++ };
             Day3 = new Day(1, 3) { DayId = dayId++ };
 
-            DayActivity1 = new DayActivity(Day1, Activity1, TimeOfDay.VOORMIDDAG);
+            Attendance attendance = new Attendance(DayActivity1, U2);
+            DayActivity1 = new DayActivity(Day1, Activity5, TimeOfDay.VOLLEDIG) { Attendances = new[] { attendance } };
+            
             DayActivity2 = new DayActivity(Day1, Activity2, TimeOfDay.NAMIDDAG);
             DayActivity3 = new DayActivity(Day1, Activity3, TimeOfDay.OCHTEND);
             DayActivity4 = new DayActivity(Day1, Activity4, TimeOfDay.AVOND);
@@ -171,6 +173,8 @@ namespace KolveniershofBACKEND.Tests.Data
             CustomDay3.DayActivities = DayActivities3;
             CustomDay3.Helpers = Helpers3;
             CustomDay3.Notes = Notes;
+
+            CustomDays = new[] { CustomDay1, CustomDay2, CustomDay3 };
             #endregion
         }
 
