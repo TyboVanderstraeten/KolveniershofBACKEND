@@ -63,7 +63,7 @@ namespace KolveniershofBACKEND.Data
                 {
                     for (int j = 0; j < 5; j++)
                     {
-                        Day day = new Day(i+1, j + 1);
+                        Day day = new Day(i + 1, j + 1);
                         DayActivity dayActivity1 = new DayActivity(day, a1, TimeOfDay.VOORMIDDAG);
                         DayActivity dayActivity2 = new DayActivity(day, a2, TimeOfDay.VOORMIDDAG);
                         DayActivity dayActivity3 = new DayActivity(day, a3, TimeOfDay.NAMIDDAG);
