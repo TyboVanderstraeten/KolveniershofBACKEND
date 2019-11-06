@@ -170,6 +170,50 @@ namespace KolveniershofBACKEND.Tests.Controllers
             Assert.Equal(templateName, actionResult.Value.TemplateName);
         } 
         #endregion
+
+        [Fact]
+        public void AddActivity_Succeeds()
+        {
+
+            string templateName = "eerste_week_eerste_dag";
+            int weekNr = 1;
+            int dayNr = 1;
+
+            DayActivityDTO dayActivityDTO = new DayActivityDTO()
+            {
+                DayId = 1,
+                ActivityId = 1,
+                TimeOfDay = TimeOfDay.VOLLEDIG,
+                Attendances = null
+            };
+
+            _dayRepository.Setup(d => d.GetByWeekAndDay(templateName, weekNr, dayNr)).Returns(_dummyDBContext.Day1);
+            _activityRepository.Setup(d => d.GetById(dayActivityDTO.ActivityId)).Returns(_dummyDBContext.Activity1);
+
+            ActionResult<DayActivity> actionResult = _controller.AddActivity(templateName, weekNr, dayNr, dayActivityDTO);
+            Assert.Equal(TimeOfDay.VOLLEDIG, actionResult.Value.TimeOfDay);
+        }
+
+
+        [Fact]
+        public void RemoveActivity_Succeeds()
+        {
+
+            string templateName = "eerste_week_eerste_dag";
+            int weekNr = 1;
+            int dayNr = 1;
+            int activityId = 1;
+            TimeOfDay timeOfDay = TimeOfDay.VOLLEDIG;
+
+
+            _dayRepository.Setup(d => d.GetByWeekAndDay(templateName, weekNr, dayNr)).Returns(_dummyDBContext.Day1);
+            _dayActivityRepository.Setup(d => d.GetTemplateDayActivity(templateName, weekNr, dayNr, timeOfDay, activityId)).Returns(_dummyDBContext.DayActivity1);
+
+            ActionResult<DayActivity> actionResult = _controller.RemoveActivity(templateName, weekNr, dayNr, activityId,timeOfDay);
+            Assert.Equal(TimeOfDay.VOLLEDIG, actionResult.Value.TimeOfDay);
+
+        }
+
         #endregion
 
 

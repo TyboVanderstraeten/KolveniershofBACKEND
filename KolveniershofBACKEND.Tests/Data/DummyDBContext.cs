@@ -50,9 +50,9 @@ namespace KolveniershofBACKEND.Tests.Data
         public DayActivity DayActivity11 { get; }
         public DayActivity DayActivity12 { get; }
 
-        public DayActivity[] DayActivities1 { get; }
-        public DayActivity[] DayActivities2 { get; }
-        public DayActivity[] DayActivities3 { get; }
+        public IList<DayActivity> DayActivities1 { get; }
+        public IList<DayActivity> DayActivities2 { get; }
+        public IList<DayActivity> DayActivities3 { get; }
 
         public Helper Helper1 { get; }
         public Helper Helper2 { get; }
@@ -119,7 +119,11 @@ namespace KolveniershofBACKEND.Tests.Data
             DayActivity2 = new DayActivity(Day1, Activity2, TimeOfDay.NAMIDDAG);
             DayActivity3 = new DayActivity(Day1, Activity3, TimeOfDay.OCHTEND);
             DayActivity4 = new DayActivity(Day1, Activity4, TimeOfDay.AVOND);
-            DayActivities1 = new[] { DayActivity1, DayActivity2, DayActivity3, DayActivity4 };
+            DayActivities1 = new List<DayActivity>();
+            DayActivities1.Add(DayActivity1);
+            DayActivities1.Add(DayActivity2);
+            DayActivities1.Add(DayActivity3);
+            DayActivities1.Add(DayActivity4);
             Day1.DayActivities = DayActivities1;
 
             Helper1 = new Helper(Day1, U1);
