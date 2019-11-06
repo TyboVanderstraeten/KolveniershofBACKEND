@@ -34,6 +34,13 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
                         .ToList();
         }
 
+        public IEnumerable<Day> GetAllByTemplateName(string templateName)
+        {
+            return _days.Where(d => !(d is CustomDay) && d.TemplateName.Equals(templateName))
+                        .Include(d => d.DayActivities).ThenInclude(da => da.Activity)
+                        .Include(d => d.Helpers).ThenInclude(h => h.User)
+                        .ToList();
+        }
         public Day GetById(int id)
         {
             return _days.Where(d => !(d is CustomDay))

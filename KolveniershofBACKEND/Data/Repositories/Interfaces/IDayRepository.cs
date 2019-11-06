@@ -7,6 +7,7 @@ namespace KolveniershofBACKEND.Data.Repositories.Interfaces
     {
         IEnumerable<Day> GetAll();
         IEnumerable<Day> GetAllByWeek(int weekNr);
+        IEnumerable<Day> GetAllByTemplateName(string templateName);
         Day GetById(int id);
         Day GetByWeekAndDay(int weekNr, int dayNr);
         void Add(Day day);

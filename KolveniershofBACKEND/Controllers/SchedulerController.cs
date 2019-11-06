@@ -36,6 +36,13 @@ namespace KolveniershofBACKEND.Controllers
         }
 
         [HttpGet]
+        [Route("template/all/name/{templateName}")]
+        public ActionResult<IEnumerable<Day>> GetAllTemplateDaysByName(string templateName)
+        {
+            return _dayRepository.GetAllByTemplateName(templateName).ToList();
+        }
+
+        [HttpGet]
         [Route("template/week/{weekNr}")]
         public ActionResult<IEnumerable<Day>> GetAllTemplateDaysByWeek(int weekNr)
         {
