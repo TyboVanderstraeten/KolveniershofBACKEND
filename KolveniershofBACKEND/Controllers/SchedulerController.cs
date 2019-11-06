@@ -67,7 +67,17 @@ namespace KolveniershofBACKEND.Controllers
         [Route("template/new")]
         public ActionResult<Day> AddTemplateDay(DayDTO model)
         {
-            return null;
+            if (_dayRepository.GetByWeekAndDay(model.TemplateName, model.WeekNr, model.DayNr) == null)
+            {
+                Day dayToAdd = new Day(model.TemplateName, model.WeekNr, model.DayNr);
+                _dayRepository.Add(dayToAdd);
+                _dayRepository.SaveChanges();
+                return dayToAdd;
+            }
+            else
+            {
+                return BadRequest("A day with this weekNr and dayNr already exists for this template");
+            }
         }
 
         [HttpPost]
