@@ -14,11 +14,14 @@ namespace KolveniershofBACKEND.Controllers
     {
         private readonly IUserRepository _userRepository;
         private readonly IDayActivityRepository _dayActivityRepository;
+        private readonly IAttendanceRepository _attendanceRepository;
 
-        public AttendancesController(IUserRepository userRepository, IDayActivityRepository dayActivityRepository)
+        public AttendancesController(IUserRepository userRepository, IDayActivityRepository dayActivityRepository,
+            IAttendanceRepository attendanceRepository)
         {
             _userRepository = userRepository;
             _dayActivityRepository = dayActivityRepository;
+            _attendanceRepository = attendanceRepository;
         }
 
         [HttpGet]
@@ -60,7 +63,7 @@ namespace KolveniershofBACKEND.Controllers
         public ActionResult<Attendance> Remove(DateTime date, TimeOfDay timeOfDay, int activityId, int userId)
         {
             DayActivity dayActivity = _dayActivityRepository.GetCustomDayActivity(date, timeOfDay, activityId);
-            Attendance attendanceToRemove = dayActivity.Attendances.SingleOrDefault(a => a.UserId == userId);
+            Attendance attendanceToRemove = _attendanceRepository.GetForUser(date, timeOfDay, activityId, userId);
             dayActivity.RemoveAttendance(attendanceToRemove);
             _dayActivityRepository.SaveChanges();
             return attendanceToRemove;

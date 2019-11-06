@@ -52,7 +52,8 @@ namespace KolveniershofBACKEND
                 .AddScoped<INoteRepository, NoteRepository>()
                 .AddScoped<IDayActivityRepository, DayActivityRepository>()
                 .AddScoped<IHelperRepository, HelperRepository>()
-                .AddScoped<IWeekendDayRepository, WeekendDayRepository>();
+                .AddScoped<IWeekendDayRepository, WeekendDayRepository>()
+                .AddScoped<IAttendanceRepository, AttendanceRepository>();
             #endregion
 
             #region NSwag
