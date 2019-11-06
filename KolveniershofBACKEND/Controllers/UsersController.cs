@@ -27,6 +27,7 @@ namespace KolveniershofBACKEND.Controllers
         private readonly IConfiguration _configuration;
         private readonly IUserRepository _userRepository;
         private readonly ICustomDayRepository _customDayRepository;
+
         public UsersController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager,
             IConfiguration configuration, IUserRepository userRepository, ICustomDayRepository customDayRepository)
         {
@@ -88,13 +89,6 @@ namespace KolveniershofBACKEND.Controllers
             {
                 return BadRequest("Type is incorrect");
             }
-        }
-
-        [HttpGet]
-        [Route("{id}/days/weekend")]
-        public ActionResult<IEnumerable<Models.Domain.WeekendDay>> GetWeekendDaysFromUser(int id)
-        {
-            return _userRepository.GetWeekendDaysFromUser(id).ToList();
         }
 
         [HttpGet]
