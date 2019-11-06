@@ -34,30 +34,30 @@ namespace KolveniershofBACKEND.Controllers
         }
 
         [HttpGet]
-        [Route("custom/range/{start}/{end}")]
-        public ActionResult<IEnumerable<CustomDay>> GetAllCustomDaysInRange(DateTime start, DateTime end)
+        [Route("{startDate}/{endDate}")]
+        public ActionResult<IEnumerable<CustomDay>> GetAll(DateTime startDate, DateTime endDate)
         {
-            return _customDayRepository.GetAllInRange(start, end).ToList();
+            return _customDayRepository.GetAllInRange(startDate, endDate).ToList();
         }
 
         [HttpGet]
-        [Route("custom/day/{id}")]
-        public ActionResult<CustomDay> GetCustomDayById(int id)
+        [Route("{dayId}")]
+        public ActionResult<CustomDay> GetById(int dayId)
         {
-            return _customDayRepository.GetById(id);
+            return _customDayRepository.GetById(dayId);
         }
 
         [HttpGet]
-        [Route("custom/day/date/{date}")]
-        public ActionResult<CustomDay> GetCustomDayByDate(DateTime date)
+        [Route("{date}")]
+        public ActionResult<CustomDay> GetByDate(DateTime date)
         {
             return _customDayRepository.GetByDate(date);
         }
 
 
         [HttpGet]
-        [Route("day/user/{userId}/{date}")]
-        public ActionResult<CustomDay> GetDayForUser(int userId, DateTime date)
+        [Route("{date}/{userId}")]
+        public ActionResult<CustomDay> GetForUser(int userId, DateTime date)
         {
             CustomDay customDay = _customDayRepository.GetByDate(date);
             IEnumerable<DayActivity> dayActivitiesAttended = customDay.DayActivities.Where(da => da.Attendances.Any(a => a.UserId == userId)).ToList();
@@ -78,135 +78,56 @@ namespace KolveniershofBACKEND.Controllers
         }
 
         [HttpGet]
-        [Route("custom/day/absent/{date}")]
-        public ActionResult<IEnumerable<User>> GetAbsentUsersForDay(DateTime date)
+        [Route("absent/{date}")]
+        public ActionResult<IEnumerable<User>> GetAbsent(DateTime date)
         {
             return _customDayRepository.GetAbsentUsersForDay(date).ToList();
         }
 
         [HttpGet]
-        [Route("custom/day/sick/{date}")]
-        public ActionResult<IEnumerable<User>> GetSickUsersForDay(DateTime date)
+        [Route("sick/{date}")]
+        public ActionResult<IEnumerable<User>> GetSick(DateTime date)
         {
             return _customDayRepository.GetSickUsersForDay(date).ToList();
         }
 
         [HttpGet]
-        [Route("custom/day/notes/{date}")]
-        public ActionResult<IEnumerable<Note>> GetNotesForDay(DateTime date)
+        [Route("notes/{date}")]
+        public ActionResult<IEnumerable<Note>> GetNotes(DateTime date)
         {
             return _customDayRepository.GetNotesForDay(date).ToList();
         }
 
         [HttpGet]
-        [Route("custom/day/helpers/{date}")]
-        public ActionResult<IEnumerable<Helper>> GetHelpersForDay(DateTime date)
+        [Route("helpers/{date}")]
+        public ActionResult<IEnumerable<Helper>> GetHelpers(DateTime date)
         {
             return _customDayRepository.GetHelpersForDay(date).ToList();
         }
 
         [HttpPost]
-        [Route("custom/day/new")]
-        public ActionResult<CustomDay> AddCustomDay(CustomDayDTO model)
+        public ActionResult<CustomDay> Add(CustomDayDTO model)
         {
-            // Choose template day
             Day templateDayChosen = _dayRepository.GetByWeekAndDay(model.TemplateName, model.WeekNr, model.DayNr);
-
-            // Create custom day
             CustomDay customDayToCreate = new CustomDay(templateDayChosen.TemplateName, templateDayChosen.WeekNr, templateDayChosen.DayNr, model.Date, model.PreDish, model.MainDish, model.Dessert);
-
-            // Inject template collections into customday collections
             foreach (DayActivity dayActivity in templateDayChosen.DayActivities)
             {
                 DayActivity dayActivityToAdd = new DayActivity(customDayToCreate, dayActivity.Activity, dayActivity.TimeOfDay);
                 customDayToCreate.AddDayActivity(dayActivityToAdd);
             }
-
             foreach (Helper helper in templateDayChosen.Helpers)
             {
                 Helper helperToAdd = new Helper(customDayToCreate, helper.User);
                 customDayToCreate.AddHelper(helperToAdd);
             }
-
             _customDayRepository.Add(customDayToCreate);
             _customDayRepository.SaveChanges();
             return customDayToCreate;
         }
 
-        [HttpPost]
-        [Route("custom/day/add/activity/{date}")]
-        public ActionResult<DayActivity> AddActivityToDay(DateTime date, DayActivityDTO model)
-        {
-            CustomDay customDayToEdit = _customDayRepository.GetByDate(date);
-            Activity activity = _activityRepository.GetById(model.ActivityId);
-            DayActivity dayActivityToAdd = new DayActivity(customDayToEdit, activity, model.TimeOfDay);
-            customDayToEdit.AddDayActivity(dayActivityToAdd);
-            _customDayRepository.SaveChanges();
-            return dayActivityToAdd;
-        }
-
-        [HttpPost]
-        [Route("custom/day/add/helper/{date}")]
-        public ActionResult<Helper> AddHelperToDay(DateTime date, HelperDTO model)
-        {
-            CustomDay customDayToEdit = _customDayRepository.GetByDate(date);
-            User user = _userRepository.GetById(model.UserId);
-            Helper helperToAdd = new Helper(customDayToEdit, user);
-            customDayToEdit.AddHelper(helperToAdd);
-            _customDayRepository.SaveChanges();
-            return helperToAdd;
-        }
-
-        [HttpPost]
-        [Route("custom/day/add/note/{date}")]
-        public ActionResult<Note> AddNoteToDay(DateTime date, NoteDTO model)
-        {
-            CustomDay customDayToEdit = _customDayRepository.GetByDate(date);
-            Note noteToAdd = new Note(model.NoteType, model.Content);
-            customDayToEdit.AddNote(noteToAdd);
-            _customDayRepository.SaveChanges();
-            return noteToAdd;
-        }
-
-
-        [HttpDelete]
-        [Route("custom/activity/delete/{date}/{id}/{timeOfDay}")]
-        public ActionResult<DayActivity> RemoveActivityFromDay(DateTime date, int id, TimeOfDay timeOfDay)
-        {
-            CustomDay dayToEdit = _customDayRepository.GetByDate(date);
-            DayActivity dayActivityToRemove =
-                    dayToEdit.DayActivities.SingleOrDefault(da => da.DayId == dayToEdit.DayId && da.ActivityId == id);
-            dayToEdit.RemoveDayActivity(dayActivityToRemove);
-            _customDayRepository.SaveChanges();
-            return dayActivityToRemove;
-        }
-
-        //querying for dayId necessary? since it's the specific day..
-        [HttpDelete]
-        [Route("custom/helper/delete/{date}/{id}")]
-        public ActionResult<Helper> RemoveHelperFromDay(DateTime date, int id)
-        {
-            CustomDay dayToEdit = _customDayRepository.GetByDate(date);
-            Helper helperToRemove = dayToEdit.Helpers.SingleOrDefault(h => h.DayId == dayToEdit.DayId && h.UserId == id);
-            dayToEdit.RemoveHelper(helperToRemove);
-            _customDayRepository.SaveChanges();
-            return helperToRemove;
-        }
-
-        [HttpDelete]
-        [Route("custom/day/delete/note/{date}/{id}")]
-        public ActionResult<Note> RemoveNoteFromDay(DateTime date, int id)
-        {
-            CustomDay dayToEdit = _customDayRepository.GetByDate(date);
-            Note noteToRemove = dayToEdit.Notes.SingleOrDefault(n => n.DayId == dayToEdit.DayId && n.NoteId == id);
-            dayToEdit.RemoveNote(noteToRemove);
-            _customDayRepository.SaveChanges();
-            return noteToRemove;
-        }
-
         [HttpPut]
-        [Route("custom/day/edit/{date}")]
-        public ActionResult<CustomDay> EditDay(DateTime date, CustomDayDTO model)
+        [Route("{date}")]
+        public ActionResult<CustomDay> Edit(DateTime date, CustomDayDTO model)
         {
             CustomDay dayToEdit = _customDayRepository.GetByDate(date);
             if (!(dayToEdit.WeekNr.Equals(model.TemplateName)) || (dayToEdit.WeekNr != model.WeekNr) || (dayToEdit.DayNr != model.DayNr))
@@ -238,13 +159,83 @@ namespace KolveniershofBACKEND.Controllers
         }
 
         [HttpDelete]
-        [Route("custom/day/delete/{date}")]
-        public ActionResult<CustomDay> RemoveDay(DateTime date)
+        [Route("{date}")]
+        public ActionResult<CustomDay> Remove(DateTime date)
         {
             CustomDay dayToRemove = _customDayRepository.GetByDate(date);
             _customDayRepository.Remove(dayToRemove);
             _customDayRepository.SaveChanges();
             return dayToRemove;
+        }
+
+        [HttpPost]
+        [Route("activity/{date}")]
+        public ActionResult<DayActivity> AddActivity(DateTime date, DayActivityDTO model)
+        {
+            CustomDay customDayToEdit = _customDayRepository.GetByDate(date);
+            Activity activity = _activityRepository.GetById(model.ActivityId);
+            DayActivity dayActivityToAdd = new DayActivity(customDayToEdit, activity, model.TimeOfDay);
+            customDayToEdit.AddDayActivity(dayActivityToAdd);
+            _customDayRepository.SaveChanges();
+            return dayActivityToAdd;
+        }
+
+        [HttpDelete]
+        [Route("activity/{date}/{timeOfDay}/{activityId}")]
+        public ActionResult<DayActivity> RemoveActivity(DateTime date, int activityId, TimeOfDay timeOfDay)
+        {
+            CustomDay dayToEdit = _customDayRepository.GetByDate(date);
+            DayActivity dayActivityToRemove =
+                    dayToEdit.DayActivities.SingleOrDefault(da => da.DayId == dayToEdit.DayId && da.ActivityId == activityId);
+            dayToEdit.RemoveDayActivity(dayActivityToRemove);
+            _customDayRepository.SaveChanges();
+            return dayActivityToRemove;
+        }
+
+
+        [HttpPost]
+        [Route("helper/{date}")]
+        public ActionResult<Helper> AddHelper(DateTime date, HelperDTO model)
+        {
+            CustomDay customDayToEdit = _customDayRepository.GetByDate(date);
+            User user = _userRepository.GetById(model.UserId);
+            Helper helperToAdd = new Helper(customDayToEdit, user);
+            customDayToEdit.AddHelper(helperToAdd);
+            _customDayRepository.SaveChanges();
+            return helperToAdd;
+        }
+
+        [HttpDelete]
+        [Route("helper/{date}/{userId}")]
+        public ActionResult<Helper> RemoveHelper(DateTime date, int userId)
+        {
+            CustomDay dayToEdit = _customDayRepository.GetByDate(date);
+            Helper helperToRemove = dayToEdit.Helpers.SingleOrDefault(h => h.DayId == dayToEdit.DayId && h.UserId == userId);
+            dayToEdit.RemoveHelper(helperToRemove);
+            _customDayRepository.SaveChanges();
+            return helperToRemove;
+        }
+
+        [HttpPost]
+        [Route("note/{date}")]
+        public ActionResult<Note> AddNote(DateTime date, NoteDTO model)
+        {
+            CustomDay customDayToEdit = _customDayRepository.GetByDate(date);
+            Note noteToAdd = new Note(model.NoteType, model.Content);
+            customDayToEdit.AddNote(noteToAdd);
+            _customDayRepository.SaveChanges();
+            return noteToAdd;
+        }
+
+        [HttpDelete]
+        [Route("note/{date}/{noteId}")]
+        public ActionResult<Note> RemoveNote(DateTime date, int noteId)
+        {
+            CustomDay dayToEdit = _customDayRepository.GetByDate(date);
+            Note noteToRemove = dayToEdit.Notes.SingleOrDefault(n => n.DayId == dayToEdit.DayId && n.NoteId == noteId);
+            dayToEdit.RemoveNote(noteToRemove);
+            _customDayRepository.SaveChanges();
+            return noteToRemove;
         }
     }
 }
