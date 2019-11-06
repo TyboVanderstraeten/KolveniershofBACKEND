@@ -10,6 +10,7 @@ namespace KolveniershofBACKEND.Data.Mappers
         {
             builder.ToTable("Day");
             builder.HasKey(d => d.DayId);
+            builder.Property(d => d.TemplateName).IsRequired();
             builder.Property(d => d.WeekNr).IsRequired();
             builder.Property(d => d.DayNr).IsRequired();
             builder.HasDiscriminator<string>("DayType")
