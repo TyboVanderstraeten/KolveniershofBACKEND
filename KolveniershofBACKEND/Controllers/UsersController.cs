@@ -46,31 +46,6 @@ namespace KolveniershofBACKEND.Controllers
         }
 
         [HttpGet]
-        [Route("day/user/{userId}/{date}")]
-        public ActionResult<CustomDay> GetDayForUser(int userId, DateTime date)
-        {
-            // Get the customday with the date
-            CustomDay customDay = _customDayRepository.GetByDate(date);
-            // DayActivities that our user attends
-            IEnumerable<DayActivity> dayActivitiesAttended = customDay.DayActivities.Where(da => da.Attendances.Any(a => a.UserId == userId)).ToList();
-            // Create new customday object, set values to customday, set dayactivities to those dayactivities attended by our user
-            CustomDay customDayUser = new CustomDay(
-                customDay.TemplateName,
-                customDay.WeekNr,
-                customDay.DayNr,
-                customDay.Date,
-                customDay.PreDish,
-                customDay.MainDish,
-                customDay.Dessert
-                );
-            customDayUser.DayId = customDay.DayId;
-            customDayUser.DayActivities = dayActivitiesAttended.ToList();
-            customDayUser.Helpers = customDay.Helpers;
-            customDayUser.Notes = customDay.Notes;
-            return customDayUser;
-        }
-
-        [HttpGet]
         [Route("group/{id}")]
         public ActionResult<IEnumerable<User>> GetAllFromGroup(int id)
         {

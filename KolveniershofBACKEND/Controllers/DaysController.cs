@@ -55,6 +55,29 @@ namespace KolveniershofBACKEND.Controllers
             return _customDayRepository.GetByDate(date);
         }
 
+
+        [HttpGet]
+        [Route("day/user/{userId}/{date}")]
+        public ActionResult<CustomDay> GetDayForUser(int userId, DateTime date)
+        {
+            CustomDay customDay = _customDayRepository.GetByDate(date);
+            IEnumerable<DayActivity> dayActivitiesAttended = customDay.DayActivities.Where(da => da.Attendances.Any(a => a.UserId == userId)).ToList();
+            CustomDay customDayUser = new CustomDay(
+                customDay.TemplateName,
+                customDay.WeekNr,
+                customDay.DayNr,
+                customDay.Date,
+                customDay.PreDish,
+                customDay.MainDish,
+                customDay.Dessert
+                );
+            customDayUser.DayId = customDay.DayId;
+            customDayUser.DayActivities = dayActivitiesAttended.ToList();
+            customDayUser.Helpers = customDay.Helpers;
+            customDayUser.Notes = customDay.Notes;
+            return customDayUser;
+        }
+
         [HttpGet]
         [Route("custom/day/absent/{date}")]
         public ActionResult<IEnumerable<User>> GetAbsentUsersForDay(DateTime date)
