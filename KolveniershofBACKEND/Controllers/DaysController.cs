@@ -1,32 +1,31 @@
-﻿using KolveniershofBACKEND.Data.Repositories.Interfaces;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using KolveniershofBACKEND.Data.Repositories.Interfaces;
 using KolveniershofBACKEND.Models.Domain;
 using KolveniershofBACKEND.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace KolveniershofBACKEND.Controllers
 {
     [ApiController]
     [Route("KolveniershofAPI/[controller]")]
-    public class SchedulerController : ControllerBase
+    public class DaysController : ControllerBase
     {
         private readonly IDayRepository _dayRepository;
         private readonly ICustomDayRepository _customDayRepository;
         private readonly IActivityRepository _activityRepository;
         private readonly IUserRepository _userRepository;
 
-        public SchedulerController(IDayRepository dayRepository, ICustomDayRepository customDayRepository,
-            IActivityRepository activityRepository, IUserRepository userRepository)
+        public DaysController(IDayRepository dayRepository, ICustomDayRepository customDayRepository,
+                              IActivityRepository activityRepository, IUserRepository userRepository)
         {
             _dayRepository = dayRepository;
             _customDayRepository = customDayRepository;
             _activityRepository = activityRepository;
             _userRepository = userRepository;
         }
-
-        #region CustomDay methods
 
         [HttpGet]
         [Route("custom/all")]
@@ -239,6 +238,5 @@ namespace KolveniershofBACKEND.Controllers
             _customDayRepository.SaveChanges();
             return dayToRemove;
         }
-        #endregion
     }
 }
