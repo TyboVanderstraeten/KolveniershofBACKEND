@@ -109,9 +109,9 @@ namespace KolveniershofBACKEND.Tests.Data
             #region init Days
             int dayId = 1;
 
-            Day1 = new Day(1, 1) { DayId = dayId++ };
-            Day2 = new Day(1, 2) { DayId = dayId++ };
-            Day3 = new Day(1, 3) { DayId = dayId++ };
+            Day1 = new Day("eerste_week_eerste_dag",1, 1) { DayId = dayId++ };
+            Day2 = new Day("eerste_week_tweede_dag",1, 2) { DayId = dayId++ };
+            Day3 = new Day("eerste_week_derde_dag",1, 3) { DayId = dayId++ };
 
             
             DayActivity1 = new DayActivity(Day1, Activity5, TimeOfDay.VOLLEDIG);
@@ -159,17 +159,17 @@ namespace KolveniershofBACKEND.Tests.Data
             Note2 = new Note(NoteType.VARIA, "Vandaag zullen er geen bekertjes aanwezig zijn");
             Notes = new[] { Note1, Note2 };
 
-            CustomDay1 = new CustomDay(1, 1, DateTime.Today, "Wortelsoep", "Kip zoetzuur", "chocomousse");
+            CustomDay1 = new CustomDay("eerste_week_eerste_dag",1, 1, DateTime.Today, "Wortelsoep", "Kip zoetzuur", "chocomousse");
             CustomDay1.DayActivities = DayActivities1;
             CustomDay1.Helpers = Helpers1;
             CustomDay1.Notes = Notes;
 
-            CustomDay2 = new CustomDay(1, 2, DateTime.Today.AddDays(1), "Wortelsoep", "Kip zoetzuur", "chocomousse");
+            CustomDay2 = new CustomDay("eerste_week_tweede_dag", 1, 2, DateTime.Today.AddDays(1), "Wortelsoep", "Kip zoetzuur", "chocomousse");
             CustomDay2.DayActivities = DayActivities2;
             CustomDay2.Helpers = Helpers2;
             CustomDay2.Notes = Notes;
 
-            CustomDay3 = new CustomDay(1, 3, DateTime.Today.AddDays(2), "Wortelsoep", "Kip zoetzuur", "chocomousse");
+            CustomDay3 = new CustomDay("eerste_week_derde_dag",1, 3, DateTime.Today.AddDays(2), "Wortelsoep", "Kip zoetzuur", "chocomousse");
             CustomDay3.DayActivities = DayActivities3;
             CustomDay3.Helpers = Helpers3;
             CustomDay3.Notes = Notes;

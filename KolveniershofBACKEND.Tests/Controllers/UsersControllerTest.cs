@@ -96,39 +96,39 @@ namespace KolveniershofBACKEND.Tests.Controllers
         }
         #endregion
 
-        #region GetAllFromGroup
-        [Fact]
-        public void GetAllFromGroup_Succeeds()
-        {
-            int groupNr = 2;
-            IEnumerable<User> group2 = _dummyDBContext.Users.ToList().Where(u => u.Group == groupNr);
-            _userRepository.Setup(a => a.GetAllFromGroup(groupNr)).Returns(group2);
-            ActionResult<IEnumerable<User>> actionResult = _controller.GetAllFromGroup(groupNr);
-            IList<User> users = actionResult.Value as IList<User>;
-            Assert.Equal("Rob", users.ToList().First().FirstName); //there is only 1 user in this list!
-        }
-        #endregion
+        //#region GetAllFromGroup
+        //[Fact]
+        //public void GetAllFromGroup_Succeeds()
+        //{
+        //    int groupNr = 2;
+        //    IEnumerable<User> group2 = _dummyDBContext.Users.ToList().Where(u => u.Group == groupNr);
+        //    _userRepository.Setup(a => a.GetAllFromGroup(groupNr)).Returns(group2);
+        //    ActionResult<IEnumerable<User>> actionResult = _controller.GetAllFromGroup(groupNr);
+        //    IList<User> users = actionResult.Value as IList<User>;
+        //    Assert.Equal("Rob", users.ToList().First().FirstName); //there is only 1 user in this list!
+        //}
+        //#endregion
 
         #region GetAllWithType
-        [Fact]
-        public void GetAllWithType_Succeeds()
-        {
-            UserType userType = UserType.CLIENT;
-            IEnumerable<User> clientUsers = _dummyDBContext.Users.ToList().Where(u => u.UserType == userType);
-            _userRepository.Setup(u => u.GetAllWithType(userType)).Returns(clientUsers);
+        //[Fact]
+        //public void GetAllWithType_Succeeds()
+        //{
+        //    UserType userType = UserType.CLIENT;
+        //    IEnumerable<User> clientUsers = _dummyDBContext.Users.ToList().Where(u => u.UserType == userType);
+        //    _userRepository.Setup(u => u.GetAllWithType(userType)).Returns(clientUsers);
 
-            ActionResult<IEnumerable<User>> actionResult = _controller.GetAllWithType("client");
-            IList<User> users = actionResult.Value as IList<User>;
+        //    ActionResult<IEnumerable<User>> actionResult = _controller.GetAllWithType("client");
+        //    IList<User> users = actionResult.Value as IList<User>;
 
-            Assert.Equal("Rob", users.ToList().First().FirstName); // there's only 1 user in this list
-        }
+        //    Assert.Equal("Rob", users.ToList().First().FirstName); // there's only 1 user in this list
+        //}
 
-        [Fact]
-        public void GetAllWithType_Fails_TypeDoesNotExist()
-        {
-            ActionResult<IEnumerable<User>> actionResult = _controller.GetAllWithType("wrongType");
-            Assert.IsType<BadRequestObjectResult>(actionResult.Result);
-        }
+        //[Fact]
+        //public void GetAllWithType_Fails_TypeDoesNotExist()
+        //{
+        //    ActionResult<IEnumerable<User>> actionResult = _controller.GetAllWithType("wrongType");
+        //    Assert.IsType<BadRequestObjectResult>(actionResult.Result);
+        //}
         #endregion
 
         #region GetById
