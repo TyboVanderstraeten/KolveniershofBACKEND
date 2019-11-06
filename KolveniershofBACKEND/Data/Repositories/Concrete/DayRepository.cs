@@ -26,9 +26,10 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
                         .ToList();
         }
 
-        public IEnumerable<Day> GetAllByWeek(int weekNr)
+        public IEnumerable<Day> GetAllByWeek(string templateName, int weekNr)
         {
-            return _days.Where(d => !(d is CustomDay) && d.WeekNr == weekNr)
+            return _days.Where(d => !(d is CustomDay) && d.WeekNr == weekNr
+            && d.TemplateName.ToLower().Trim().Equals(templateName.ToLower().Trim()))
                         .Include(d => d.DayActivities).ThenInclude(da => da.Activity)
                         .Include(d => d.Helpers).ThenInclude(h => h.User)
                         .ToList();
@@ -36,7 +37,8 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
 
         public IEnumerable<Day> GetAllByTemplateName(string templateName)
         {
-            return _days.Where(d => !(d is CustomDay) && d.TemplateName.Equals(templateName))
+            return _days.Where(d => !(d is CustomDay)
+            && d.TemplateName.ToLower().Trim().Equals(templateName.ToLower().Trim()))
                         .Include(d => d.DayActivities).ThenInclude(da => da.Activity)
                         .Include(d => d.Helpers).ThenInclude(h => h.User)
                         .ToList();
@@ -49,9 +51,10 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
                         .SingleOrDefault(d => d.DayId == id);
         }
 
-        public Day GetByWeekAndDay(int weekNr, int dayNr)
+        public Day GetByWeekAndDay(string templateName, int weekNr, int dayNr)
         {
-            return _days.Where(d => !(d is CustomDay))
+            return _days.Where(d => !(d is CustomDay)
+            && d.TemplateName.ToLower().Trim().Equals(templateName.ToLower().Trim()))
                         .Include(d => d.DayActivities).ThenInclude(da => da.Activity)
                         .Include(d => d.Helpers).ThenInclude(h => h.User)
                         .SingleOrDefault(d => d.WeekNr == weekNr && d.DayNr == dayNr);
