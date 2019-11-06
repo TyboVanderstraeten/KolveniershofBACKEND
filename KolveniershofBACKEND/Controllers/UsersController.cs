@@ -54,6 +54,7 @@ namespace KolveniershofBACKEND.Controllers
             IEnumerable<DayActivity> dayActivitiesAttended = customDay.DayActivities.Where(da => da.Attendances.Any(a => a.UserId == userId)).ToList();
             // Create new customday object, set values to customday, set dayactivities to those dayactivities attended by our user
             CustomDay customDayUser = new CustomDay(
+                customDay.TemplateName,
                 customDay.WeekNr,
                 customDay.DayNr,
                 customDay.Date,

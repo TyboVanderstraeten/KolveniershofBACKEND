@@ -206,10 +206,10 @@ namespace KolveniershofBACKEND.Controllers
         public ActionResult<CustomDay> AddCustomDay(CustomDayDTO model)
         {
             // Choose template day
-            Day templateDayChosen = _dayRepository.GetByWeekAndDay(model.WeekNr, model.DayNr);
+            Day templateDayChosen = _dayRepository.GetByWeekAndDay(model.TemplateName, model.WeekNr, model.DayNr);
 
             // Create custom day
-            CustomDay customDayToCreate = new CustomDay(templateDayChosen.WeekNr, templateDayChosen.DayNr, model.Date, model.PreDish, model.MainDish, model.Dessert);
+            CustomDay customDayToCreate = new CustomDay(templateDayChosen.TemplateName, templateDayChosen.WeekNr, templateDayChosen.DayNr, model.Date, model.PreDish, model.MainDish, model.Dessert);
 
             // Inject template collections into customday collections
             foreach (DayActivity dayActivity in templateDayChosen.DayActivities)
@@ -227,14 +227,6 @@ namespace KolveniershofBACKEND.Controllers
             _customDayRepository.Add(customDayToCreate);
             _customDayRepository.SaveChanges();
             return customDayToCreate;
-
-            /*
-             * Now you can call other methods, for instance:
-             * - Adding helpers
-             * - Adding activities
-             * - Adding notes
-             * - ...
-             */
         }
 
         [HttpPost]
@@ -313,9 +305,10 @@ namespace KolveniershofBACKEND.Controllers
         public ActionResult<Day> EditDay(DateTime date, CustomDayDTO model)
         {
             CustomDay dayToEdit = _customDayRepository.GetByDate(date);
-            if ((dayToEdit.WeekNr != model.WeekNr) || (dayToEdit.DayNr != model.DayNr))
+            if (!(dayToEdit.WeekNr.Equals(model.TemplateName)) || (dayToEdit.WeekNr != model.WeekNr) || (dayToEdit.DayNr != model.DayNr))
             {
-                Day templateDayChosen = _dayRepository.GetByWeekAndDay(model.WeekNr, model.DayNr);
+                Day templateDayChosen = _dayRepository.GetByWeekAndDay(model.TemplateName, model.WeekNr, model.DayNr);
+                dayToEdit.TemplateName = templateDayChosen.TemplateName;
                 dayToEdit.WeekNr = templateDayChosen.WeekNr;
                 dayToEdit.DayNr = templateDayChosen.WeekNr;
                 dayToEdit.DayActivities = new List<DayActivity>();
