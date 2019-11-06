@@ -17,13 +17,18 @@ namespace KolveniershofBACKEND.Controllers
         private readonly IDayRepository _dayRepository;
         private readonly IActivityRepository _activityRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IDayActivityRepository _dayActivityRepository;
+        private readonly IHelperRepository _helperRepository;
 
         public TemplatesController(IDayRepository dayRepository, IActivityRepository activityRepository,
-            IUserRepository userRepository)
+            IUserRepository userRepository, IDayActivityRepository dayActivityRepository,
+            IHelperRepository helperRepository)
         {
             _dayRepository = dayRepository;
             _activityRepository = activityRepository;
             _userRepository = userRepository;
+            _dayActivityRepository = dayActivityRepository;
+            _helperRepository = helperRepository;
         }
 
         [HttpGet]
@@ -103,8 +108,7 @@ namespace KolveniershofBACKEND.Controllers
         public ActionResult<DayActivity> RemoveActivity(string templateName, int weekNr, int dayNr, int activityId, TimeOfDay timeOfDay)
         {
             Day dayToEdit = _dayRepository.GetByWeekAndDay(templateName, weekNr, dayNr);
-            DayActivity dayActivityToRemove =
-                    dayToEdit.DayActivities.SingleOrDefault(da => da.DayId == dayToEdit.DayId && da.ActivityId == activityId && da.TimeOfDay.Equals(timeOfDay));
+            DayActivity dayActivityToRemove = _dayActivityRepository.GetTemplateDayActivity(templateName, weekNr, dayNr, timeOfDay, activityId);
             dayToEdit.RemoveDayActivity(dayActivityToRemove);
             _dayRepository.SaveChanges();
             return dayActivityToRemove;
@@ -124,11 +128,11 @@ namespace KolveniershofBACKEND.Controllers
 
 
         [HttpDelete]
-        [Route("helper/{templateName}/{weekNr}/{dayNr}/{id}")]
-        public ActionResult<Helper> RemoveHelper(string templateName, int weekNr, int dayNr, int id)
+        [Route("helper/{templateName}/{weekNr}/{dayNr}/{userId}")]
+        public ActionResult<Helper> RemoveHelper(string templateName, int weekNr, int dayNr, int userId)
         {
             Day dayToEdit = _dayRepository.GetByWeekAndDay(templateName, weekNr, dayNr);
-            Helper helperToRemove = dayToEdit.Helpers.SingleOrDefault(h => h.DayId == dayToEdit.DayId && h.UserId == id);
+            Helper helperToRemove = _helperRepository.GetTemplateDayHelper(templateName, weekNr, dayNr, userId)
             dayToEdit.RemoveHelper(helperToRemove);
             _dayRepository.SaveChanges();
             return helperToRemove;
