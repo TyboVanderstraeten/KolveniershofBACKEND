@@ -27,6 +27,7 @@ namespace KolveniershofBACKEND.Controllers
         private readonly IConfiguration _configuration;
         private readonly IUserRepository _userRepository;
         private readonly ICustomDayRepository _customDayRepository;
+
         public UsersController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager,
             IConfiguration configuration, IUserRepository userRepository, ICustomDayRepository customDayRepository)
         {
@@ -38,46 +39,21 @@ namespace KolveniershofBACKEND.Controllers
         }
 
         [HttpGet]
-        [Route("all")]
         public ActionResult<IEnumerable<User>> GetAll()
         {
             return _userRepository.GetAll().ToList();
         }
 
         [HttpGet]
-        [Route("day/user/{userId}/{date}")]
-        public ActionResult<CustomDay> GetDayForUser(int userId, DateTime date)
-        {
-            // Get the customday with the date
-            CustomDay customDay = _customDayRepository.GetByDate(date);
-            // DayActivities that our user attends
-            IEnumerable<DayActivity> dayActivitiesAttended = customDay.DayActivities.Where(da => da.Attendances.Any(a => a.UserId == userId)).ToList();
-            // Create new customday object, set values to customday, set dayactivities to those dayactivities attended by our user
-            CustomDay customDayUser = new CustomDay(
-                customDay.WeekNr,
-                customDay.DayNr,
-                customDay.Date,
-                customDay.PreDish,
-                customDay.MainDish,
-                customDay.Dessert
-                );
-            customDayUser.DayId = customDay.DayId;
-            customDayUser.DayActivities = dayActivitiesAttended.ToList();
-            customDayUser.Helpers = customDay.Helpers;
-            customDayUser.Notes = customDay.Notes;
-            return customDayUser;
-        }
-
-        [HttpGet]
         [Route("group/{id}")]
-        public ActionResult<IEnumerable<User>> GetAllFromGroup(int id)
+        public ActionResult<IEnumerable<User>> GetAll(int groupId)
         {
-            return _userRepository.GetAllFromGroup(id).ToList();
+            return _userRepository.GetAllFromGroup(groupId).ToList();
         }
 
         [HttpGet]
-        [Route("type/{type}")]
-        public ActionResult<IEnumerable<User>> GetAllWithType(string type)
+        [Route("{type}")]
+        public ActionResult<IEnumerable<User>> GetAll(string type)
         {
             if (Enum.IsDefined(typeof(UserType), type.ToUpper()))
             {
@@ -90,28 +66,21 @@ namespace KolveniershofBACKEND.Controllers
         }
 
         [HttpGet]
-        [Route("{id}/days/weekend")]
-        public ActionResult<IEnumerable<Models.Domain.WeekendDay>> GetWeekendDaysFromUser(int id)
+        [Route("{userId}")]
+        public ActionResult<User> GetById(int userId)
         {
-            return _userRepository.GetWeekendDaysFromUser(id).ToList();
+            return _userRepository.GetById(userId);
         }
 
         [HttpGet]
-        [Route("{id}")]
-        public ActionResult<User> GetById(int id)
-        {
-            return _userRepository.GetById(id);
-        }
-
-        [HttpGet]
-        [Route("email/{email}")]
+        [Route("{email}")]
         public ActionResult<User> GetByEmail(string email)
         {
             return _userRepository.GetByEmail(email);
         }
 
         [HttpGet]
-        [Route("email/available")]
+        [Route("availability/{email}")]
         public async Task<ActionResult<bool>> CheckAvailibilityEmail(string email)
         {
             IdentityUser identityUser = await _userManager.FindByEmailAsync(email);
@@ -135,7 +104,6 @@ namespace KolveniershofBACKEND.Controllers
         }
 
         [HttpPost]
-        [Route("new")]
         public async Task<ActionResult<User>> Add(UserDTO model)
         {
             try
@@ -179,7 +147,6 @@ namespace KolveniershofBACKEND.Controllers
         // Works 90% off the time, sometimes produces an error: using result of async call to edit somewhere else, doesn't always happen fast enough
         // NEED TO FIX
         [HttpPut]
-        [Route("edit")]
         public ActionResult<User> Edit(UserDTO model)
         {
             User userToEdit = _userRepository.GetById(model.UserId);
@@ -202,10 +169,10 @@ namespace KolveniershofBACKEND.Controllers
         // Works 90% off the time, sometimes produces an error: using result of async call to remove user, doesn't always happen fast enough
         // NEED TO FIX
         [HttpDelete]
-        [Route("remove/{id}")]
-        public async Task<ActionResult<User>> Remove(int id)
+        [Route("{userId}")]
+        public async Task<ActionResult<User>> Remove(int userId)
         {
-            User userToDelete = _userRepository.GetById(id);
+            User userToDelete = _userRepository.GetById(userId);
 
             if (userToDelete == null)
             {
@@ -221,6 +188,7 @@ namespace KolveniershofBACKEND.Controllers
             }
         }
 
+        #region Private methods
         private async Task<string> GetToken(IdentityUser user)
         {
             var claims = new List<Claim>() {
@@ -247,5 +215,6 @@ namespace KolveniershofBACKEND.Controllers
             var result = await _signInManager.CheckPasswordSignInAsync(identityUser, password, false);
             return result.Succeeded;
         }
+        #endregion
     }
 }

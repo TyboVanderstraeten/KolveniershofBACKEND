@@ -16,7 +16,7 @@ namespace KolveniershofBACKEND.Models.Domain
             Notes = new List<Note>();
         }
 
-        public CustomDay(int weekNr, int dayNr, DateTime date, string preDish, string mainDish, string dessert) : base(weekNr, dayNr)
+        public CustomDay(string templateName, int weekNr, int dayNr, DateTime date, string preDish, string mainDish, string dessert) : base(templateName, weekNr, dayNr)
         {
             Date = date;
             PreDish = preDish;

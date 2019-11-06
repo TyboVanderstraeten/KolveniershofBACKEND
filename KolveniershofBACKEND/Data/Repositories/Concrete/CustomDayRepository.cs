@@ -57,28 +57,6 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
                               .ToList();
         }
 
-        public IEnumerable<User> GetAttendedClientsForActivity(DateTime date, int activityId)
-        {
-            return _customDays.Where(d => d.Date.Date == date.Date)
-                              .SelectMany(d => d.DayActivities
-                                    .Where(da => da.ActivityId == activityId)
-                                    .SelectMany(da => da.Attendances
-                                            .Select(a => a.User)))
-                                    .Where(u => u.UserType.Equals(UserType.CLIENT))
-                                    .ToList();
-        }
-
-        public IEnumerable<User> GetAttendedPersonnelForActivity(DateTime date, int activityId)
-        {
-            return _customDays.Where(d => d.Date.Date == date.Date)
-                  .SelectMany(d => d.DayActivities
-                        .Where(da => da.ActivityId == activityId)
-                        .SelectMany(da => da.Attendances
-                                .Select(a => a.User)))
-                        .Where(u => !(u.UserType.Equals(UserType.CLIENT)))
-                        .ToList();
-        }
-
         public IEnumerable<Note> GetNotesForDay(DateTime date)
         {
             return _customDays.Where(d => d.Date.Date == date.Date)
