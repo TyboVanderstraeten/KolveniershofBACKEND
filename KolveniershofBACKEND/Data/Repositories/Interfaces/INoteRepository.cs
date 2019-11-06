@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace KolveniershofBACKEND.Data.Repositories.Interfaces
 {
-    public interface IHelperRepository
+    public interface INoteRepository
     {
-        Helper GetTemplateDayHelper(string templateName, int weekNr, int dayNr, int userId);
-        Helper GetCustomDayHelper(DateTime date, int userId);
+        Note GetCustomDayNote(DateTime date, int noteId);
         void SaveChanges();
     }
 }

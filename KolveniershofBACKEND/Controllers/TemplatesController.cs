@@ -132,7 +132,7 @@ namespace KolveniershofBACKEND.Controllers
         public ActionResult<Helper> RemoveHelper(string templateName, int weekNr, int dayNr, int userId)
         {
             Day dayToEdit = _dayRepository.GetByWeekAndDay(templateName, weekNr, dayNr);
-            Helper helperToRemove = _helperRepository.GetTemplateDayHelper(templateName, weekNr, dayNr, userId)
+            Helper helperToRemove = _helperRepository.GetTemplateDayHelper(templateName, weekNr, dayNr, userId);
             dayToEdit.RemoveHelper(helperToRemove);
             _dayRepository.SaveChanges();
             return helperToRemove;

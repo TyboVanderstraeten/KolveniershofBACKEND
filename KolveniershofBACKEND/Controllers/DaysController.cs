@@ -16,15 +16,23 @@ namespace KolveniershofBACKEND.Controllers
         private readonly IDayRepository _dayRepository;
         private readonly ICustomDayRepository _customDayRepository;
         private readonly IActivityRepository _activityRepository;
+        private readonly IDayActivityRepository _dayActivityRepository;
+        private readonly IHelperRepository _helperRepository;
         private readonly IUserRepository _userRepository;
+        private readonly INoteRepository _noteRepository;
 
         public DaysController(IDayRepository dayRepository, ICustomDayRepository customDayRepository,
-                              IActivityRepository activityRepository, IUserRepository userRepository)
+                              IActivityRepository activityRepository, IUserRepository userRepository,
+                              IDayActivityRepository dayActivityRepository, IHelperRepository helperRepository,
+                              INoteRepository noteRepository)
         {
             _dayRepository = dayRepository;
             _customDayRepository = customDayRepository;
             _activityRepository = activityRepository;
             _userRepository = userRepository;
+            _dayActivityRepository = dayActivityRepository;
+            _helperRepository = helperRepository;
+            _noteRepository = noteRepository;
         }
 
         [HttpGet]
@@ -185,8 +193,7 @@ namespace KolveniershofBACKEND.Controllers
         public ActionResult<DayActivity> RemoveActivity(DateTime date, int activityId, TimeOfDay timeOfDay)
         {
             CustomDay dayToEdit = _customDayRepository.GetByDate(date);
-            DayActivity dayActivityToRemove =
-                    dayToEdit.DayActivities.SingleOrDefault(da => da.DayId == dayToEdit.DayId && da.ActivityId == activityId);
+            DayActivity dayActivityToRemove = _dayActivityRepository.GetCustomDayActivity(date, timeOfDay, activityId);
             dayToEdit.RemoveDayActivity(dayActivityToRemove);
             _customDayRepository.SaveChanges();
             return dayActivityToRemove;
@@ -210,7 +217,7 @@ namespace KolveniershofBACKEND.Controllers
         public ActionResult<Helper> RemoveHelper(DateTime date, int userId)
         {
             CustomDay dayToEdit = _customDayRepository.GetByDate(date);
-            Helper helperToRemove = dayToEdit.Helpers.SingleOrDefault(h => h.DayId == dayToEdit.DayId && h.UserId == userId);
+            Helper helperToRemove = _helperRepository.GetCustomDayHelper(date, userId);
             dayToEdit.RemoveHelper(helperToRemove);
             _customDayRepository.SaveChanges();
             return helperToRemove;
@@ -232,7 +239,7 @@ namespace KolveniershofBACKEND.Controllers
         public ActionResult<Note> RemoveNote(DateTime date, int noteId)
         {
             CustomDay dayToEdit = _customDayRepository.GetByDate(date);
-            Note noteToRemove = dayToEdit.Notes.SingleOrDefault(n => n.DayId == dayToEdit.DayId && n.NoteId == noteId);
+            Note noteToRemove = _noteRepository.GetCustomDayNote(date, noteId);
             dayToEdit.RemoveNote(noteToRemove);
             _customDayRepository.SaveChanges();
             return noteToRemove;

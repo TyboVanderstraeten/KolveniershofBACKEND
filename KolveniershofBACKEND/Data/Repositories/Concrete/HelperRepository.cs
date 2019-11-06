@@ -2,9 +2,7 @@
 using KolveniershofBACKEND.Models.Domain;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace KolveniershofBACKEND.Data.Repositories.Concrete
 {
@@ -12,11 +10,13 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
     {
         private readonly DBContext _dbContext;
         private readonly DbSet<Day> _days;
+        private readonly DbSet<CustomDay> _customDays;
 
         public HelperRepository(DBContext dbContext)
         {
             _dbContext = dbContext;
             _days = dbContext.Days;
+            _customDays = dbContext.CustomDays;
         }
 
         public Helper GetTemplateDayHelper(string templateName, int weekNr, int dayNr, int userId)
@@ -25,6 +25,14 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
                               .SingleOrDefault(d => d.TemplateName.ToLower().Trim().Equals(templateName.ToLower().Trim()) && d.WeekNr == weekNr && d.DayNr == dayNr)
                               .Helpers
                               .SingleOrDefault(h => h.UserId == userId);
+        }
+
+        public Helper GetCustomDayHelper(DateTime date, int userId)
+        {
+            return _customDays.Include(d => d.Helpers).ThenInclude(h => h.User)
+                  .SingleOrDefault(d => d.Date.Date == date.Date)
+                  .Helpers
+                  .SingleOrDefault(h => h.UserId == userId);
         }
 
         public void SaveChanges()
