@@ -14,17 +14,19 @@ namespace KolveniershofBACKEND.Controllers
     public class WeekendsController : Controller
     {
         private readonly IUserRepository _userRepository;
+        private readonly IWeekendDayRepository _weekendDayRepository;
 
-        public WeekendsController(IUserRepository userRepository)
+        public WeekendsController(IUserRepository userRepository, IWeekendDayRepository weekendDayRepository)
         {
             _userRepository = userRepository;
+            _weekendDayRepository = weekendDayRepository;
         }
 
         [HttpGet]
         [Route("{date}/{userId}")]
         public ActionResult<WeekendDay> Get(DateTime date, int userId)
         {
-            return _userRepository.GetById(userId).WeekendDays.SingleOrDefault(wd => wd.Date.Date == date.Date);
+            return _weekendDayRepository.GetByDate(date, userId);
         }
 
         [HttpPost]
@@ -38,21 +40,21 @@ namespace KolveniershofBACKEND.Controllers
         }
 
         [HttpPut]
-        [Route("{weekendDayId}/{userId}")]
-        public ActionResult<WeekendDay> Edit(int weekendDayId, int userId, CommentDTO model)
+        [Route("{date}/{userId}")]
+        public ActionResult<WeekendDay> Edit(DateTime date, int userId, CommentDTO model)
         {
-            WeekendDay weekendDayToEdit = _userRepository.GetById(userId).WeekendDays.SingleOrDefault(w => w.WeekendDayId == weekendDayId);
+            WeekendDay weekendDayToEdit = _weekendDayRepository.GetByDate(date, userId);
             weekendDayToEdit.Comment = model.Comment;
             _userRepository.SaveChanges();
             return weekendDayToEdit;
         }
 
         [HttpDelete]
-        [Route("{weekendDayId}/{userId}")]
-        public ActionResult<WeekendDay> Remove(int weekendDayId, int userId)
+        [Route("{date}/{userId}")]
+        public ActionResult<WeekendDay> Remove(DateTime date, int userId)
         {
+            WeekendDay weekendDayToRemove = _weekendDayRepository.GetByDate(date, userId);
             User user = _userRepository.GetById(userId);
-            WeekendDay weekendDayToRemove = user.WeekendDays.SingleOrDefault(w => w.WeekendDayId == weekendDayId);
             user.RemoveWeekendDay(weekendDayToRemove);
             _userRepository.SaveChanges();
             return weekendDayToRemove;
