@@ -28,29 +28,28 @@ namespace KolveniershofBACKEND.Controllers
         }
 
         [HttpGet]
-        [Route("custom/all")]
-        public ActionResult<IEnumerable<Day>> GetAllCustomDays()
+        public ActionResult<IEnumerable<CustomDay>> GetAll()
         {
             return _customDayRepository.GetAll().ToList();
         }
 
         [HttpGet]
         [Route("custom/range/{start}/{end}")]
-        public ActionResult<IEnumerable<Day>> GetAllCustomDaysInRange(DateTime start, DateTime end)
+        public ActionResult<IEnumerable<CustomDay>> GetAllCustomDaysInRange(DateTime start, DateTime end)
         {
             return _customDayRepository.GetAllInRange(start, end).ToList();
         }
 
         [HttpGet]
         [Route("custom/day/{id}")]
-        public ActionResult<Day> GetCustomDayById(int id)
+        public ActionResult<CustomDay> GetCustomDayById(int id)
         {
             return _customDayRepository.GetById(id);
         }
 
         [HttpGet]
         [Route("custom/day/date/{date}")]
-        public ActionResult<Day> GetCustomDayByDate(DateTime date)
+        public ActionResult<CustomDay> GetCustomDayByDate(DateTime date)
         {
             return _customDayRepository.GetByDate(date);
         }
@@ -207,7 +206,7 @@ namespace KolveniershofBACKEND.Controllers
 
         [HttpPut]
         [Route("custom/day/edit/{date}")]
-        public ActionResult<Day> EditDay(DateTime date, CustomDayDTO model)
+        public ActionResult<CustomDay> EditDay(DateTime date, CustomDayDTO model)
         {
             CustomDay dayToEdit = _customDayRepository.GetByDate(date);
             if (!(dayToEdit.WeekNr.Equals(model.TemplateName)) || (dayToEdit.WeekNr != model.WeekNr) || (dayToEdit.DayNr != model.DayNr))
@@ -240,7 +239,7 @@ namespace KolveniershofBACKEND.Controllers
 
         [HttpDelete]
         [Route("custom/day/delete/{date}")]
-        public ActionResult<Day> RemoveDay(DateTime date)
+        public ActionResult<CustomDay> RemoveDay(DateTime date)
         {
             CustomDay dayToRemove = _customDayRepository.GetByDate(date);
             _customDayRepository.Remove(dayToRemove);
