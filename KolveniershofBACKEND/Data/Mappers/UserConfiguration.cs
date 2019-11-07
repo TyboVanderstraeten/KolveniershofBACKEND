@@ -15,12 +15,12 @@ namespace KolveniershofBACKEND.Data.Mappers
             builder.Property(u => u.FirstName).IsRequired();
             builder.Property(u => u.LastName).IsRequired();
             builder.Property(u => u.Email).IsRequired();
-            builder.Property(u => u.ProfilePicture).IsRequired();
+            builder.Property(u => u.ProfilePicture).IsRequired(false);
             builder.Property(u => u.Group).IsRequired(false);
             builder.HasMany(u => u.WeekendDays)
                 .WithOne()
                 .IsRequired()
-                .HasForeignKey(w=>w.UserId)
+                .HasForeignKey(w => w.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }
