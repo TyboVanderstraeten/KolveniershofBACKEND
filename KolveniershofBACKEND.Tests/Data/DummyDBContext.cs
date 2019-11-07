@@ -89,7 +89,7 @@ namespace KolveniershofBACKEND.Tests.Data
 
         public Note Note1 { get; }
         public Note Note2 { get; }
-        public Note[] Notes { get; } 
+        public IList<Note> Notes { get; } 
         #endregion
 
 
@@ -203,7 +203,9 @@ namespace KolveniershofBACKEND.Tests.Data
             #region init CustomDays
             Note1 = new Note(NoteType.VERVOER, "Florian neemt de bus niet vandaag");
             Note2 = new Note(NoteType.VARIA, "Vandaag zullen er geen bekertjes aanwezig zijn");
-            Notes = new[] { Note1, Note2 };
+            Notes = new List<Note>();
+            Notes.Add(Note1);
+            Notes.Add(Note2);
 
             CustomDay1 = new CustomDay("eerste_week_eerste_dag",1, 1, DateTime.Today, "Wortelsoep", "Kip zoetzuur", "chocomousse");
             CustomDay1.DayActivities = DayActivities1;

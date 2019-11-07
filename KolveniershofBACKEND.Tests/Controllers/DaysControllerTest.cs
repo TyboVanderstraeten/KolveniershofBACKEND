@@ -211,14 +211,43 @@ namespace KolveniershofBACKEND.Tests.Controllers
             ActionResult<DayActivity> actionResult = _controller.RemoveActivity(date, activityId, timeOfDay);
             Assert.Equal("Koken", actionResult.Value.Activity.Name);
             _customDayRepository.Verify(a => a.SaveChanges(), Times.Once);
-        } 
+        }
         #endregion
 
-        //[Fact] //TODO MICHAEL
-        //public void AddNoteToDay_Succeeds()
-        //{
+        #region Add / Remove helper
+        [Fact] 
+        public void AddHelper_Succeeds()
+        {
+            DateTime date = DateTime.Today;
 
-        //}
+            HelperDTO helperDTO = new HelperDTO()
+            {
+                UserId = 1
+            };
+
+            _customDayRepository.Setup(c => c.GetByDate(date)).Returns(_dummyDBContext.CustomDay1);
+            _userRepository.Setup(u => u.GetById(helperDTO.UserId)).Returns(_dummyDBContext.U1);
+
+            ActionResult<Helper> actionResult = _controller.AddHelper(date, helperDTO);
+            Assert.Equal("Tybo", actionResult.Value.User.FirstName);
+            _customDayRepository.Verify(c => c.SaveChanges(), Times.Once());
+        }
+
+        [Fact] 
+        public void RemoveHelper_Succeeds()
+        {
+            DateTime date = DateTime.Today;
+            int userId = 1;
+
+            _customDayRepository.Setup(c => c.GetByDate(date)).Returns(_dummyDBContext.CustomDay1);
+            _helperRepository.Setup(h => h.GetCustomDayHelper(date, userId)).Returns(_dummyDBContext.Helper1);
+
+            ActionResult<Helper> actionResult = _controller.RemoveHelper(date, userId);
+            Assert.Equal("Tybo", actionResult.Value.User.FirstName);
+            _customDayRepository.Verify(c => c.SaveChanges(), Times.Once());
+        }
+
+        #endregion
 
     }
 }
