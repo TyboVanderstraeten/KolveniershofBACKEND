@@ -146,8 +146,29 @@ namespace KolveniershofBACKEND.Tests.Controllers
         } 
         #endregion
 
+        [Fact]
+        public void Edit_Succeeds()
+        {
+            DateTime date = DateTime.Today;
 
+            CustomDayDTO dayDTO = new CustomDayDTO()
+            {
+                TemplateName = "eerste_week_eerste_dag",
+                DayNr = 1,
+                WeekNr = 1,
+                Date = DateTime.Today,
+                PreDish = "Kervelsoep",
+                MainDish = "Kip",
+                Dessert = "Chocomousse",
+                Notes = null
+            };
 
+            _customDayRepository.Setup(c => c.GetByDate(date)).Returns(_dummyDBContext.CustomDay1);
+            _dayRepository.Setup(d => d.GetByWeekAndDay(dayDTO.TemplateName, dayDTO.WeekNr, dayDTO.DayNr)).Returns(_dummyDBContext.Day1);
+
+            ActionResult<CustomDay> actionResult = _controller.Edit(date, dayDTO);
+            Assert.Equal("Chocomousse", actionResult.Value.Dessert);
+        }
         //[Fact] //TODO MICHAEL
         //public void AddActivityToDay_Succeeds()
         //{
