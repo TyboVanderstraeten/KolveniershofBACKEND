@@ -1,11 +1,40 @@
-﻿using System;
+﻿using KolveniershofBACKEND.Controllers;
+using KolveniershofBACKEND.Data.Repositories.Interfaces;
+using KolveniershofBACKEND.Tests.Data;
+using Moq;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace KolveniershofBACKEND.Tests.Controllers
 {
-    class DaysControllerTest
+    public class DaysControllerTest
     {
+        private Mock<IDayRepository> _dayRepository;
+        private Mock<ICustomDayRepository> _customDayRepository;
+        private Mock<IActivityRepository> _activityRepository;
+        private Mock<IDayActivityRepository> _dayActivityRepository;
+        private Mock<IHelperRepository> _helperRepository;
+        private Mock<IUserRepository>_userRepository;
+        private Mock<INoteRepository> _noteRepository;
+
+        private DummyDBContext _dummyDBContext;
+        private DaysController _controller;
+
+        public DaysControllerTest()
+        {
+            _dayRepository = new Mock<IDayRepository>();
+            _customDayRepository = new Mock<ICustomDayRepository>();
+            _activityRepository = new Mock<IActivityRepository>();
+            _dayActivityRepository = new Mock<IDayActivityRepository>();
+            _helperRepository = new Mock<IHelperRepository>();
+            _userRepository = new Mock<IUserRepository>();
+            _noteRepository = new Mock<INoteRepository>();
+
+            _dummyDBContext = new DummyDBContext();
+            _controller = new DaysController(_dayRepository.Object, _customDayRepository.Object, _activityRepository.Object, _userRepository.Object,
+                _dayActivityRepository.Object, _helperRepository.Object, _noteRepository.Object);
+        }
 
         //#region CustomDay
         //#region Get
