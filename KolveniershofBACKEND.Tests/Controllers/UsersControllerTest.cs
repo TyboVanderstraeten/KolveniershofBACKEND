@@ -307,6 +307,5 @@ namespace KolveniershofBACKEND.Tests.Controllers
             _userRepository.Verify(u => u.SaveChanges(), Times.Once());
         } 
         #endregion
-
     }
 }

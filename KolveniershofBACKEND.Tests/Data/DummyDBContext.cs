@@ -79,6 +79,9 @@ namespace KolveniershofBACKEND.Tests.Data
         public Attendance Attendance2 { get; }
         public Attendance Attendance3 { get; }
         public Attendance Attendance4 { get; }
+        public Attendance Attendance5 { get; }
+        public Attendance Attendance6 { get; }
+
 
         public IList<Attendance> Attendances1 { get; }
         public IList<Attendance> Attendances2 { get; }
@@ -135,7 +138,11 @@ namespace KolveniershofBACKEND.Tests.Data
             DayActivity1 = new DayActivity(Day1, Activity5, TimeOfDay.VOLLEDIG);
 
             Attendance1 = new Attendance(DayActivity1, U1);
+            Attendance5 = new Attendance(DayActivity1, U2);
+            Attendance6 = new Attendance(DayActivity1, U2);
             Attendances1.Add(Attendance1);
+            Attendances1.Add(Attendance5);
+            Attendances1.Add(Attendance6);
             DayActivity1.Attendances = Attendances1;
 
             DayActivity2 = new DayActivity(Day1, Activity2, TimeOfDay.NAMIDDAG);
@@ -153,7 +160,7 @@ namespace KolveniershofBACKEND.Tests.Data
             DayActivity4 = new DayActivity(Day1, Activity4, TimeOfDay.AVOND);
 
             Attendance4 = new Attendance(DayActivity4, U1);
-            Attendances1.Add(Attendance4);
+            Attendances4.Add(Attendance4);
             DayActivity4.Attendances = Attendances4;
 
             DayActivities1 = new List<DayActivity>();
