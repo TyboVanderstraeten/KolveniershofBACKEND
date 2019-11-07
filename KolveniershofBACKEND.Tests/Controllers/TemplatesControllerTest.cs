@@ -145,8 +145,6 @@ namespace KolveniershofBACKEND.Tests.Controllers
             DayDTO dayDTO = new DayDTO()
             {
                 TemplateName = "tweede_week_eerste_dag",
-                DayActivities = new[] { dayActivityDTO1, dayActivityDTO2 },
-                Helpers = new[] { helperDTO },
                 DayNr = 1,
                 WeekNr = 2
             };
@@ -168,9 +166,10 @@ namespace KolveniershofBACKEND.Tests.Controllers
             _dayRepository.Setup(d => d.GetByWeekAndDay(templateName, weekNr, dayNr)).Returns(_dummyDBContext.Day1);
             ActionResult<Day> actionResult = _controller.Remove(templateName, weekNr, dayNr);
             Assert.Equal(templateName, actionResult.Value.TemplateName);
-        } 
+        }
         #endregion
 
+        #region Add / Remove activity
         [Fact]
         public void AddActivity_Succeeds()
         {
@@ -209,17 +208,49 @@ namespace KolveniershofBACKEND.Tests.Controllers
             _dayRepository.Setup(d => d.GetByWeekAndDay(templateName, weekNr, dayNr)).Returns(_dummyDBContext.Day1);
             _dayActivityRepository.Setup(d => d.GetTemplateDayActivity(templateName, weekNr, dayNr, timeOfDay, activityId)).Returns(_dummyDBContext.DayActivity1);
 
-            ActionResult<DayActivity> actionResult = _controller.RemoveActivity(templateName, weekNr, dayNr, activityId,timeOfDay);
+            ActionResult<DayActivity> actionResult = _controller.RemoveActivity(templateName, weekNr, dayNr, activityId, timeOfDay);
             Assert.Equal(TimeOfDay.VOLLEDIG, actionResult.Value.TimeOfDay);
 
         }
-
         #endregion
 
+        #region Add / Remove Helper
+        [Fact]
+        public void AddHelper_Succeeds()
+        {
+            HelperDTO helperDTO = new HelperDTO()
+            {
+                UserId = 1,
+                DayId = 1
+            };
 
+            string templateName = "eerste_week_eerste_dag";
+            int weekNr = 1;
+            int dayNr = 1;
 
+            _dayRepository.Setup(d => d.GetByWeekAndDay(templateName, weekNr, dayNr)).Returns(_dummyDBContext.Day1);
+            _userRepository.Setup(d => d.GetById(helperDTO.UserId)).Returns(_dummyDBContext.U1);
 
+            ActionResult<Helper> actionResult = _controller.AddHelper(templateName, weekNr, dayNr, helperDTO);
+            Assert.Equal("Tybo", actionResult.Value.User.FirstName);
+        }
 
+        [Fact]
+        public void RemoveHelper_Succeeds()
+        {
+            string templateName = "eerste_week_eerste_dag";
+            int weekNr = 1;
+            int dayNr = 1;
+            int userId = 1;
 
+            _dayRepository.Setup(d => d.GetByWeekAndDay(templateName, weekNr, dayNr)).Returns(_dummyDBContext.Day1);
+            _helperRepository.Setup(d => d.GetTemplateDayHelper(templateName, weekNr, dayNr, userId)).Returns(_dummyDBContext.Helper1);
+
+            ActionResult<Helper> actionResult = _controller.RemoveHelper(templateName, weekNr, dayNr, userId);
+            Assert.Equal("Tybo", actionResult.Value.User.FirstName);
+        } 
+        #endregion
+
+        #endregion
     }
 }

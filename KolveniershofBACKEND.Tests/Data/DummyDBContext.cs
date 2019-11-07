@@ -56,7 +56,7 @@ namespace KolveniershofBACKEND.Tests.Data
 
         public Helper Helper1 { get; }
         public Helper Helper2 { get; }
-        public Helper[] Helpers1 { get; }
+        public IList<Helper> Helpers1 { get; }
 
         public Helper Helper3 { get; }
         public Helper Helper4 { get; }
@@ -128,7 +128,9 @@ namespace KolveniershofBACKEND.Tests.Data
 
             Helper1 = new Helper(Day1, U1);
             Helper2 = new Helper(Day1, U3);
-            Helpers1 = new[] { Helper1, Helper2 };
+            Helpers1 = new List<Helper>();
+            Helpers1.Add(Helper1);
+            Helpers1.Add(Helper2);
             Day1.Helpers = Helpers1;
 
             DayActivity5 = new DayActivity(Day2, Activity5, TimeOfDay.VOORMIDDAG);
