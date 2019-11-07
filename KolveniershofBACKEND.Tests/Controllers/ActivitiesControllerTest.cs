@@ -73,6 +73,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
             Activity activity = actionResult2.Value as Activity;
             Assert.Equal("GetById", actionResult2.ActionName);
             Assert.Equal("Zwemmen", activity.Name);
+            _activityRepository.Verify(a => a.Add(It.IsAny<Activity>()), Times.Once());
+            _activityRepository.Verify(a => a.SaveChanges(), Times.Once());
         }
 
         //when validation is added --> new test for badrequest!
@@ -90,6 +92,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
 
             ActionResult<Activity> actionResult = _controller.Add(activityDTO);
             Assert.IsType<BadRequestResult>(actionResult.Result);
+            _activityRepository.Verify(a => a.Add(It.IsAny<Activity>()), Times.Never());
+            _activityRepository.Verify(a => a.SaveChanges(), Times.Never());
         } // FAILS --> normal because it isn't fixed yet
 
 
@@ -116,6 +120,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
 
             Assert.Equal("Zwemmen", activity.Name);
             Assert.Equal("", activity.Description);
+            _activityRepository.Verify(a => a.SaveChanges(), Times.Once());
         }
 
         [Fact]
@@ -133,6 +138,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
 
             ActionResult<Activity> actionResult = _controller.Edit(activityDTO);
             Assert.IsType<BadRequestResult>(actionResult.Result);
+          
+            _activityRepository.Verify(a => a.SaveChanges(), Times.Never());
         }// FAILS --> normal because it isn't fixed yet
         #endregion
 
@@ -149,6 +156,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
             Activity activity = okObjectResult.Value as Activity;
             Assert.Equal("Testatelier", activity.Name);
             Assert.NotNull(activity);
+            _activityRepository.Verify(a => a.Remove(It.IsAny<Activity>()), Times.Once());
+            _activityRepository.Verify(a => a.SaveChanges(), Times.Once());
         }
 
         [Fact]
@@ -159,6 +168,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
 
             ActionResult<Activity> actionResult = _controller.Remove(activityId);
             Assert.IsType<NoContentResult>(actionResult.Result);
+            _activityRepository.Verify(a => a.Remove(It.IsAny<Activity>()), Times.Never());
+            _activityRepository.Verify(a => a.SaveChanges(), Times.Never());
 
         } 
         #endregion

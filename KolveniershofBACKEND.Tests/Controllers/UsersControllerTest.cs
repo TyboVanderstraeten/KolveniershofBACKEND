@@ -224,6 +224,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
             CreatedAtActionResult actionResult2 = actionResult.Result as CreatedAtActionResult;
             User userResult = actionResult2.Value as User;
             Assert.Equal(userDTO.Email, userResult.Email);
+            _userRepository.Verify(u => u.Add(It.IsAny<User>()), Times.Once());
+            _userRepository.Verify(u => u.SaveChanges(), Times.Once());
         }
 
         [Fact]
@@ -241,6 +243,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
             _userRepository.Setup(u => u.GetByEmail(userDTO.Email)).Returns(_dummyDBContext.U2);
             ActionResult<User> actionResult = await _controller.Add(userDTO);
             Assert.IsType<BadRequestObjectResult>(actionResult.Result);
+            _userRepository.Verify(u => u.Add(It.IsAny<User>()), Times.Never());
+            _userRepository.Verify(u => u.SaveChanges(), Times.Never());
         } 
         #endregion
 
@@ -256,6 +260,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
             User user = okObjectResult.Value as User;
 
             Assert.Equal("Tybo", user.FirstName);
+            _userRepository.Verify(u => u.Remove(It.IsAny<User>()), Times.Once());
+            _userRepository.Verify(u => u.SaveChanges(), Times.Once());
         }
 
         [Fact]
@@ -266,9 +272,10 @@ namespace KolveniershofBACKEND.Tests.Controllers
 
             ActionResult<User> actionResult = await _controller.Remove(userId);
             Assert.IsType<NoContentResult>(actionResult.Result);
+            _userRepository.Verify(u => u.Remove(It.IsAny<User>()), Times.Never());
+            _userRepository.Verify(u => u.SaveChanges(), Times.Never());
         }
         #endregion
-
 
         #region Edit
         [Fact]
@@ -297,9 +304,9 @@ namespace KolveniershofBACKEND.Tests.Controllers
             OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
             User user = okObjectResult.Value as User;
             Assert.Equal("Florian", user.FirstName);
+            _userRepository.Verify(u => u.SaveChanges(), Times.Once());
         } 
         #endregion
-
 
     }
 }
