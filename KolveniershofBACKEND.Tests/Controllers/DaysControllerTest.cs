@@ -143,9 +143,13 @@ namespace KolveniershofBACKEND.Tests.Controllers
             ActionResult<CustomDay> actionResult = _controller.Add(dayDTO);
             CustomDay customDay = actionResult.Value;
             Assert.Equal(4, customDay.DayActivities.Count);
-        } 
+            _customDayRepository.Verify(a => a.Add(It.IsAny<CustomDay>()), Times.Once);
+            _customDayRepository.Verify(a => a.SaveChanges(), Times.Once);
+
+        }
         #endregion
 
+        #region Edit
         [Fact]
         public void Edit_Succeeds()
         {
@@ -168,18 +172,47 @@ namespace KolveniershofBACKEND.Tests.Controllers
 
             ActionResult<CustomDay> actionResult = _controller.Edit(date, dayDTO);
             Assert.Equal("Chocomousse", actionResult.Value.Dessert);
+            _customDayRepository.Verify(a => a.SaveChanges(), Times.Once);
         }
-        //[Fact] //TODO MICHAEL
-        //public void AddActivityToDay_Succeeds()
-        //{
+        #endregion
 
-        //}
 
-        //[Fact] //TODO MICHAEL
-        //public void AddHelperToDay_Succeeds()
-        //{
+        #region Add / Remove activity
+        [Fact]
+        public void AddActivityToDay_Succeeds()
+        {
+            DateTime date = DateTime.Today;
 
-        //}
+            DayActivityDTO dayActivityDTO = new DayActivityDTO()
+            {
+                ActivityId = 2,
+                TimeOfDay = TimeOfDay.VOORMIDDAG,
+                Attendances = null
+            };
+
+            _customDayRepository.Setup(c => c.GetByDate(date)).Returns(_dummyDBContext.CustomDay1);
+            _activityRepository.Setup(a => a.GetById(dayActivityDTO.ActivityId)).Returns(_dummyDBContext.Activity2);
+
+            ActionResult<DayActivity> actionResult = _controller.AddActivity(date, dayActivityDTO);
+            Assert.Equal(TimeOfDay.VOORMIDDAG, actionResult.Value.TimeOfDay);
+            _customDayRepository.Verify(a => a.SaveChanges(), Times.Once);
+        }
+
+        [Fact]
+        public void RemoveActivity_Succeeds()
+        {
+            DateTime date = DateTime.Today;
+            int activityId = 2;
+            TimeOfDay timeOfDay = TimeOfDay.AVOND;
+
+            _customDayRepository.Setup(c => c.GetByDate(date)).Returns(_dummyDBContext.CustomDay1);
+            _dayActivityRepository.Setup(d => d.GetCustomDayActivity(date, timeOfDay, activityId)).Returns(_dummyDBContext.DayActivity2);
+
+            ActionResult<DayActivity> actionResult = _controller.RemoveActivity(date, activityId, timeOfDay);
+            Assert.Equal("Koken", actionResult.Value.Activity.Name);
+            _customDayRepository.Verify(a => a.SaveChanges(), Times.Once);
+        } 
+        #endregion
 
         //[Fact] //TODO MICHAEL
         //public void AddNoteToDay_Succeeds()
