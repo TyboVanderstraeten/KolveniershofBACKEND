@@ -75,6 +75,18 @@ namespace KolveniershofBACKEND.Tests.Data
         public CustomDay CustomDay3 { get; }
         public CustomDay[] CustomDays { get; }
 
+        public Attendance Attendance1 { get; }
+        public Attendance Attendance2 { get; }
+        public Attendance Attendance3 { get; }
+        public Attendance Attendance4 { get; }
+
+        public IList<Attendance> Attendances1 { get; }
+        public IList<Attendance> Attendances2 { get; }
+        public IList<Attendance> Attendances3 { get; }
+        public IList<Attendance> Attendances4 { get; }
+        
+
+
         public Note Note1 { get; }
         public Note Note2 { get; }
         public Note[] Notes { get; } 
@@ -112,13 +124,38 @@ namespace KolveniershofBACKEND.Tests.Data
             Day1 = new Day("eerste_week_eerste_dag",1, 1) { DayId = dayId++ };
             Day2 = new Day("eerste_week_tweede_dag",1, 2) { DayId = dayId++ };
             Day3 = new Day("eerste_week_derde_dag",1, 3) { DayId = dayId++ };
+          
+
+            Attendances1 = new List<Attendance>();
+            Attendances2 = new List<Attendance>();
+            Attendances3 = new List<Attendance>();
+            Attendances4 = new List<Attendance>();
 
             
             DayActivity1 = new DayActivity(Day1, Activity5, TimeOfDay.VOLLEDIG);
-            
+
+            Attendance1 = new Attendance(DayActivity1, U1);
+            Attendances1.Add(Attendance1);
+            DayActivity1.Attendances = Attendances1;
+
             DayActivity2 = new DayActivity(Day1, Activity2, TimeOfDay.NAMIDDAG);
+
+            Attendance2 = new Attendance(DayActivity2, U1);
+            Attendances2.Add(Attendance2);
+            DayActivity2.Attendances = Attendances2;
+
             DayActivity3 = new DayActivity(Day1, Activity3, TimeOfDay.OCHTEND);
+
+            Attendance3 = new Attendance(DayActivity3, U1);
+            Attendances3.Add(Attendance3);
+            DayActivity3.Attendances = Attendances3;
+
             DayActivity4 = new DayActivity(Day1, Activity4, TimeOfDay.AVOND);
+
+            Attendance4 = new Attendance(DayActivity4, U1);
+            Attendances1.Add(Attendance4);
+            DayActivity4.Attendances = Attendances4;
+
             DayActivities1 = new List<DayActivity>();
             DayActivities1.Add(DayActivity1);
             DayActivities1.Add(DayActivity2);
@@ -131,6 +168,7 @@ namespace KolveniershofBACKEND.Tests.Data
             Helpers1 = new List<Helper>();
             Helpers1.Add(Helper1);
             Helpers1.Add(Helper2);
+
             Day1.Helpers = Helpers1;
 
             DayActivity5 = new DayActivity(Day2, Activity5, TimeOfDay.VOORMIDDAG);
@@ -157,6 +195,8 @@ namespace KolveniershofBACKEND.Tests.Data
             Helpers3 = new[] { Helper5, Helper6 };
             Day3.Helpers = Helpers3;
 
+
+
             Days = new[] { Day1, Day2, Day3 };
             #endregion
 
@@ -169,6 +209,7 @@ namespace KolveniershofBACKEND.Tests.Data
             CustomDay1.DayActivities = DayActivities1;
             CustomDay1.Helpers = Helpers1;
             CustomDay1.Notes = Notes;
+            
 
             CustomDay2 = new CustomDay("eerste_week_tweede_dag", 1, 2, DateTime.Today.AddDays(1), "Wortelsoep", "Kip zoetzuur", "chocomousse");
             CustomDay2.DayActivities = DayActivities2;

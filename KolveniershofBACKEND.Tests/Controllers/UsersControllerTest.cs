@@ -205,26 +205,6 @@ namespace KolveniershofBACKEND.Tests.Controllers
         }
         #endregion
 
-        //[Fact]
-        //public async Task LoginUser_SucceedsAsync()
-        //{
-        //    LoginDTO loginDTO = new LoginDTO()
-        //    {
-        //        Email = "tybo@hotmail.com",
-        //        Password = "P@ssword1"
-        //    };
-
-
-
-
-        //    _userManager.Setup(u => u.FindByEmailAsync(loginDTO.Email)).ReturnsAsync(identityUser);
-        //    _signInManager.Setup(u => u.CheckPasswordSignInAsync(identityUser, loginDTO.Password, false)).ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Success);
-        //    _userManager.Setup(u => u.GetClaimsAsync(identityUser)).ReturnsAsync(user.Claims.ToList() as IList<Claim>);
-        //    ActionResult<string> actionResult = await _controller.Login(loginDTO);
-        //    Assert.NotNull(actionResult.Value);//token has been returned
-
-        //}
-
         #region Add
         [Fact]
         public async Task AddUser_SucceedsAsync_Succeeds()
