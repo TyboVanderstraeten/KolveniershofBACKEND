@@ -1,6 +1,7 @@
 ﻿using KolveniershofBACKEND.Controllers;
 using KolveniershofBACKEND.Data.Repositories.Interfaces;
 using KolveniershofBACKEND.Models.Domain;
+using KolveniershofBACKEND.Models.DTO;
 using KolveniershofBACKEND.Tests.Data;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -32,6 +33,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
             _controller = new AttendancesController(_userRepository.Object, _dayActivityRepository.Object, _attendanceRepository.Object);
         }
 
+        #region Get
         [Fact]
         public void GetAll_Succeeds()
         {
@@ -76,8 +78,10 @@ namespace KolveniershofBACKEND.Tests.Controllers
             ActionResult<IEnumerable<Attendance>> actionResult = _controller.GetAllClients(date, activityId, timeOfDay);
 
             Assert.Equal(attendances.Count, actionResult.Value.ToList().Count);
-        }
+        } 
+        #endregion
 
+        #region Add
         [Fact]
         public void AddAttendance_Succeeds()
         {
@@ -93,8 +97,10 @@ namespace KolveniershofBACKEND.Tests.Controllers
 
             Assert.Equal("Tybo", actionResult.Value.User.FirstName);
             _dayActivityRepository.Verify(a => a.SaveChanges(), Times.Once());
-        }
+        } 
+        #endregion
 
+        #region Remove
         [Fact]
         public void RemoveAttendance_Succeeds()
         {
@@ -109,12 +115,44 @@ namespace KolveniershofBACKEND.Tests.Controllers
             ActionResult<Attendance> actionResult = _controller.Remove(date, timeOfDay, activityId, userId);
             Assert.Equal("Tybo", actionResult.Value.User.FirstName);
             _dayActivityRepository.Verify(d => d.SaveChanges(), Times.Once());
+        } 
+        #endregion
+
+        #region Add / Remove comment
+        [Fact]
+        public void AddComment_Succeeds()
+        {
+            DateTime date = DateTime.Today;
+            TimeOfDay timeOfDay = TimeOfDay.AVOND;
+            int activityId = 1;
+            int userId = 1;
+            CommentDTO commentDTO = new CommentDTO()
+            {
+                Comment = "Dit was een zeer leuke activiteit"
+            };
+
+            _dayActivityRepository.Setup(d => d.GetCustomDayActivity(date, timeOfDay, activityId)).Returns(_dummyDBContext.DayActivity1);
+
+            ActionResult<Attendance> actionResult = _controller.AddComment(date, timeOfDay, activityId, userId, commentDTO);
+            Assert.Equal(commentDTO.Comment, actionResult.Value.Comment);
+            _dayActivityRepository.Verify(d => d.SaveChanges(), Times.Once());
         }
 
+        [Fact]
+        public void RemoveComment_Succeeds()
+        {
+            DateTime date = DateTime.Today;
+            TimeOfDay timeOfDay = TimeOfDay.VOLLEDIG;
+            int activityId = 1;
+            int userId = 1;
 
+            _dayActivityRepository.Setup(d => d.GetCustomDayActivity(date, timeOfDay, activityId)).Returns(_dummyDBContext.DayActivity1);
 
-
-
+            ActionResult<Attendance> actionResult = _controller.RemoveComment(date, timeOfDay, activityId, userId);
+            Assert.Equal(timeOfDay, actionResult.Value.TimeOfDay);
+            _dayActivityRepository.Verify(d => d.SaveChanges(), Times.Once());
+        }  
+        #endregion
 
     }
 }
