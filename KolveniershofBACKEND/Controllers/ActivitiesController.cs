@@ -19,12 +19,21 @@ namespace KolveniershofBACKEND.Controllers
             _activityRepository = activityRepository;
         }
 
+        /// <summary>
+        /// Get all activities
+        /// </summary>
+        /// <returns>All activities</returns>
         [HttpGet]
         public ActionResult<IEnumerable<Activity>> GetAll()
         {
             return _activityRepository.GetAll().ToList();
         }
 
+        /// <summary>
+        /// Get a specific activity
+        /// </summary>
+        /// <param name="id">The id of the activity</param>
+        /// <returns>The activity</returns>
         [HttpGet]
         [Route("{id}")]
         public ActionResult<Activity> GetById(int id)
