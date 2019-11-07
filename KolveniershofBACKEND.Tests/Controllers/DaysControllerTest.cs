@@ -215,7 +215,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
         #endregion
 
         #region Add / Remove helper
-        [Fact] 
+        [Fact]
         public void AddHelper_Succeeds()
         {
             DateTime date = DateTime.Today;
@@ -233,7 +233,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
             _customDayRepository.Verify(c => c.SaveChanges(), Times.Once());
         }
 
-        [Fact] 
+        [Fact]
         public void RemoveHelper_Succeeds()
         {
             DateTime date = DateTime.Today;
@@ -249,5 +249,39 @@ namespace KolveniershofBACKEND.Tests.Controllers
 
         #endregion
 
+        #region Add / Remove note
+        [Fact]
+        public void AddNote_Succeeds()
+        {
+            DateTime date = DateTime.Today;
+
+            NoteDTO noteDTO = new NoteDTO()
+            {
+                NoteType = NoteType.VERVOER,
+                Content = "Jantje zijn moeder gaat hem brengen met de auto, hij zal de bus dus niet nemen"
+            };
+
+            _customDayRepository.Setup(c => c.GetByDate(date)).Returns(_dummyDBContext.CustomDay1);
+            ActionResult<Note> actionResult = _controller.AddNote(date, noteDTO);
+            Assert.Equal(NoteType.VERVOER, actionResult.Value.NoteType);
+            _customDayRepository.Verify(c => c.SaveChanges(), Times.Once());
+        }
+
+        [Fact]
+        public void RemoveNote_Succeeds()
+        {
+            DateTime date = DateTime.Today;
+            int noteId = 1;
+
+            _customDayRepository.Setup(c => c.GetByDate(date)).Returns(_dummyDBContext.CustomDay1);
+            _noteRepository.Setup(n => n.GetCustomDayNote(date, noteId)).Returns(_dummyDBContext.Note1);
+
+            ActionResult<Note> actionResult = _controller.RemoveNote(date, noteId);
+            Assert.Equal(NoteType.VERVOER, actionResult.Value.NoteType);
+            _customDayRepository.Verify(c => c.SaveChanges(), Times.Once());
+        } 
+        #endregion
+
     }
 }
+
