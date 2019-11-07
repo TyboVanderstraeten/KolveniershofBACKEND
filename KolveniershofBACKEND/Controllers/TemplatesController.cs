@@ -31,12 +31,21 @@ namespace KolveniershofBACKEND.Controllers
             _helperRepository = helperRepository;
         }
 
+        /// <summary>
+        /// Get all template days
+        /// </summary>
+        /// <returns>All template days</returns>
         [HttpGet]
         public ActionResult<IEnumerable<Day>> GetAll()
         {
             return _dayRepository.GetAll().ToList();
         }
 
+        /// <summary>
+        /// Get all template days from a specific template
+        /// </summary>
+        /// <param name="templateName">The name of the template</param>
+        /// <returns>All template days from a specific template</returns>
         [HttpGet]
         [Route("{templateName}")]
         public ActionResult<IEnumerable<Day>> GetAll(string templateName)
@@ -44,6 +53,12 @@ namespace KolveniershofBACKEND.Controllers
             return _dayRepository.GetAllByTemplateName(templateName).ToList();
         }
 
+        /// <summary>
+        /// Get all template days from a specific template and a specific week
+        /// </summary>
+        /// <param name="templateName">The name of the template</param>
+        /// <param name="weekNr">The number of the week</param>
+        /// <returns>All template days from a specific template and a specific week</returns>
         [HttpGet]
         [Route("{templateName}/{weekNr}")]
         public ActionResult<IEnumerable<Day>> GetAll(string templateName, int weekNr)
@@ -51,6 +66,11 @@ namespace KolveniershofBACKEND.Controllers
             return _dayRepository.GetAllByWeek(templateName, weekNr).ToList();
         }
 
+        /// <summary>
+        /// Get a specific template day
+        /// </summary>
+        /// <param name="id">The id of the template day</param>
+        /// <returns>The template day</returns>
         [HttpGet]
         [Route("{id}")]
         public ActionResult<Day> GetById(int id)
@@ -58,6 +78,13 @@ namespace KolveniershofBACKEND.Controllers
             return _dayRepository.GetById(id);
         }
 
+        /// <summary>
+        /// Get a template day from a specific template, week and day
+        /// </summary>
+        /// <param name="templateName">The name of the template</param>
+        /// <param name="weekNr">The number of the week</param>
+        /// <param name="dayNr">The number of the day</param>
+        /// <returns>The template day</returns>
         [HttpGet]
         [Route("{templateName}/{weekNr}/{dayNr}")]
         public ActionResult<Day> GetByWeekAndDay(string templateName, int weekNr, int dayNr)
@@ -65,6 +92,11 @@ namespace KolveniershofBACKEND.Controllers
             return _dayRepository.GetByWeekAndDay(templateName, weekNr, dayNr);
         }
 
+        /// <summary>
+        /// Create a new template day
+        /// </summary>
+        /// <param name="model">The template day</param>
+        /// <returns>The template day</returns>
         [HttpPost]
         public ActionResult<Day> Add(DayDTO model)
         {
@@ -81,6 +113,13 @@ namespace KolveniershofBACKEND.Controllers
             }
         }
 
+        /// <summary>
+        /// Remove a template day
+        /// </summary>
+        /// <param name="templateName">The name of the template</param>
+        /// <param name="weekNr">The number of the week</param>
+        /// <param name="dayNr">The number of the day</param>
+        /// <returns>The template day</returns>
         [HttpDelete]
         [Route("{templateName}/{weekNr}/{dayNr}")]
         public ActionResult<Day> Remove(string templateName, int weekNr, int dayNr)
@@ -91,6 +130,14 @@ namespace KolveniershofBACKEND.Controllers
             return dayToRemove;
         }
 
+        /// <summary>
+        /// Add an activity to a template day
+        /// </summary>
+        /// <param name="templateName">The name of the template</param>
+        /// <param name="weekNr">The number of the week</param>
+        /// <param name="dayNr">The number of the day</param>
+        /// <param name="model">The activity</param>
+        /// <returns>The activity</returns>
         [HttpPost]
         [Route("activity/{templateName}/{weekNr}/{dayNr}")]
         public ActionResult<DayActivity> AddActivity(string templateName, int weekNr, int dayNr, DayActivityDTO model)
@@ -103,6 +150,15 @@ namespace KolveniershofBACKEND.Controllers
             return dayActivityToAdd;
         }
 
+        /// <summary>
+        /// Remove an activity from a template day
+        /// </summary>
+        /// <param name="templateName">The name of the template</param>
+        /// <param name="weekNr">The number of the week</param>
+        /// <param name="dayNr">The number of the day</param>
+        /// <param name="activityId">The id of the activity</param>
+        /// <param name="timeOfDay">The time of day</param>
+        /// <returns>The activity</returns>
         [HttpDelete]
         [Route("activity/{templateName}/{weekNr}/{dayNr}/{activityId}/{timeOfDay}")]
         public ActionResult<DayActivity> RemoveActivity(string templateName, int weekNr, int dayNr, int activityId, TimeOfDay timeOfDay)
@@ -114,6 +170,14 @@ namespace KolveniershofBACKEND.Controllers
             return dayActivityToRemove;
         }
 
+        /// <summary>
+        /// Add a helper to a template day
+        /// </summary>
+        /// <param name="templateName">The name of the template</param>
+        /// <param name="weekNr">The number of the week</param>
+        /// <param name="dayNr">The number of the day</param>
+        /// <param name="model">The helper</param>
+        /// <returns>The helper</returns>
         [HttpPost]
         [Route("helper/{templateName}/{weekNr}/{dayNr}")]
         public ActionResult<Helper> AddHelper(string templateName, int weekNr, int dayNr, HelperDTO model)
@@ -126,7 +190,14 @@ namespace KolveniershofBACKEND.Controllers
             return helperToAdd;
         }
 
-
+        /// <summary>
+        /// Remove a helper from a template day
+        /// </summary>
+        /// <param name="templateName">The name of the template</param>
+        /// <param name="weekNr">The number of the week</param>
+        /// <param name="dayNr">The number of the day</param>
+        /// <param name="userId">The id of the helper</param>
+        /// <returns>The helper</returns>
         [HttpDelete]
         [Route("helper/{templateName}/{weekNr}/{dayNr}/{userId}")]
         public ActionResult<Helper> RemoveHelper(string templateName, int weekNr, int dayNr, int userId)
