@@ -38,12 +38,21 @@ namespace KolveniershofBACKEND.Controllers
             _customDayRepository = customDayRepository;
         }
 
+        /// <summary>
+        /// Get all users
+        /// </summary>
+        /// <returns>All users</returns>
         [HttpGet]
         public ActionResult<IEnumerable<User>> GetAll()
         {
             return _userRepository.GetAll().ToList();
         }
 
+        /// <summary>
+        /// Get all users from a group
+        /// </summary>
+        /// <param name="groupId">The id of the group</param>
+        /// <returns>The users of the group</returns>
         [HttpGet]
         [Route("group/{id}")]
         public ActionResult<IEnumerable<User>> GetAll(int groupId)
@@ -51,6 +60,11 @@ namespace KolveniershofBACKEND.Controllers
             return _userRepository.GetAllFromGroup(groupId).ToList();
         }
 
+        /// <summary>
+        /// Get all users with a specific type
+        /// </summary>
+        /// <param name="type">The type of the user</param>
+        /// <returns>The users with the type</returns>
         [HttpGet]
         [Route("{type}")]
         public ActionResult<IEnumerable<User>> GetAll(string type)
@@ -65,6 +79,11 @@ namespace KolveniershofBACKEND.Controllers
             }
         }
 
+        /// <summary>
+        /// Get a specific user
+        /// </summary>
+        /// <param name="userId">The id of the user</param>
+        /// <returns>The user</returns>
         [HttpGet]
         [Route("{userId}")]
         public ActionResult<User> GetById(int userId)
@@ -72,6 +91,11 @@ namespace KolveniershofBACKEND.Controllers
             return _userRepository.GetById(userId);
         }
 
+        /// <summary>
+        /// Get a specific user
+        /// </summary>
+        /// <param name="email">The email of the user</param>
+        /// <returns>The user</returns>
         [HttpGet]
         [Route("{email}")]
         public ActionResult<User> GetByEmail(string email)
@@ -79,6 +103,11 @@ namespace KolveniershofBACKEND.Controllers
             return _userRepository.GetByEmail(email);
         }
 
+        /// <summary>
+        /// Check if an email is available
+        /// </summary>
+        /// <param name="email">The email to check</param>
+        /// <returns>True: available | False: unavailable</returns>
         [HttpGet]
         [Route("availability/{email}")]
         public async Task<ActionResult<bool>> CheckAvailibilityEmail(string email)
@@ -87,6 +116,11 @@ namespace KolveniershofBACKEND.Controllers
             return identityUser == null;
         }
 
+        /// <summary>
+        /// Login
+        /// </summary>
+        /// <param name="model">The user's credentials</param>
+        /// <returns>A token</returns>
         [HttpPost]
         [Route("login")]
         public async Task<ActionResult<string>> Login(LoginDTO model)
@@ -103,6 +137,11 @@ namespace KolveniershofBACKEND.Controllers
             return BadRequest("E-mail or password is incorrect");
         }
 
+        /// <summary>
+        /// Create a new user
+        /// </summary>
+        /// <param name="model">The user</param>
+        /// <returns>The user</returns>
         [HttpPost]
         public async Task<ActionResult<User>> Add(UserDTO model)
         {
@@ -146,6 +185,11 @@ namespace KolveniershofBACKEND.Controllers
 
         // Works 90% off the time, sometimes produces an error: using result of async call to edit somewhere else, doesn't always happen fast enough
         // NEED TO FIX
+        /// <summary>
+        /// Edit a user
+        /// </summary>
+        /// <param name="model">The user</param>
+        /// <returns>The user</returns>
         [HttpPut]
         public ActionResult<User> Edit(UserDTO model)
         {
@@ -168,6 +212,11 @@ namespace KolveniershofBACKEND.Controllers
 
         // Works 90% off the time, sometimes produces an error: using result of async call to remove user, doesn't always happen fast enough
         // NEED TO FIX
+        /// <summary>
+        /// Remove a user
+        /// </summary>
+        /// <param name="userId">The id of the user</param>
+        /// <returns>The user</returns>
         [HttpDelete]
         [Route("{userId}")]
         public async Task<ActionResult<User>> Remove(int userId)

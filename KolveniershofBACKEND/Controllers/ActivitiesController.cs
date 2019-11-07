@@ -19,12 +19,21 @@ namespace KolveniershofBACKEND.Controllers
             _activityRepository = activityRepository;
         }
 
+        /// <summary>
+        /// Get all activities
+        /// </summary>
+        /// <returns>All activities</returns>
         [HttpGet]
         public ActionResult<IEnumerable<Activity>> GetAll()
         {
             return _activityRepository.GetAll().ToList();
         }
 
+        /// <summary>
+        /// Get a specific activity
+        /// </summary>
+        /// <param name="id">The id of the activity</param>
+        /// <returns>The activity</returns>
         [HttpGet]
         [Route("{id}")]
         public ActionResult<Activity> GetById(int id)
@@ -32,6 +41,11 @@ namespace KolveniershofBACKEND.Controllers
             return _activityRepository.GetById(id);
         }
 
+        /// <summary>
+        /// Create a new activity
+        /// </summary>
+        /// <param name="model">The activity</param>
+        /// <returns>The activity</returns>
         [HttpPost]
         public ActionResult<Activity> Add(ActivityDTO model)
         {
@@ -53,6 +67,11 @@ namespace KolveniershofBACKEND.Controllers
             }
         }
 
+        /// <summary>
+        /// Edit an activity
+        /// </summary>
+        /// <param name="model">The activity</param>
+        /// <returns>The activity</returns>
         [HttpPut]
         public ActionResult<Activity> Edit(ActivityDTO model)
         {
@@ -65,6 +84,11 @@ namespace KolveniershofBACKEND.Controllers
             return Ok(activityToEdit);
         }
 
+        /// <summary>
+        /// Remove an activity
+        /// </summary>
+        /// <param name="id">The id of the activity</param>
+        /// <returns>The activity</returns>
         [HttpDelete]
         [Route("{id}")]
         public ActionResult<Activity> Remove(int id)
