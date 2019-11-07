@@ -42,9 +42,6 @@ namespace KolveniershofBACKEND.Tests.Controllers
         }
 
 
-
-
-
         #region Get
         [Fact]
         public void GetAll_Succeeds()

@@ -121,27 +121,6 @@ namespace KolveniershofBACKEND.Tests.Controllers
         [Fact]
         public void AddTemplateDay_Succeeds()
         {
-            DayActivityDTO dayActivityDTO1 = new DayActivityDTO()
-            {
-                DayId = 1,
-                ActivityId = 1,
-                TimeOfDay = TimeOfDay.AVOND,
-                Attendances = null
-            };
-
-            DayActivityDTO dayActivityDTO2 = new DayActivityDTO()
-            {
-                DayId = 1,
-                ActivityId = 2,
-                TimeOfDay = TimeOfDay.VOORMIDDAG,
-                Attendances = null
-            };
-
-            HelperDTO helperDTO = new HelperDTO()
-            {
-                UserId = 1,
-                DayId = 1
-            };
             DayDTO dayDTO = new DayDTO()
             {
                 TemplateName = "tweede_week_eerste_dag",
@@ -152,6 +131,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
             ActionResult<Day> actionResult = _controller.Add(dayDTO);
             Day dayResult = actionResult.Value;
             Assert.Equal("tweede_week_eerste_dag", dayResult.TemplateName);
+            _dayRepository.Verify(d => d.Add(It.IsAny<Day>()), Times.Once());
+            _dayRepository.Verify(d => d.SaveChanges(), Times.Once());
         }
         #endregion
 
@@ -166,6 +147,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
             _dayRepository.Setup(d => d.GetByWeekAndDay(templateName, weekNr, dayNr)).Returns(_dummyDBContext.Day1);
             ActionResult<Day> actionResult = _controller.Remove(templateName, weekNr, dayNr);
             Assert.Equal(templateName, actionResult.Value.TemplateName);
+            _dayRepository.Verify(d => d.Remove(It.IsAny<Day>()), Times.Once());
+            _dayRepository.Verify(d => d.SaveChanges(), Times.Once());
         }
         #endregion
 
@@ -191,6 +174,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
 
             ActionResult<DayActivity> actionResult = _controller.AddActivity(templateName, weekNr, dayNr, dayActivityDTO);
             Assert.Equal(TimeOfDay.VOLLEDIG, actionResult.Value.TimeOfDay);
+            _dayRepository.Verify(d => d.SaveChanges(), Times.Once());
         }
 
 
@@ -210,6 +194,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
 
             ActionResult<DayActivity> actionResult = _controller.RemoveActivity(templateName, weekNr, dayNr, activityId, timeOfDay);
             Assert.Equal(TimeOfDay.VOLLEDIG, actionResult.Value.TimeOfDay);
+            _dayRepository.Verify(d => d.SaveChanges(), Times.Once());
 
         }
         #endregion
@@ -233,6 +218,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
 
             ActionResult<Helper> actionResult = _controller.AddHelper(templateName, weekNr, dayNr, helperDTO);
             Assert.Equal("Tybo", actionResult.Value.User.FirstName);
+            _dayRepository.Verify(d => d.SaveChanges(), Times.Once());
         }
 
         [Fact]
@@ -248,6 +234,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
 
             ActionResult<Helper> actionResult = _controller.RemoveHelper(templateName, weekNr, dayNr, userId);
             Assert.Equal("Tybo", actionResult.Value.User.FirstName);
+            _dayRepository.Verify(d => d.SaveChanges(), Times.Once());
         } 
         #endregion
 
