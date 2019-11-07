@@ -27,7 +27,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
         #region Get
 
         [Fact]
-        public void GetAllActivities()
+        public void GetAllActivities_Succeeds()
         {
             _activityRepository.Setup(a => a.GetAll()).Returns(_dummyDBContext.Activities);
             ActionResult<IEnumerable<Activity>> actionResult = _controller.GetAll();
