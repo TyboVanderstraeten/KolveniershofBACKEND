@@ -24,6 +24,13 @@ namespace KolveniershofBACKEND.Controllers
             _attendanceRepository = attendanceRepository;
         }
 
+        /// <summary>
+        /// Get all attendances for an activity on a specific day
+        /// </summary>
+        /// <param name="date">The date of the activity</param>
+        /// <param name="activityId">The id of the activity</param>
+        /// <param name="timeOfDay">The time of day of the activity</param>
+        /// <returns>The attendance</returns>
         [HttpGet]
         [Route("{date}/{timeOfDay}/{activityId}")]
         public ActionResult<IEnumerable<Attendance>> GetAll(DateTime date, int activityId, TimeOfDay timeOfDay)
@@ -31,6 +38,13 @@ namespace KolveniershofBACKEND.Controllers
             return _dayActivityRepository.GetCustomDayActivity(date, timeOfDay, activityId).Attendances.ToList();
         }
 
+        /// <summary>
+        /// Get all client attendances for an activity on a specific day
+        /// </summary>
+        /// <param name="date">The date of the activity</param>
+        /// <param name="activityId">The id of the activity</param>
+        /// <param name="timeOfDay">The time of day of the activity</param>
+        /// <returns>The client attendances</returns>
         [HttpGet]
         [Route("clients/{date}/{timeOfDay}/{activityId}")]
         public ActionResult<IEnumerable<Attendance>> GetAllClients(DateTime date, int activityId, TimeOfDay timeOfDay)
@@ -38,7 +52,13 @@ namespace KolveniershofBACKEND.Controllers
             return _dayActivityRepository.GetCustomDayActivity(date, timeOfDay, activityId).Attendances.Where(a => a.User.UserType.Equals(UserType.CLIENT)).ToList();
         }
 
-
+        /// <summary>
+        /// Get all personnel attendances for an activity on a specific day
+        /// </summary>
+        /// <param name="date">The date of the activity</param>
+        /// <param name="activityId">The id of the activity</param>
+        /// <param name="timeOfDay">The time of day of the activity</param>
+        /// <returns>The personnel attendances</returns>
         [HttpGet]
         [Route("personnel/{date}/{timeOfDay}/{activityId}")]
         public ActionResult<IEnumerable<Attendance>> GetAllPersonnel(DateTime date, int activityId, TimeOfDay timeOfDay)
@@ -46,6 +66,14 @@ namespace KolveniershofBACKEND.Controllers
             return _dayActivityRepository.GetCustomDayActivity(date, timeOfDay, activityId).Attendances.Where(a => !(a.User.UserType.Equals(UserType.CLIENT))).ToList();
         }
 
+        /// <summary>
+        /// Create a new attendance for an activity on a specific day
+        /// </summary>
+        /// <param name="date">The date of the activity</param>
+        /// <param name="timeOfDay">The time of day of the activity</param>
+        /// <param name="activityId">The id of the activity</param>
+        /// <param name="userId">The id of the attending user</param>
+        /// <returns>The attendance</returns>
         [HttpPost]
         [Route("{date}/{timeOfDay}/{activityId}/{userId}")]
         public ActionResult<Attendance> Add(DateTime date, TimeOfDay timeOfDay, int activityId, int userId)
@@ -58,6 +86,14 @@ namespace KolveniershofBACKEND.Controllers
             return attendanceToAdd;
         }
 
+        /// <summary>
+        /// Remove an attendance for an activity on a specific day
+        /// </summary>
+        /// <param name="date">The date of the activity</param>
+        /// <param name="timeOfDay">The time of day of the activity</param>
+        /// <param name="activityId">The id of the activity</param>
+        /// <param name="userId">The id of the attending user</param>
+        /// <returns>The attendance</returns>
         [HttpDelete]
         [Route("{date}/{timeOfDay}/{activityId}/{userId}")]
         public ActionResult<Attendance> Remove(DateTime date, TimeOfDay timeOfDay, int activityId, int userId)
@@ -69,6 +105,15 @@ namespace KolveniershofBACKEND.Controllers
             return attendanceToRemove;
         }
 
+        /// <summary>
+        /// Add a comment to an attendance for an activity on a specific day
+        /// </summary>
+        /// <param name="date">The date of the activity</param>
+        /// <param name="timeOfDay">The time of day of the activity</param>
+        /// <param name="activityId">The id of the activity</param>
+        /// <param name="userId">The id of the attending user</param>
+        /// <param name="model">The comment</param>
+        /// <returns>The attendance</returns>
         [HttpPost]
         [Route("comment/{date}/{timeOfDay}/{activityId}/{userId}")]
         public ActionResult<Attendance> AddComment(DateTime date, TimeOfDay timeOfDay, int activityId, int userId, CommentDTO model)
@@ -79,6 +124,14 @@ namespace KolveniershofBACKEND.Controllers
             return attendanceToEdit;
         }
 
+        /// <summary>
+        /// Remove a comment from an attendance for an activity on a specific day
+        /// </summary>
+        /// <param name="date">The date of the activity</param>
+        /// <param name="timeOfDay">The time of day of the activity</param>
+        /// <param name="activityId">The id of the activity</param>
+        /// <param name="userId">The id of the attending user</param>
+        /// <returns>The attendance</returns>
         [HttpDelete]
         [Route("comment/{date}/{timeOfDay}/{activityId}/{userId}")]
         public ActionResult<Attendance> RemoveComment(DateTime date, TimeOfDay timeOfDay, int activityId, int userId)
