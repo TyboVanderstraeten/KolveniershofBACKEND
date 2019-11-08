@@ -63,7 +63,7 @@ namespace KolveniershofBACKEND.Controllers
         [Route("personnel/{date}/{timeOfDay}/{activityId}")]
         public ActionResult<IEnumerable<Attendance>> GetAllPersonnel(DateTime date, int activityId, TimeOfDay timeOfDay)
         {
-            return _dayActivityRepository.GetCustomDayActivity(date, timeOfDay, activityId).Attendances.Where(a => !(a.User.UserType.Equals(UserType.CLIENT))).ToList();
+            return _dayActivityRepository.GetCustomDayActivity(date, timeOfDay, activityId).Attendances.Where(a => !a.User.UserType.Equals(UserType.CLIENT)).ToList();
         }
 
         /// <summary>
