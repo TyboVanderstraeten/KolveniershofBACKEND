@@ -50,13 +50,13 @@ namespace KolveniershofBACKEND.Tests.Data
         public DayActivity DayActivity11 { get; }
         public DayActivity DayActivity12 { get; }
 
-        public DayActivity[] DayActivities1 { get; }
-        public DayActivity[] DayActivities2 { get; }
-        public DayActivity[] DayActivities3 { get; }
+        public IList<DayActivity> DayActivities1 { get; }
+        public IList<DayActivity> DayActivities2 { get; }
+        public IList<DayActivity> DayActivities3 { get; }
 
         public Helper Helper1 { get; }
         public Helper Helper2 { get; }
-        public Helper[] Helpers1 { get; }
+        public IList<Helper> Helpers1 { get; }
 
         public Helper Helper3 { get; }
         public Helper Helper4 { get; }
@@ -75,9 +75,24 @@ namespace KolveniershofBACKEND.Tests.Data
         public CustomDay CustomDay3 { get; }
         public CustomDay[] CustomDays { get; }
 
+        public Attendance Attendance1 { get; }
+        public Attendance Attendance2 { get; }
+        public Attendance Attendance3 { get; }
+        public Attendance Attendance4 { get; }
+        public Attendance Attendance5 { get; }
+        public Attendance Attendance6 { get; }
+
+
+        public IList<Attendance> Attendances1 { get; }
+        public IList<Attendance> Attendances2 { get; }
+        public IList<Attendance> Attendances3 { get; }
+        public IList<Attendance> Attendances4 { get; }
+        
+
+
         public Note Note1 { get; }
         public Note Note2 { get; }
-        public Note[] Notes { get; } 
+        public IList<Note> Notes { get; } 
         #endregion
 
 
@@ -109,22 +124,58 @@ namespace KolveniershofBACKEND.Tests.Data
             #region init Days
             int dayId = 1;
 
-            Day1 = new Day(1, 1) { DayId = dayId++ };
-            Day2 = new Day(1, 2) { DayId = dayId++ };
-            Day3 = new Day(1, 3) { DayId = dayId++ };
+            Day1 = new Day("eerste_week_eerste_dag",1, 1) { DayId = dayId++ };
+            Day2 = new Day("eerste_week_tweede_dag",1, 2) { DayId = dayId++ };
+            Day3 = new Day("eerste_week_derde_dag",1, 3) { DayId = dayId++ };
+          
+
+            Attendances1 = new List<Attendance>();
+            Attendances2 = new List<Attendance>();
+            Attendances3 = new List<Attendance>();
+            Attendances4 = new List<Attendance>();
 
             
             DayActivity1 = new DayActivity(Day1, Activity5, TimeOfDay.VOLLEDIG);
-            
+
+            Attendance1 = new Attendance(DayActivity1, U1);
+            Attendance5 = new Attendance(DayActivity1, U2);
+            Attendance6 = new Attendance(DayActivity1, U2);
+            Attendances1.Add(Attendance1);
+            Attendances1.Add(Attendance5);
+            Attendances1.Add(Attendance6);
+            DayActivity1.Attendances = Attendances1;
+
             DayActivity2 = new DayActivity(Day1, Activity2, TimeOfDay.NAMIDDAG);
+
+            Attendance2 = new Attendance(DayActivity2, U1);
+            Attendances2.Add(Attendance2);
+            DayActivity2.Attendances = Attendances2;
+
             DayActivity3 = new DayActivity(Day1, Activity3, TimeOfDay.OCHTEND);
+
+            Attendance3 = new Attendance(DayActivity3, U1);
+            Attendances3.Add(Attendance3);
+            DayActivity3.Attendances = Attendances3;
+
             DayActivity4 = new DayActivity(Day1, Activity4, TimeOfDay.AVOND);
-            DayActivities1 = new[] { DayActivity1, DayActivity2, DayActivity3, DayActivity4 };
+
+            Attendance4 = new Attendance(DayActivity4, U1);
+            Attendances4.Add(Attendance4);
+            DayActivity4.Attendances = Attendances4;
+
+            DayActivities1 = new List<DayActivity>();
+            DayActivities1.Add(DayActivity1);
+            DayActivities1.Add(DayActivity2);
+            DayActivities1.Add(DayActivity3);
+            DayActivities1.Add(DayActivity4);
             Day1.DayActivities = DayActivities1;
 
             Helper1 = new Helper(Day1, U1);
             Helper2 = new Helper(Day1, U3);
-            Helpers1 = new[] { Helper1, Helper2 };
+            Helpers1 = new List<Helper>();
+            Helpers1.Add(Helper1);
+            Helpers1.Add(Helper2);
+
             Day1.Helpers = Helpers1;
 
             DayActivity5 = new DayActivity(Day2, Activity5, TimeOfDay.VOORMIDDAG);
@@ -151,25 +202,30 @@ namespace KolveniershofBACKEND.Tests.Data
             Helpers3 = new[] { Helper5, Helper6 };
             Day3.Helpers = Helpers3;
 
+
+
             Days = new[] { Day1, Day2, Day3 };
             #endregion
 
             #region init CustomDays
             Note1 = new Note(NoteType.VERVOER, "Florian neemt de bus niet vandaag");
             Note2 = new Note(NoteType.VARIA, "Vandaag zullen er geen bekertjes aanwezig zijn");
-            Notes = new[] { Note1, Note2 };
+            Notes = new List<Note>();
+            Notes.Add(Note1);
+            Notes.Add(Note2);
 
-            CustomDay1 = new CustomDay(1, 1, DateTime.Today, "Wortelsoep", "Kip zoetzuur", "chocomousse");
+            CustomDay1 = new CustomDay("eerste_week_eerste_dag",1, 1, DateTime.Today, "Wortelsoep", "Kip zoetzuur", "chocomousse");
             CustomDay1.DayActivities = DayActivities1;
             CustomDay1.Helpers = Helpers1;
             CustomDay1.Notes = Notes;
+            
 
-            CustomDay2 = new CustomDay(1, 2, DateTime.Today.AddDays(1), "Wortelsoep", "Kip zoetzuur", "chocomousse");
+            CustomDay2 = new CustomDay("eerste_week_tweede_dag", 1, 2, DateTime.Today.AddDays(1), "Wortelsoep", "Kip zoetzuur", "chocomousse");
             CustomDay2.DayActivities = DayActivities2;
             CustomDay2.Helpers = Helpers2;
             CustomDay2.Notes = Notes;
 
-            CustomDay3 = new CustomDay(1, 3, DateTime.Today.AddDays(2), "Wortelsoep", "Kip zoetzuur", "chocomousse");
+            CustomDay3 = new CustomDay("eerste_week_derde_dag",1, 3, DateTime.Today.AddDays(2), "Wortelsoep", "Kip zoetzuur", "chocomousse");
             CustomDay3.DayActivities = DayActivities3;
             CustomDay3.Helpers = Helpers3;
             CustomDay3.Notes = Notes;
