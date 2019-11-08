@@ -76,7 +76,7 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="date">The date of the custom day</param>
         /// <returns>The custom day</returns>
         [HttpGet]
-        [Route("{date}")]
+        [Route("date/{date}")]
         public ActionResult<CustomDay> GetByDate(DateTime date)
         {
             return _customDayRepository.GetByDate(date);
