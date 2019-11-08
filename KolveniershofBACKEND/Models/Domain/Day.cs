@@ -5,6 +5,7 @@ namespace KolveniershofBACKEND.Models.Domain
     public class Day
     {
         public int DayId { get; set; }
+        public string TemplateName { get; set; }
         public int WeekNr { get; set; }
         public int DayNr { get; set; }
         public ICollection<DayActivity> DayActivities { get; set; }
@@ -16,8 +17,9 @@ namespace KolveniershofBACKEND.Models.Domain
             Helpers = new List<Helper>();
         }
 
-        public Day(int weekNr, int dayNr)
+        public Day(string templateName, int weekNr, int dayNr)
         {
+            TemplateName = templateName;
             WeekNr = weekNr;
             DayNr = dayNr;
             DayActivities = new List<DayActivity>();
