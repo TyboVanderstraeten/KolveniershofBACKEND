@@ -96,39 +96,39 @@ namespace KolveniershofBACKEND.Tests.Controllers
         }
         #endregion
 
-        #region GetAllFromGroup
-        [Fact]
-        public void GetAllFromGroup_Succeeds()
-        {
-            int groupNr = 2;
-            IEnumerable<User> group2 = _dummyDBContext.Users.ToList().Where(u => u.Group == groupNr);
-            _userRepository.Setup(a => a.GetAllFromGroup(groupNr)).Returns(group2);
-            ActionResult<IEnumerable<User>> actionResult = _controller.GetAllFromGroup(groupNr);
-            IList<User> users = actionResult.Value as IList<User>;
-            Assert.Equal("Rob", users.ToList().First().FirstName); //there is only 1 user in this list!
-        }
-        #endregion
+        //#region GetAllFromGroup
+        //[Fact]
+        //public void GetAllFromGroup_Succeeds()
+        //{
+        //    int groupNr = 2;
+        //    IEnumerable<User> group2 = _dummyDBContext.Users.ToList().Where(u => u.Group == groupNr);
+        //    _userRepository.Setup(a => a.GetAllFromGroup(groupNr)).Returns(group2);
+        //    ActionResult<IEnumerable<User>> actionResult = _controller.GetAllFromGroup(groupNr);
+        //    IList<User> users = actionResult.Value as IList<User>;
+        //    Assert.Equal("Rob", users.ToList().First().FirstName); //there is only 1 user in this list!
+        //}
+        //#endregion
 
         #region GetAllWithType
-        [Fact]
-        public void GetAllWithType_Succeeds()
-        {
-            UserType userType = UserType.CLIENT;
-            IEnumerable<User> clientUsers = _dummyDBContext.Users.ToList().Where(u => u.UserType == userType);
-            _userRepository.Setup(u => u.GetAllWithType(userType)).Returns(clientUsers);
+        //[Fact]
+        //public void GetAllWithType_Succeeds()
+        //{
+        //    UserType userType = UserType.CLIENT;
+        //    IEnumerable<User> clientUsers = _dummyDBContext.Users.ToList().Where(u => u.UserType == userType);
+        //    _userRepository.Setup(u => u.GetAllWithType(userType)).Returns(clientUsers);
 
-            ActionResult<IEnumerable<User>> actionResult = _controller.GetAllWithType("client");
-            IList<User> users = actionResult.Value as IList<User>;
+        //    ActionResult<IEnumerable<User>> actionResult = _controller.GetAllWithType("client");
+        //    IList<User> users = actionResult.Value as IList<User>;
 
-            Assert.Equal("Rob", users.ToList().First().FirstName); // there's only 1 user in this list
-        }
+        //    Assert.Equal("Rob", users.ToList().First().FirstName); // there's only 1 user in this list
+        //}
 
-        [Fact]
-        public void GetAllWithType_Fails_TypeDoesNotExist()
-        {
-            ActionResult<IEnumerable<User>> actionResult = _controller.GetAllWithType("wrongType");
-            Assert.IsType<BadRequestObjectResult>(actionResult.Result);
-        }
+        //[Fact]
+        //public void GetAllWithType_Fails_TypeDoesNotExist()
+        //{
+        //    ActionResult<IEnumerable<User>> actionResult = _controller.GetAllWithType("wrongType");
+        //    Assert.IsType<BadRequestObjectResult>(actionResult.Result);
+        //}
         #endregion
 
         #region GetById
@@ -205,26 +205,6 @@ namespace KolveniershofBACKEND.Tests.Controllers
         }
         #endregion
 
-        //[Fact]
-        //public async Task LoginUser_SucceedsAsync()
-        //{
-        //    LoginDTO loginDTO = new LoginDTO()
-        //    {
-        //        Email = "tybo@hotmail.com",
-        //        Password = "P@ssword1"
-        //    };
-
-
-
-
-        //    _userManager.Setup(u => u.FindByEmailAsync(loginDTO.Email)).ReturnsAsync(identityUser);
-        //    _signInManager.Setup(u => u.CheckPasswordSignInAsync(identityUser, loginDTO.Password, false)).ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Success);
-        //    _userManager.Setup(u => u.GetClaimsAsync(identityUser)).ReturnsAsync(user.Claims.ToList() as IList<Claim>);
-        //    ActionResult<string> actionResult = await _controller.Login(loginDTO);
-        //    Assert.NotNull(actionResult.Value);//token has been returned
-
-        //}
-
         #region Add
         [Fact]
         public async Task AddUser_SucceedsAsync_Succeeds()
@@ -244,6 +224,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
             CreatedAtActionResult actionResult2 = actionResult.Result as CreatedAtActionResult;
             User userResult = actionResult2.Value as User;
             Assert.Equal(userDTO.Email, userResult.Email);
+            _userRepository.Verify(u => u.Add(It.IsAny<User>()), Times.Once());
+            _userRepository.Verify(u => u.SaveChanges(), Times.Once());
         }
 
         [Fact]
@@ -261,6 +243,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
             _userRepository.Setup(u => u.GetByEmail(userDTO.Email)).Returns(_dummyDBContext.U2);
             ActionResult<User> actionResult = await _controller.Add(userDTO);
             Assert.IsType<BadRequestObjectResult>(actionResult.Result);
+            _userRepository.Verify(u => u.Add(It.IsAny<User>()), Times.Never());
+            _userRepository.Verify(u => u.SaveChanges(), Times.Never());
         } 
         #endregion
 
@@ -276,6 +260,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
             User user = okObjectResult.Value as User;
 
             Assert.Equal("Tybo", user.FirstName);
+            _userRepository.Verify(u => u.Remove(It.IsAny<User>()), Times.Once());
+            _userRepository.Verify(u => u.SaveChanges(), Times.Once());
         }
 
         [Fact]
@@ -286,9 +272,10 @@ namespace KolveniershofBACKEND.Tests.Controllers
 
             ActionResult<User> actionResult = await _controller.Remove(userId);
             Assert.IsType<NoContentResult>(actionResult.Result);
+            _userRepository.Verify(u => u.Remove(It.IsAny<User>()), Times.Never());
+            _userRepository.Verify(u => u.SaveChanges(), Times.Never());
         }
         #endregion
-
 
         #region Edit
         [Fact]
@@ -317,9 +304,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
             OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
             User user = okObjectResult.Value as User;
             Assert.Equal("Florian", user.FirstName);
+            _userRepository.Verify(u => u.SaveChanges(), Times.Once());
         } 
         #endregion
-
-
     }
 }
