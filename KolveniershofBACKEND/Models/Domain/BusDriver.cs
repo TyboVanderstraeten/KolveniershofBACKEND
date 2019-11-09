@@ -9,12 +9,13 @@ namespace KolveniershofBACKEND.Models.Domain
 {
     public class BusDriver
     {
-        [JsonIgnore]
+        
         public Day Day { get; set; }
+        [JsonIgnore]
         public int DayId { get; set; }
 
-        [JsonIgnore]
         public Driver Driver { get; set; }
+        [JsonIgnore]
         public int DriverId { get; set; }
 
         [JsonConverter(typeof(StringEnumConverter))]

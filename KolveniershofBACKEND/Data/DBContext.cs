@@ -33,5 +33,6 @@ namespace KolveniershofBACKEND.Data
         public DbSet<Day> Days { get; set; }
         public DbSet<CustomDay> CustomDays { get; set; }
         public DbSet<Driver> Drivers { get; set; }
+        public DbSet<BusDriver> BusDrivers { get; set; }
     }
 }

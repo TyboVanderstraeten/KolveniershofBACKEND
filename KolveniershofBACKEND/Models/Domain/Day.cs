@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace KolveniershofBACKEND.Models.Domain
 {
@@ -10,6 +11,7 @@ namespace KolveniershofBACKEND.Models.Domain
         public int DayNr { get; set; }
         public ICollection<DayActivity> DayActivities { get; set; }
         public ICollection<Helper> Helpers { get; set; }
+        [JsonIgnore]
         public ICollection<BusDriver> BusDrivers { get; set; }
 
         protected Day()
