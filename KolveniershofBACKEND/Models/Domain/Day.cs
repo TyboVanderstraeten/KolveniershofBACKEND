@@ -10,11 +10,13 @@ namespace KolveniershofBACKEND.Models.Domain
         public int DayNr { get; set; }
         public ICollection<DayActivity> DayActivities { get; set; }
         public ICollection<Helper> Helpers { get; set; }
+        public ICollection<BusDriver> BusDrivers { get; set; }
 
         protected Day()
         {
             DayActivities = new List<DayActivity>();
             Helpers = new List<Helper>();
+            BusDrivers = new List<BusDriver>();
         }
 
         public Day(string templateName, int weekNr, int dayNr)
@@ -24,6 +26,7 @@ namespace KolveniershofBACKEND.Models.Domain
             DayNr = dayNr;
             DayActivities = new List<DayActivity>();
             Helpers = new List<Helper>();
+            BusDrivers = new List<BusDriver>();
         }
 
         public void AddHelper(Helper helper)
@@ -44,6 +47,16 @@ namespace KolveniershofBACKEND.Models.Domain
         public void RemoveDayActivity(DayActivity dayActivity)
         {
             DayActivities.Remove(dayActivity);
+        }
+
+        public void AddBusDriver(BusDriver busDriver)
+        {
+            BusDrivers.Add(busDriver);
+        }
+
+        public void RemoveBusDriver(BusDriver busDriver)
+        {
+            BusDrivers.Remove(busDriver);
         }
     }
 }

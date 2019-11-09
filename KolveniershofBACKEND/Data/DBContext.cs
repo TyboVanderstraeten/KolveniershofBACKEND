@@ -23,6 +23,8 @@ namespace KolveniershofBACKEND.Data
             builder.ApplyConfiguration(new DayConfiguration());
             builder.ApplyConfiguration(new HelperConfiguration());
             builder.ApplyConfiguration(new NoteConfiguration());
+            builder.ApplyConfiguration(new BusDriverConfiguration());
+            builder.ApplyConfiguration(new DriverConfiguration());
         }
 
         public DbSet<Activity> Activities { get; set; }
@@ -30,5 +32,6 @@ namespace KolveniershofBACKEND.Data
         public new DbSet<User> Users { get; set; }
         public DbSet<Day> Days { get; set; }
         public DbSet<CustomDay> CustomDays { get; set; }
+        public DbSet<Driver> Drivers { get; set; }
     }
 }

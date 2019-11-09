@@ -1,4 +1,5 @@
 ﻿using KolveniershofBACKEND.Models.Domain;
+using KolveniershofBACKEND.Models.Domain.Enums;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Threading.Tasks;
@@ -58,6 +59,15 @@ namespace KolveniershofBACKEND.Data
             _dbContext.Users.Add(u5);
             #endregion
 
+            #region Drivers
+            Driver driver1 = new Driver("Ine", BusColor.BEIGE);
+            Driver driver2 = new Driver("Annemie", BusColor.GEEL);
+            Driver driver3 = new Driver("Kathleen", BusColor.BLAUW);
+            Driver driver4 = new Driver("Nick", BusColor.BEIGE);
+            Driver driver5 = new Driver("Hedwig", BusColor.GEEL);
+            Driver driver6 = new Driver("Koen", BusColor.BLAUW);
+            #endregion
+
             #region TemplateDay
             string[] templateNames = { "zomer", "winter" };
             for (int h = 0; h < 2; h++)
@@ -89,6 +99,21 @@ namespace KolveniershofBACKEND.Data
                         Helper helper2 = new Helper(day, u4);
                         day.AddHelper(helper1);
                         day.AddHelper(helper2);
+
+                        BusDriver busDriver1 = new BusDriver(day, driver1, TimeOfDay.OCHTEND);
+                        BusDriver busDriver2 = new BusDriver(day, driver2, TimeOfDay.OCHTEND);
+                        BusDriver busDriver3 = new BusDriver(day, driver3, TimeOfDay.OCHTEND);
+                        BusDriver busDriver4 = new BusDriver(day, driver4, TimeOfDay.AVOND);
+                        BusDriver busDriver5 = new BusDriver(day, driver5, TimeOfDay.AVOND);
+                        BusDriver busDriver6 = new BusDriver(day, driver6, TimeOfDay.AVOND);
+
+                        day.AddBusDriver(busDriver1);
+                        day.AddBusDriver(busDriver2);
+                        day.AddBusDriver(busDriver3);
+                        day.AddBusDriver(busDriver4);
+                        day.AddBusDriver(busDriver5);
+                        day.AddBusDriver(busDriver6);
+
                         _dbContext.Days.Add(day);
                     }
                 }
