@@ -5,6 +5,6 @@ namespace KolveniershofBACKEND.Data.Repositories.Interfaces
 {
     public interface IBusDriverRepository
     {
-        IEnumerable<BusDriver> GetDriversForDay(int dayId);
+        IEnumerable<BusDriver> GetDriversByWeek(int weekNr);
     }
 }

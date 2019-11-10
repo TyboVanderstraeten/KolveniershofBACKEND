@@ -20,14 +20,14 @@ namespace KolveniershofBACKEND.Controllers
         }
 
         /// <summary>
-        /// Get the bus scheme from a templateDay
+        /// Get the bus scheme for a template week
         /// </summary>
-        /// <param name="dayId">The id of an particular day</param>
+        /// <param name="weekNr">The number of a particular week</param>
         [HttpGet]
-        [Route("{dayId}")]
-        public ActionResult<IEnumerable<BusDriver>> GetBusScheme(int dayId)
+        [Route("getByWeek/{weekNr}")]
+        public ActionResult<IEnumerable<BusDriver>> GetBusScheme(int weekNr)
         {
-            return _busDriverRepository.GetDriversForDay(dayId).ToList();
+            return _busDriverRepository.GetDriversByWeek(weekNr).ToList();
         }
     }
 }

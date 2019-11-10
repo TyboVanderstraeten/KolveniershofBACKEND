@@ -17,11 +17,9 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
             _busDrivers = _dbContext.BusDrivers;
         }
 
-        public IEnumerable<BusDriver> GetDriversForDay(int dayId)
+        public IEnumerable<BusDriver> GetDriversByWeek(int weekNr)
         {
-            var lol =  _busDrivers.Include(b => b.Day).Include(b => b.Driver).Where(b => b.DayId == dayId).ToList();
-
-            return lol;
+            return  _busDrivers.Include(b => b.Day).Include(b => b.Driver).Where(b => b.Day.WeekNr == weekNr).ToList();
         }
     }
 }
