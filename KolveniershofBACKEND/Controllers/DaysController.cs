@@ -61,18 +61,6 @@ namespace KolveniershofBACKEND.Controllers
         /// <summary>
         /// Get a specific custom day
         /// </summary>
-        /// <param name="dayId">The id of the custom day</param>
-        /// <returns>The custom day</returns>
-        [HttpGet]
-        [Route("{dayId}")]
-        public ActionResult<CustomDay> GetById(int dayId)
-        {
-            return _customDayRepository.GetById(dayId);
-        }
-
-        /// <summary>
-        /// Get a specific custom day
-        /// </summary>
         /// <param name="date">The date of the custom day</param>
         /// <returns>The custom day</returns>
         [HttpGet]
@@ -199,7 +187,7 @@ namespace KolveniershofBACKEND.Controllers
                 Day templateDayChosen = _dayRepository.GetByWeekAndDay(model.TemplateName, model.WeekNr, model.DayNr);
                 dayToEdit.TemplateName = templateDayChosen.TemplateName;
                 dayToEdit.WeekNr = templateDayChosen.WeekNr;
-                dayToEdit.DayNr = templateDayChosen.WeekNr;
+                dayToEdit.DayNr = templateDayChosen.DayNr;
                 dayToEdit.DayActivities = new List<DayActivity>();
                 dayToEdit.Helpers = new List<Helper>();
                 foreach (DayActivity dayActivity in templateDayChosen.DayActivities)

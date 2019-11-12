@@ -75,7 +75,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
 
             IList<Attendance> attendances = _dummyDBContext.Attendances1.Where(attendance => attendance.User.UserType != UserType.CLIENT).ToList();
             _dayActivityRepository.Setup(d => d.GetCustomDayActivity(date, timeOfDay, activityId)).Returns(_dummyDBContext.DayActivity1);
-            ActionResult<IEnumerable<Attendance>> actionResult = _controller.GetAllClients(date, activityId, timeOfDay);
+            ActionResult<IEnumerable<Attendance>> actionResult = _controller.GetAllPersonnel(date, activityId, timeOfDay);
 
             Assert.Equal(attendances.Count, actionResult.Value.ToList().Count);
         } 

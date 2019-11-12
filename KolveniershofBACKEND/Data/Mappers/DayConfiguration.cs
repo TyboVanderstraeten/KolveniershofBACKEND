@@ -13,6 +13,7 @@ namespace KolveniershofBACKEND.Data.Mappers
             builder.Property(d => d.TemplateName).IsRequired();
             builder.Property(d => d.WeekNr).IsRequired();
             builder.Property(d => d.DayNr).IsRequired();
+            builder.Ignore(d => d.DayName);
             builder.HasDiscriminator<string>("DayType")
                 .HasValue<Day>("template_day")
                 .HasValue<CustomDay>("custom_day");

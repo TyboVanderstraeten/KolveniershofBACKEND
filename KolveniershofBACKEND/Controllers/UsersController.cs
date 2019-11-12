@@ -100,6 +100,7 @@ namespace KolveniershofBACKEND.Controllers
         [Route("{email}")]
         public ActionResult<User> GetByEmail(string email)
         {
+            // Only if user is client or begeleider
             return _userRepository.GetByEmail(email);
         }
 
@@ -153,25 +154,29 @@ namespace KolveniershofBACKEND.Controllers
                     model.LastName,
                     model.Email,
                     model.ProfilePicture,
-                    model.Group);
+                    model.Group,
+                    model.DegreeOfLimitation);
 
-                //Temp
                 if (_userRepository.GetByEmail(userToCreate.Email) != null)
                 {
                     return BadRequest("User already exists");
                 }
 
-                IdentityUser identityUserToCreate = new IdentityUser()
+                if (userToCreate.UserType.Equals(UserType.CLIENT) || userToCreate.UserType.Equals(UserType.BEGELEIDER))
                 {
-                    Email = userToCreate.Email,
-                    NormalizedEmail = userToCreate.Email,
-                    UserName = userToCreate.Email,
-                    NormalizedUserName = userToCreate.Email,
-                    LockoutEnabled = true,
-                    EmailConfirmed = true
-                };
 
-                await _userManager.CreateAsync(identityUserToCreate, "P@ssword1");
+                    IdentityUser identityUserToCreate = new IdentityUser()
+                    {
+                        Email = userToCreate.Email,
+                        NormalizedEmail = userToCreate.Email,
+                        UserName = userToCreate.Email,
+                        NormalizedUserName = userToCreate.Email,
+                        LockoutEnabled = true,
+                        EmailConfirmed = true
+                    };
+                    await _userManager.CreateAsync(identityUserToCreate, "P@ssword1");
+                }
+
                 _userRepository.Add(userToCreate);
                 _userRepository.SaveChanges();
                 return CreatedAtAction(nameof(GetById), new { id = userToCreate.UserId }, userToCreate);
@@ -194,18 +199,23 @@ namespace KolveniershofBACKEND.Controllers
         public ActionResult<User> Edit(UserDTO model)
         {
             User userToEdit = _userRepository.GetById(model.UserId);
-            IdentityUser identityUserToEdit = GetUser(userToEdit.Email).GetAwaiter().GetResult();
             userToEdit.UserType = model.UserType;
             userToEdit.FirstName = model.FirstName;
             userToEdit.LastName = model.LastName;
             userToEdit.Email = model.Email;
             userToEdit.ProfilePicture = model.ProfilePicture;
             userToEdit.Group = model.Group;
+            userToEdit.DegreeOfLimitation = model.DegreeOfLimitation;
 
-            identityUserToEdit.Email = userToEdit.Email;
-            identityUserToEdit.NormalizedEmail = userToEdit.Email;
-            identityUserToEdit.UserName = userToEdit.Email;
-            identityUserToEdit.NormalizedUserName = userToEdit.Email;
+            if (userToEdit.UserType.Equals(UserType.CLIENT) || userToEdit.UserType.Equals(UserType.BEGELEIDER))
+            {
+                IdentityUser identityUserToEdit = GetUser(userToEdit.Email).GetAwaiter().GetResult();
+                identityUserToEdit.Email = userToEdit.Email;
+                identityUserToEdit.NormalizedEmail = userToEdit.Email;
+                identityUserToEdit.UserName = userToEdit.Email;
+                identityUserToEdit.NormalizedUserName = userToEdit.Email;
+            }
+
             _userRepository.SaveChanges();
             return Ok(userToEdit);
         }
@@ -229,8 +239,12 @@ namespace KolveniershofBACKEND.Controllers
             }
             else
             {
-                IdentityUser identityUserToDelete = GetUser(userToDelete.Email).GetAwaiter().GetResult();
-                await _userManager.DeleteAsync(identityUserToDelete);
+                if (userToDelete.UserType.Equals(UserType.CLIENT) || userToDelete.UserType.Equals(UserType.BEGELEIDER))
+                {
+
+                    IdentityUser identityUserToDelete = GetUser(userToDelete.Email).GetAwaiter().GetResult();
+                    await _userManager.DeleteAsync(identityUserToDelete);
+                }
                 _userRepository.Remove(userToDelete);
                 _userRepository.SaveChanges();
                 return Ok(userToDelete);

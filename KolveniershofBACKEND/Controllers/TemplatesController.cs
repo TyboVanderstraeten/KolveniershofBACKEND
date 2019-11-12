@@ -67,18 +67,6 @@ namespace KolveniershofBACKEND.Controllers
         }
 
         /// <summary>
-        /// Get a specific template day
-        /// </summary>
-        /// <param name="id">The id of the template day</param>
-        /// <returns>The template day</returns>
-        [HttpGet]
-        [Route("{id}")]
-        public ActionResult<Day> GetById(int id)
-        {
-            return _dayRepository.GetById(id);
-        }
-
-        /// <summary>
         /// Get a template day from a specific template, week and day
         /// </summary>
         /// <param name="templateName">The name of the template</param>

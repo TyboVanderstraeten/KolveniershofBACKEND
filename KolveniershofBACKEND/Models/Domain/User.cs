@@ -16,6 +16,7 @@ namespace KolveniershofBACKEND.Models.Domain
         public string Email { get; set; }
         public string ProfilePicture { get; set; }
         public int? Group { get; set; }
+        public int? DegreeOfLimitation { get; set; }
         public ICollection<WeekendDay> WeekendDays { get; set; }
 
         protected User()
@@ -24,7 +25,7 @@ namespace KolveniershofBACKEND.Models.Domain
         }
 
         public User(UserType userType, string firstName, string lastName,
-            string email, string profilePicture, int? group)
+            string email, string profilePicture, int? group, int? degreeOfLimitation)
         {
             UserType = userType;
             FirstName = firstName;
@@ -32,6 +33,7 @@ namespace KolveniershofBACKEND.Models.Domain
             Email = email;
             ProfilePicture = profilePicture;
             Group = group;
+            DegreeOfLimitation = degreeOfLimitation;
             WeekendDays = new List<WeekendDay>();
         }
 
