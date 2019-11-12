@@ -8,7 +8,7 @@ namespace KolveniershofBACKEND.Models.DTO
 {
     public class CommentDTO
     {
-        [Required(ErrorMessage = "Comment is required")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Comment is required")]
         public string Comment { get; set; }
     }
 }

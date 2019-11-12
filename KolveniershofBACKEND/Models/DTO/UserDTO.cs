@@ -10,9 +10,9 @@ namespace KolveniershofBACKEND.Models.DTO
         public int UserId { get; set; }
         [Required(ErrorMessage = "UserType is required")]
         public UserType UserType { get; set; }
-        [Required(ErrorMessage = "First name is required")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "First name is required")]
         public string FirstName { get; set; }
-        [Required(ErrorMessage = "Last name is required")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Last name is required")]
         public string LastName { get; set; }
         public string Email { get; set; }
         public string ProfilePicture { get; set; }

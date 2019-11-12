@@ -6,7 +6,7 @@ namespace KolveniershofBACKEND.Models.DTO
     public class DayDTO
     {
         public int DayId { get; set; }
-        [Required(ErrorMessage = "Template name is required")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Template name is required")]
         public string TemplateName { get; set; }
         [Required(ErrorMessage = "Weeknr is required")]
         public int WeekNr { get; set; }

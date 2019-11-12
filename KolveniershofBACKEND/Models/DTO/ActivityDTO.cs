@@ -6,12 +6,12 @@ namespace KolveniershofBACKEND.Models.DTO
     public class ActivityDTO
     {
         public int ActivityId { get; set; }
-        [Required(ErrorMessage ="ActivityType is required")]
+        [Required(ErrorMessage = "ActivityType is required")]
         public ActivityType ActivityType { get; set; }
-        [Required(ErrorMessage = "Name is required")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Name is required")]
         public string Name { get; set; }
         public string Description { get; set; }
-        [Required(ErrorMessage = "Pictogram is required")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Pictogram is required")]
         public string Pictogram { get; set; }
     }
 }

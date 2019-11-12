@@ -9,7 +9,7 @@ namespace KolveniershofBACKEND.Models.DTO
         public int DayId { get; set; }
         [Required(ErrorMessage = "NoteType is required")]
         public NoteType NoteType { get; set; }
-        [Required(ErrorMessage = "Content is required")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Content is required")]
         public string Content { get; set; }
     }
 }
