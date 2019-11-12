@@ -32,7 +32,15 @@ namespace KolveniershofBACKEND.Controllers
         [Route("{date}/user/{userId}")]
         public ActionResult<WeekendDay> Get(DateTime date, int userId)
         {
-            return _weekendDayRepository.GetByDate(date, userId);
+            WeekendDay weekendDay = _weekendDayRepository.GetByDate(date, userId);
+            if (weekendDay == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(weekendDay);
+            }
         }
 
         /// <summary>
@@ -43,11 +51,26 @@ namespace KolveniershofBACKEND.Controllers
         [HttpPost]
         public ActionResult<WeekendDay> Add(WeekendDayDTO model)
         {
+
             WeekendDay weekendDayToAdd = new WeekendDay(model.Date, model.Comment);
             User user = _userRepository.GetById(model.UserId);
-            user.AddWeekendDay(weekendDayToAdd);
-            _userRepository.SaveChanges();
-            return weekendDayToAdd;
+            if (user == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                try
+                {
+                    user.AddWeekendDay(weekendDayToAdd);
+                    _userRepository.SaveChanges();
+                    return Ok(weekendDayToAdd);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
+            }
         }
 
         /// <summary>
@@ -61,9 +84,23 @@ namespace KolveniershofBACKEND.Controllers
         public ActionResult<WeekendDay> Edit(DateTime date, int userId, CommentDTO model)
         {
             WeekendDay weekendDayToEdit = _weekendDayRepository.GetByDate(date, userId);
-            weekendDayToEdit.Comment = model.Comment;
-            _userRepository.SaveChanges();
-            return weekendDayToEdit;
+            if (weekendDayToEdit == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                try
+                {
+                    weekendDayToEdit.Comment = model.Comment;
+                    _userRepository.SaveChanges();
+                    return Ok(weekendDayToEdit);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
+            }
         }
 
         /// <summary>
@@ -77,10 +114,31 @@ namespace KolveniershofBACKEND.Controllers
         public ActionResult<WeekendDay> Remove(DateTime date, int userId)
         {
             WeekendDay weekendDayToRemove = _weekendDayRepository.GetByDate(date, userId);
-            User user = _userRepository.GetById(userId);
-            user.RemoveWeekendDay(weekendDayToRemove);
-            _userRepository.SaveChanges();
-            return weekendDayToRemove;
+            if (weekendDayToRemove == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                try
+                {
+                    User user = _userRepository.GetById(userId);
+                    if (user == null)
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        user.RemoveWeekendDay(weekendDayToRemove);
+                        _userRepository.SaveChanges();
+                        return Ok(weekendDayToRemove);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
+            }
         }
     }
 }

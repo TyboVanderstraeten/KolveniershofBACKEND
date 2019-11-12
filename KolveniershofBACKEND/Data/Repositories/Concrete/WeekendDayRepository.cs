@@ -21,9 +21,16 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
 
         public WeekendDay GetByDate(DateTime date, int userId)
         {
-            return _users.Include(u => u.WeekendDays).SingleOrDefault(u => u.UserId == userId)
-                         .WeekendDays
-                         .SingleOrDefault(w => w.Date.Date == date.Date);
+            try
+            {
+                return _users.Include(u => u.WeekendDays).SingleOrDefault(u => u.UserId == userId)
+                             .WeekendDays
+                             .SingleOrDefault(w => w.Date.Date == date.Date);
+            }
+            catch (Exception ex)
+            {
+                return new WeekendDay(date, null);
+            }
         }
 
         public void SaveChanges()

@@ -140,7 +140,7 @@ namespace KolveniershofBACKEND.Tests.Data
             Attendance1 = new Attendance(DayActivity1, U1);
             Attendance5 = new Attendance(DayActivity1, U2);
             Attendance6 = new Attendance(DayActivity1, U2);
-            Attendances1.Add(Attendance1);
+            //Attendances1.Add(Attendance1);
             Attendances1.Add(Attendance5);
             Attendances1.Add(Attendance6);
             DayActivity1.Attendances = Attendances1;
@@ -173,7 +173,7 @@ namespace KolveniershofBACKEND.Tests.Data
             Helper1 = new Helper(Day1, U1);
             Helper2 = new Helper(Day1, U3);
             Helpers1 = new List<Helper>();
-            Helpers1.Add(Helper1);
+            //Helpers1.Add(Helper1);
             Helpers1.Add(Helper2);
 
             Day1.Helpers = Helpers1;
@@ -211,7 +211,7 @@ namespace KolveniershofBACKEND.Tests.Data
             Note1 = new Note(NoteType.VERVOER, "Florian neemt de bus niet vandaag");
             Note2 = new Note(NoteType.VARIA, "Vandaag zullen er geen bekertjes aanwezig zijn");
             Notes = new List<Note>();
-            Notes.Add(Note1);
+            //Notes.Add(Note1);
             Notes.Add(Note2);
 
             CustomDay1 = new CustomDay("eerste_week_eerste_dag",1, 1, DateTime.Today, "Wortelsoep", "Kip zoetzuur", "chocomousse");

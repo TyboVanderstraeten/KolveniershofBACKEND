@@ -45,7 +45,15 @@ namespace KolveniershofBACKEND.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<User>> GetAll()
         {
-            return _userRepository.GetAll().ToList();
+            IEnumerable<User> users = _userRepository.GetAll().ToList();
+            if (users == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(users);
+            }
         }
 
         /// <summary>
@@ -54,10 +62,22 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="groupId">The id of the group</param>
         /// <returns>The users of the group</returns>
         [HttpGet]
-        [Route("group/{id}")]
+        [Route("group/{groupId}")]
         public ActionResult<IEnumerable<User>> GetAll(int groupId)
         {
-            return _userRepository.GetAllFromGroup(groupId).ToList();
+            IEnumerable<User> users = _userRepository.GetAllFromGroup(groupId).ToList();
+            if (users == null)
+            {
+                return NotFound();
+            }
+            else if (groupId < 1 || groupId > 3)
+            {
+                return BadRequest("GroupId can only be 1,2,3");
+            }
+            else
+            {
+                return Ok(users);
+            }
         }
 
         /// <summary>
@@ -69,13 +89,20 @@ namespace KolveniershofBACKEND.Controllers
         [Route("type/{type}")]
         public ActionResult<IEnumerable<User>> GetAll(string type)
         {
-            if (Enum.IsDefined(typeof(UserType), type.ToUpper()))
+            if (!Enum.IsDefined(typeof(UserType), type.ToUpper()))
             {
-                return _userRepository.GetAllWithType((UserType)Enum.Parse(typeof(UserType), type.ToUpper())).ToList();
+                return BadRequest("UserType doesn't exist");
             }
-            else
             {
-                return BadRequest("Type is incorrect");
+                IEnumerable<User> users = _userRepository.GetAllWithType((UserType)Enum.Parse(typeof(UserType), type.ToUpper())).ToList();
+                if (users == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return Ok(users);
+                }
             }
         }
 
@@ -88,7 +115,15 @@ namespace KolveniershofBACKEND.Controllers
         [Route("{userId}")]
         public ActionResult<User> GetById(int userId)
         {
-            return _userRepository.GetById(userId);
+            User user = _userRepository.GetById(userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(_userRepository.GetById(userId));
+            }
         }
 
         /// <summary>
@@ -100,8 +135,15 @@ namespace KolveniershofBACKEND.Controllers
         [Route("email/{email}")]
         public ActionResult<User> GetByEmail(string email)
         {
-            // Only if user is client or begeleider
-            return _userRepository.GetByEmail(email);
+            User user = _userRepository.GetByEmail(email);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(user);
+            }
         }
 
         /// <summary>
@@ -114,7 +156,7 @@ namespace KolveniershofBACKEND.Controllers
         public async Task<ActionResult<bool>> CheckAvailibilityEmail(string email)
         {
             IdentityUser identityUser = await _userManager.FindByEmailAsync(email);
-            return identityUser == null;
+            return Ok(identityUser == null);
         }
 
         /// <summary>
@@ -127,15 +169,22 @@ namespace KolveniershofBACKEND.Controllers
         public async Task<ActionResult<string>> Login(LoginDTO model)
         {
             IdentityUser user = await GetUser(model.Email);
-            if (user != null)
+            if (user == null)
+            {
+                return NotFound();
+            }
+            else
             {
                 if (await CheckPassword(user, model.Password))
                 {
                     string token = await GetToken(user);
                     return Created("", token);
                 }
+                else
+                {
+                    return BadRequest("Password is incorrect");
+                }
             }
-            return BadRequest("E-mail or password is incorrect");
         }
 
         /// <summary>
@@ -179,8 +228,7 @@ namespace KolveniershofBACKEND.Controllers
 
                 _userRepository.Add(userToCreate);
                 _userRepository.SaveChanges();
-                return CreatedAtAction(nameof(GetById), new { id = userToCreate.UserId }, userToCreate);
-
+                return Ok(userToCreate);
             }
             catch (Exception ex)
             {
@@ -199,25 +247,39 @@ namespace KolveniershofBACKEND.Controllers
         public ActionResult<User> Edit(UserDTO model)
         {
             User userToEdit = _userRepository.GetById(model.UserId);
-            userToEdit.UserType = model.UserType;
-            userToEdit.FirstName = model.FirstName;
-            userToEdit.LastName = model.LastName;
-            userToEdit.Email = model.Email;
-            userToEdit.ProfilePicture = model.ProfilePicture;
-            userToEdit.Group = model.Group;
-            userToEdit.DegreeOfLimitation = model.DegreeOfLimitation;
-
-            if (userToEdit.UserType.Equals(UserType.CLIENT) || userToEdit.UserType.Equals(UserType.BEGELEIDER))
+            if (userToEdit == null)
             {
-                IdentityUser identityUserToEdit = GetUser(userToEdit.Email).GetAwaiter().GetResult();
-                identityUserToEdit.Email = userToEdit.Email;
-                identityUserToEdit.NormalizedEmail = userToEdit.Email;
-                identityUserToEdit.UserName = userToEdit.Email;
-                identityUserToEdit.NormalizedUserName = userToEdit.Email;
+                return NotFound();
             }
+            else
+            {
+                try
+                {
+                    userToEdit.UserType = model.UserType;
+                    userToEdit.FirstName = model.FirstName;
+                    userToEdit.LastName = model.LastName;
+                    userToEdit.Email = model.Email;
+                    userToEdit.ProfilePicture = model.ProfilePicture;
+                    userToEdit.Group = model.Group;
+                    userToEdit.DegreeOfLimitation = model.DegreeOfLimitation;
 
-            _userRepository.SaveChanges();
-            return Ok(userToEdit);
+                    if (userToEdit.UserType.Equals(UserType.CLIENT) || userToEdit.UserType.Equals(UserType.BEGELEIDER))
+                    {
+                        IdentityUser identityUserToEdit = GetUser(userToEdit.Email).GetAwaiter().GetResult();
+                        identityUserToEdit.Email = userToEdit.Email;
+                        identityUserToEdit.NormalizedEmail = userToEdit.Email;
+                        identityUserToEdit.UserName = userToEdit.Email;
+                        identityUserToEdit.NormalizedUserName = userToEdit.Email;
+                    }
+
+                    _userRepository.SaveChanges();
+                    return Ok(userToEdit);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest();
+                }
+            }
         }
 
         // Works 90% off the time, sometimes produces an error: using result of async call to remove user, doesn't always happen fast enough
@@ -232,22 +294,28 @@ namespace KolveniershofBACKEND.Controllers
         public async Task<ActionResult<User>> Remove(int userId)
         {
             User userToDelete = _userRepository.GetById(userId);
-
             if (userToDelete == null)
             {
-                return NoContent();
+                return NotFound();
             }
             else
             {
-                if (userToDelete.UserType.Equals(UserType.CLIENT) || userToDelete.UserType.Equals(UserType.BEGELEIDER))
+                try
                 {
+                    if (userToDelete.UserType.Equals(UserType.CLIENT) || userToDelete.UserType.Equals(UserType.BEGELEIDER))
+                    {
 
-                    IdentityUser identityUserToDelete = GetUser(userToDelete.Email).GetAwaiter().GetResult();
-                    await _userManager.DeleteAsync(identityUserToDelete);
+                        IdentityUser identityUserToDelete = GetUser(userToDelete.Email).GetAwaiter().GetResult();
+                        await _userManager.DeleteAsync(identityUserToDelete);
+                    }
+                    _userRepository.Remove(userToDelete);
+                    _userRepository.SaveChanges();
+                    return Ok(userToDelete);
                 }
-                _userRepository.Remove(userToDelete);
-                _userRepository.SaveChanges();
-                return Ok(userToDelete);
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
             }
         }
 

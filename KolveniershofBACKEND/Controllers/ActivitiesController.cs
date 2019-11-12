@@ -26,7 +26,15 @@ namespace KolveniershofBACKEND.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Activity>> GetAll()
         {
-            return _activityRepository.GetAll().ToList();
+            IEnumerable<Activity> activities = _activityRepository.GetAll().ToList();
+            if (activities == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(activities);
+            }
         }
 
         /// <summary>
@@ -38,7 +46,15 @@ namespace KolveniershofBACKEND.Controllers
         [Route("{id}")]
         public ActionResult<Activity> GetById(int id)
         {
-            return _activityRepository.GetById(id);
+            Activity activity = _activityRepository.GetById(id);
+            if (activity == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(activity);
+            }
         }
 
         /// <summary>
@@ -59,7 +75,7 @@ namespace KolveniershofBACKEND.Controllers
 
                 _activityRepository.Add(activityToCreate);
                 _activityRepository.SaveChanges();
-                return CreatedAtAction(nameof(GetById), new { id = activityToCreate.ActivityId }, activityToCreate);
+                return Ok(activityToCreate);
             }
             catch (Exception ex)
             {
@@ -76,12 +92,26 @@ namespace KolveniershofBACKEND.Controllers
         public ActionResult<Activity> Edit(ActivityDTO model)
         {
             Activity activityToEdit = _activityRepository.GetById(model.ActivityId);
-            activityToEdit.ActivityType = model.ActivityType;
-            activityToEdit.Name = model.Name;
-            activityToEdit.Description = model.Description;
-            activityToEdit.Pictogram = model.Pictogram;
-            _activityRepository.SaveChanges();
-            return Ok(activityToEdit);
+            if (activityToEdit == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                try
+                {
+                    activityToEdit.ActivityType = model.ActivityType;
+                    activityToEdit.Name = model.Name;
+                    activityToEdit.Description = model.Description;
+                    activityToEdit.Pictogram = model.Pictogram;
+                    _activityRepository.SaveChanges();
+                    return Ok(activityToEdit);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
+            }
         }
 
         /// <summary>
@@ -96,13 +126,20 @@ namespace KolveniershofBACKEND.Controllers
             Activity activityToDelete = _activityRepository.GetById(id);
             if (activityToDelete == null)
             {
-                return NoContent();
+                return NotFound();
             }
             else
             {
-                _activityRepository.Remove(activityToDelete);
-                _activityRepository.SaveChanges();
-                return Ok(activityToDelete);
+                try
+                {
+                    _activityRepository.Remove(activityToDelete);
+                    _activityRepository.SaveChanges();
+                    return Ok(activityToDelete);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
             }
         }
     }

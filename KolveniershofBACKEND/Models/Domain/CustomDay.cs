@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace KolveniershofBACKEND.Models.Domain
 {
@@ -27,12 +28,26 @@ namespace KolveniershofBACKEND.Models.Domain
 
         public void AddNote(Note note)
         {
-            Notes.Add(note);
+            if (Notes.SingleOrDefault(n => n.NoteId == note.NoteId && n.DayId == note.DayId) == null)
+            {
+                Notes.Add(note);
+            }
+            else
+            {
+                throw new ArgumentException("Note already exists");
+            }
         }
 
         public void RemoveNote(Note note)
         {
-            Notes.Remove(note);
+            if (Notes.SingleOrDefault(n => n.NoteId == note.NoteId && n.DayId == note.DayId) != null)
+            {
+                Notes.Remove(note);
+            }
+            else
+            {
+                throw new ArgumentException("Note doesn't exist");
+            }
         }
     }
 }
