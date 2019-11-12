@@ -72,26 +72,6 @@ namespace KolveniershofBACKEND.Tests.Controllers
             Assert.Equal(1, days.Count);
         }
 
-
-        [Fact]
-        public void GetById_Succeeds()
-        {
-            int dayId = 1;
-            _dayRepository.Setup(d => d.GetById(dayId)).Returns(_dummyDBContext.Day1);
-            ActionResult<Day> actionResult = _controller.GetById(dayId);
-            Assert.Equal(4, actionResult.Value.DayActivities.Count);
-            Assert.Equal(1, actionResult.Value.DayNr);
-        }
-
-        [Fact]
-        public void GetById_ReturnsNull()
-        {
-            int dayId = 4;
-            _dayRepository.Setup(d => d.GetById(dayId)).Returns((Day)null);
-            ActionResult<Day> actionResult = _controller.GetById(dayId);
-            Assert.Null(actionResult.Value);
-        }
-
         [Fact]
         public void GetByTemplateNameWeekAndDay_Succeeds()
         {

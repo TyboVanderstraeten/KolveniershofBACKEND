@@ -218,7 +218,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
                 ProfilePicture = null,
                 Group = null
             };
-            User user = new User(UserType.BEGELEIDER, "Florian", "Landuyt", "florian@hotmail.com", null, null);
+            User user = new User(UserType.BEGELEIDER, "Florian", "Landuyt", "florian@hotmail.com", null, null,null);
             _userRepository.Setup(u => u.GetByEmail(user.Email)).Returns((User)null);
             ActionResult<User> actionResult = await _controller.Add(userDTO);
             CreatedAtActionResult actionResult2 = actionResult.Result as CreatedAtActionResult;

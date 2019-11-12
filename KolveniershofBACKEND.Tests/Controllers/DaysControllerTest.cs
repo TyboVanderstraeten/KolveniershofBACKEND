@@ -66,16 +66,6 @@ namespace KolveniershofBACKEND.Tests.Controllers
         }
 
         [Fact]
-        public void GetById_Succeeds()
-        {
-            int customDayId = 1;
-            _customDayRepository.Setup(c => c.GetById(customDayId)).Returns(_dummyDBContext.CustomDay1);
-            ActionResult<CustomDay> actionResult = _controller.GetById(customDayId);
-            CustomDay day = actionResult.Value;
-            Assert.Equal(DateTime.Today, day.Date);
-        }
-
-        [Fact]
         public void GetByDate_Succeeds()
         {
             DateTime date = DateTime.Today.AddDays(1);
@@ -276,7 +266,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
             ActionResult<Note> actionResult = _controller.RemoveNote(date, noteId);
             Assert.Equal(NoteType.VERVOER, actionResult.Value.NoteType);
             _customDayRepository.Verify(c => c.SaveChanges(), Times.Once());
-        } 
+        }
         #endregion
 
     }
