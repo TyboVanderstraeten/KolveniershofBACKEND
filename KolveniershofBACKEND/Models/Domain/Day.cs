@@ -67,7 +67,7 @@ namespace KolveniershofBACKEND.Models.Domain
 
         public void AddDayActivity(DayActivity dayActivity)
         {
-            if (DayActivities.SingleOrDefault(da => da.DayId == dayActivity.DayId && da.ActivityId == dayActivity.ActivityId) == null)
+            if (DayActivities.SingleOrDefault(da => da.DayId == dayActivity.DayId && da.ActivityId == dayActivity.ActivityId && da.TimeOfDay == dayActivity.TimeOfDay) == null)
             {
                 DayActivities.Add(dayActivity);
             }
@@ -79,7 +79,7 @@ namespace KolveniershofBACKEND.Models.Domain
 
         public void RemoveDayActivity(DayActivity dayActivity)
         {
-            if (DayActivities.SingleOrDefault(da => da.DayId == dayActivity.DayId && da.ActivityId == dayActivity.ActivityId) != null)
+            if (DayActivities.SingleOrDefault(da => da.DayId == dayActivity.DayId && da.ActivityId == dayActivity.ActivityId && da.TimeOfDay == dayActivity.TimeOfDay) != null)
             {
                 DayActivities.Remove(dayActivity);
             }
