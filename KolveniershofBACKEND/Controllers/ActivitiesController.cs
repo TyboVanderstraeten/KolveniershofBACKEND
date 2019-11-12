@@ -31,7 +31,10 @@ namespace KolveniershofBACKEND.Controllers
             {
                 return NotFound();
             }
-            return Ok(activities);
+            else
+            {
+                return Ok(activities);
+            }
         }
 
         /// <summary>
@@ -48,7 +51,10 @@ namespace KolveniershofBACKEND.Controllers
             {
                 return NotFound();
             }
-            return Ok(activity);
+            else
+            {
+                return Ok(activity);
+            }
         }
 
         /// <summary>
@@ -69,7 +75,7 @@ namespace KolveniershofBACKEND.Controllers
 
                 _activityRepository.Add(activityToCreate);
                 _activityRepository.SaveChanges();
-                return CreatedAtAction(nameof(GetById), new { id = activityToCreate.ActivityId }, activityToCreate);
+                return Ok(activityToCreate);
             }
             catch (Exception ex)
             {

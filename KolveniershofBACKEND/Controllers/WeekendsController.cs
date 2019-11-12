@@ -51,17 +51,25 @@ namespace KolveniershofBACKEND.Controllers
         [HttpPost]
         public ActionResult<WeekendDay> Add(WeekendDayDTO model)
         {
-            try
+
+            WeekendDay weekendDayToAdd = new WeekendDay(model.Date, model.Comment);
+            User user = _userRepository.GetById(model.UserId);
+            if (user == null)
             {
-                WeekendDay weekendDayToAdd = new WeekendDay(model.Date, model.Comment);
-                User user = _userRepository.GetById(model.UserId);
-                user.AddWeekendDay(weekendDayToAdd);
-                _userRepository.SaveChanges();
-                return weekendDayToAdd;
+                return NotFound();
             }
-            catch (Exception ex)
+            else
             {
-                return BadRequest(ex.Message);
+                try
+                {
+                    user.AddWeekendDay(weekendDayToAdd);
+                    _userRepository.SaveChanges();
+                    return Ok(weekendDayToAdd);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
             }
         }
 
@@ -86,7 +94,7 @@ namespace KolveniershofBACKEND.Controllers
                 {
                     weekendDayToEdit.Comment = model.Comment;
                     _userRepository.SaveChanges();
-                    return weekendDayToEdit;
+                    return Ok(weekendDayToEdit);
                 }
                 catch (Exception ex)
                 {
@@ -115,9 +123,16 @@ namespace KolveniershofBACKEND.Controllers
                 try
                 {
                     User user = _userRepository.GetById(userId);
-                    user.RemoveWeekendDay(weekendDayToRemove);
-                    _userRepository.SaveChanges();
-                    return weekendDayToRemove;
+                    if (user == null)
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        user.RemoveWeekendDay(weekendDayToRemove);
+                        _userRepository.SaveChanges();
+                        return Ok(weekendDayToRemove);
+                    }
                 }
                 catch (Exception ex)
                 {

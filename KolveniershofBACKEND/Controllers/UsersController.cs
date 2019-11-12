@@ -142,7 +142,7 @@ namespace KolveniershofBACKEND.Controllers
             }
             else
             {
-                return Ok(_userRepository.GetByEmail(email));
+                return Ok(user);
             }
         }
 
@@ -228,7 +228,7 @@ namespace KolveniershofBACKEND.Controllers
 
                 _userRepository.Add(userToCreate);
                 _userRepository.SaveChanges();
-                return CreatedAtAction(nameof(GetById), new { id = userToCreate.UserId }, userToCreate);
+                return Ok(userToCreate);
             }
             catch (Exception ex)
             {
