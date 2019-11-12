@@ -43,13 +43,13 @@ namespace KolveniershofBACKEND.Data
             User u2 = new User(UserType.CLIENT, "Rob", "De Putter", "rob@hotmail.com", null, 2);
             await _userManager.CreateAsync(new IdentityUser() { Email = u2.Email, UserName = u2.Email, EmailConfirmed = true, }, "P@ssword1");
 
-            User u3 = new User(UserType.STAGIAIR, "Tim", "Geldof", "tim@hotmail.com", null, null);
+            User u3 = new User(UserType.STAGIAIR, "Tim", "Geldof", null, null, null);
             await _userManager.CreateAsync(new IdentityUser() { Email = u3.Email, UserName = u3.Email, EmailConfirmed = true, }, "P@ssword1");
 
-            User u4 = new User(UserType.VRIJWILLIGER, "Dean", "Vandamme", "dean@hotmail.com", null, null);
+            User u4 = new User(UserType.VRIJWILLIGER, "Dean", "Vandamme", null, null, null);
             await _userManager.CreateAsync(new IdentityUser() { Email = u4.Email, UserName = u4.Email, EmailConfirmed = true, }, "P@ssword1");
 
-            User u5 = new User(UserType.CLIENT, "Alihan", "Fevziev", "xaml@hotmail.com", null, 2);
+            User u5 = new User(UserType.CLIENT, "Alihan", "Fevziev", "alihan@hotmail.com", null, 2);
             await _userManager.CreateAsync(new IdentityUser() { Email = u5.Email, UserName = u5.Email, EmailConfirmed = true, }, "P@ssword1");
             _dbContext.Users.Add(u1);
             _dbContext.Users.Add(u2);
