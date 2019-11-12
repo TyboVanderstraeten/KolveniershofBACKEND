@@ -1,6 +1,4 @@
-﻿using KolveniershofBACKEND.Models.Domain.Enums;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace KolveniershofBACKEND.Models.Domain
@@ -9,15 +7,12 @@ namespace KolveniershofBACKEND.Models.Domain
     {
         public int DriverId { get; set; }
         public string Name { get; set; }
-        [JsonConverter(typeof(StringEnumConverter))]
-        public BusColor BusColor { get; set; }
         [JsonIgnore]
         public ICollection<BusDriver> DaysToDrive { get; set; }
 
-        public Driver(string name, BusColor busColor)
+        public Driver(string name)
         {
             Name = name;
-            BusColor = busColor;
             DaysToDrive = new List<BusDriver>();
         }
 

@@ -60,12 +60,12 @@ namespace KolveniershofBACKEND.Data
             #endregion
 
             #region Drivers
-            Driver driver1 = new Driver("Ine", BusColor.BEIGE);
-            Driver driver2 = new Driver("Annemie", BusColor.GEEL);
-            Driver driver3 = new Driver("Kathleen", BusColor.BLAUW);
-            Driver driver4 = new Driver("Nick", BusColor.BEIGE);
-            Driver driver5 = new Driver("Hedwig", BusColor.GEEL);
-            Driver driver6 = new Driver("Koen", BusColor.BLAUW);
+            Driver driver1 = new Driver("Ine");
+            Driver driver2 = new Driver("Annemie");
+            Driver driver3 = new Driver("Kathleen");
+            Driver driver4 = new Driver("Nick");
+            Driver driver5 = new Driver("Hedwig");
+            Driver driver6 = new Driver("Koen");
             #endregion
 
             #region TemplateDay
@@ -100,12 +100,12 @@ namespace KolveniershofBACKEND.Data
                         day.AddHelper(helper1);
                         day.AddHelper(helper2);
 
-                        BusDriver busDriver1 = new BusDriver(day, driver1, TimeOfDay.OCHTEND);
-                        BusDriver busDriver2 = new BusDriver(day, driver2, TimeOfDay.OCHTEND);
-                        BusDriver busDriver3 = new BusDriver(day, driver3, TimeOfDay.OCHTEND);
-                        BusDriver busDriver4 = new BusDriver(day, driver4, TimeOfDay.AVOND);
-                        BusDriver busDriver5 = new BusDriver(day, driver5, TimeOfDay.AVOND);
-                        BusDriver busDriver6 = new BusDriver(day, driver6, TimeOfDay.AVOND);
+                        BusDriver busDriver1 = new BusDriver(day, driver1, TimeOfDay.OCHTEND, BusColor.BEIGE);
+                        BusDriver busDriver2 = new BusDriver(day, driver2, TimeOfDay.OCHTEND, BusColor.GEEL);
+                        BusDriver busDriver3 = new BusDriver(day, driver3, TimeOfDay.OCHTEND, BusColor.BLAUW);
+                        BusDriver busDriver4 = new BusDriver(day, driver4, TimeOfDay.AVOND, BusColor.BEIGE);
+                        BusDriver busDriver5 = new BusDriver(day, driver5, TimeOfDay.AVOND, BusColor.GEEL);
+                        BusDriver busDriver6 = new BusDriver(day, driver6, TimeOfDay.AVOND, BusColor.BEIGE);
 
                         day.AddBusDriver(busDriver1);
                         day.AddBusDriver(busDriver2);

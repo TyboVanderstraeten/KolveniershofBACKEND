@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using KolveniershofBACKEND.Models.Domain.Enums;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
@@ -21,18 +22,22 @@ namespace KolveniershofBACKEND.Models.Domain
         [JsonConverter(typeof(StringEnumConverter))]
         public TimeOfDay TimeOfDay { get; set; }
 
+        [JsonConverter(typeof(StringEnumConverter))]
+        public BusColor BusColor { get; set; }
+
         protected BusDriver()
         {
 
         }
 
-        public BusDriver(Day day, Driver driver, TimeOfDay timeOfDay)
+        public BusDriver(Day day, Driver driver, TimeOfDay timeOfDay, BusColor busColor)
         {
             Day = day;
             DayId = day.DayId;
             Driver = driver;
             DriverId = driver.DriverId;
             TimeOfDay = timeOfDay;
+            BusColor = busColor;
         }
     }
 }
