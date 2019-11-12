@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace KolveniershofBACKEND.Models.Domain
 {
@@ -41,22 +43,50 @@ namespace KolveniershofBACKEND.Models.Domain
 
         public void AddHelper(Helper helper)
         {
-            Helpers.Add(helper);
+            if (Helpers.SingleOrDefault(h => h.DayId == helper.DayId && h.UserId == helper.UserId) == null)
+            {
+                Helpers.Add(helper);
+            }
+            else
+            {
+                throw new ArgumentException("Helper already exists");
+            }
         }
 
         public void RemoveHelper(Helper helper)
         {
-            Helpers.Remove(helper);
+            if (Helpers.SingleOrDefault(h => h.DayId == helper.DayId && h.UserId == helper.UserId) != null)
+            {
+                Helpers.Remove(helper);
+            }
+            else
+            {
+                throw new ArgumentException("Helper doesn't exist");
+            }
         }
 
         public void AddDayActivity(DayActivity dayActivity)
         {
-            DayActivities.Add(dayActivity);
+            if (DayActivities.SingleOrDefault(da => da.DayId == dayActivity.DayId && da.ActivityId == dayActivity.ActivityId) == null)
+            {
+                DayActivities.Add(dayActivity);
+            }
+            else
+            {
+                throw new ArgumentException("DayActivity already exists");
+            }
         }
 
         public void RemoveDayActivity(DayActivity dayActivity)
         {
-            DayActivities.Remove(dayActivity);
+            if (DayActivities.SingleOrDefault(da => da.DayId == dayActivity.DayId && da.ActivityId == dayActivity.ActivityId) != null)
+            {
+                DayActivities.Remove(dayActivity);
+            }
+            else
+            {
+                throw new ArgumentException("DayActivity doesn't exist");
+            }
         }
     }
 }

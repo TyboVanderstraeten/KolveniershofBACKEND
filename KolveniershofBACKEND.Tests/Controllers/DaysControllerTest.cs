@@ -258,10 +258,10 @@ namespace KolveniershofBACKEND.Tests.Controllers
         public void RemoveNote_Succeeds()
         {
             DateTime date = DateTime.Today;
-            int noteId = 1;
+            int noteId = 2;
 
             _customDayRepository.Setup(c => c.GetByDate(date)).Returns(_dummyDBContext.CustomDay1);
-            _noteRepository.Setup(n => n.GetCustomDayNote(date, noteId)).Returns(_dummyDBContext.Note1);
+            _noteRepository.Setup(n => n.GetCustomDayNote(date, noteId)).Returns(_dummyDBContext.Note2);
 
             ActionResult<Note> actionResult = _controller.RemoveNote(date, noteId);
             Assert.Equal(NoteType.VERVOER, actionResult.Value.NoteType);
