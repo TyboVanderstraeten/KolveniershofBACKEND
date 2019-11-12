@@ -120,7 +120,7 @@ namespace KolveniershofBACKEND.Controllers
             Activity activityToDelete = _activityRepository.GetById(id);
             if (activityToDelete == null)
             {
-                return NoContent();
+                return NotFound();
             }
             else
             {
