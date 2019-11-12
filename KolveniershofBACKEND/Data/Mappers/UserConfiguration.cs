@@ -17,6 +17,7 @@ namespace KolveniershofBACKEND.Data.Mappers
             builder.Property(u => u.Email).IsRequired(false);
             builder.Property(u => u.ProfilePicture).IsRequired(false);
             builder.Property(u => u.Group).IsRequired(false);
+            builder.Property(u => u.DegreeOfLimitation).IsRequired(false);
             builder.HasMany(u => u.WeekendDays)
                 .WithOne()
                 .IsRequired()

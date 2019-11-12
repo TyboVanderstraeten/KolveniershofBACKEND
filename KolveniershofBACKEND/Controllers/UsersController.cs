@@ -154,7 +154,8 @@ namespace KolveniershofBACKEND.Controllers
                     model.LastName,
                     model.Email,
                     model.ProfilePicture,
-                    model.Group);
+                    model.Group,
+                    model.DegreeOfLimitation);
 
                 if (_userRepository.GetByEmail(userToCreate.Email) != null)
                 {
@@ -204,6 +205,7 @@ namespace KolveniershofBACKEND.Controllers
             userToEdit.Email = model.Email;
             userToEdit.ProfilePicture = model.ProfilePicture;
             userToEdit.Group = model.Group;
+            userToEdit.DegreeOfLimitation = model.DegreeOfLimitation;
 
             if (userToEdit.UserType.Equals(UserType.CLIENT) || userToEdit.UserType.Equals(UserType.BEGELEIDER))
             {
