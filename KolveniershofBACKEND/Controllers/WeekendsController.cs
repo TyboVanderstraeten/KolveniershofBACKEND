@@ -29,7 +29,7 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="userId">The id of the user</param>
         /// <returns>The weekendday</returns>
         [HttpGet]
-        [Route("{date}/{userId}")]
+        [Route("{date}/user/{userId}")]
         public ActionResult<WeekendDay> Get(DateTime date, int userId)
         {
             return _weekendDayRepository.GetByDate(date, userId);
@@ -57,7 +57,7 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="userId">The id of the user</param>
         /// <returns>The weekendday</returns>
         [HttpPut]
-        [Route("{date}/{userId}")]
+        [Route("{date}/user/{userId}")]
         public ActionResult<WeekendDay> Edit(DateTime date, int userId, CommentDTO model)
         {
             WeekendDay weekendDayToEdit = _weekendDayRepository.GetByDate(date, userId);
@@ -73,7 +73,7 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="userId">The id of the user</param>
         /// <returns>The weekendday</returns>
         [HttpDelete]
-        [Route("{date}/{userId}")]
+        [Route("{date}/user/{userId}")]
         public ActionResult<WeekendDay> Remove(DateTime date, int userId)
         {
             WeekendDay weekendDayToRemove = _weekendDayRepository.GetByDate(date, userId);

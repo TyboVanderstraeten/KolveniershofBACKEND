@@ -66,7 +66,7 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="type">The type of the user</param>
         /// <returns>The users with the type</returns>
         [HttpGet]
-        [Route("{type}")]
+        [Route("type/{type}")]
         public ActionResult<IEnumerable<User>> GetAll(string type)
         {
             if (Enum.IsDefined(typeof(UserType), type.ToUpper()))
@@ -97,7 +97,7 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="email">The email of the user</param>
         /// <returns>The user</returns>
         [HttpGet]
-        [Route("{email}")]
+        [Route("email/{email}")]
         public ActionResult<User> GetByEmail(string email)
         {
             // Only if user is client or begeleider

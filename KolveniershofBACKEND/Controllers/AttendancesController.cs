@@ -32,7 +32,7 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="timeOfDay">The time of day of the activity</param>
         /// <returns>The attendance</returns>
         [HttpGet]
-        [Route("{date}/{timeOfDay}/{activityId}")]
+        [Route("{date}/{timeOfDay}/activity/{activityId}")]
         public ActionResult<IEnumerable<Attendance>> GetAll(DateTime date, int activityId, TimeOfDay timeOfDay)
         {
             return _dayActivityRepository.GetCustomDayActivity(date, timeOfDay, activityId).Attendances.ToList();
@@ -46,7 +46,7 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="timeOfDay">The time of day of the activity</param>
         /// <returns>The client attendances</returns>
         [HttpGet]
-        [Route("clients/{date}/{timeOfDay}/{activityId}")]
+        [Route("clients/{date}/{timeOfDay}/activity/{activityId}")]
         public ActionResult<IEnumerable<Attendance>> GetAllClients(DateTime date, int activityId, TimeOfDay timeOfDay)
         {
             return _dayActivityRepository.GetCustomDayActivity(date, timeOfDay, activityId).Attendances.Where(a => a.User.UserType.Equals(UserType.CLIENT)).ToList();
@@ -60,7 +60,7 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="timeOfDay">The time of day of the activity</param>
         /// <returns>The personnel attendances</returns>
         [HttpGet]
-        [Route("personnel/{date}/{timeOfDay}/{activityId}")]
+        [Route("personnel/{date}/{timeOfDay}/activity/{activityId}")]
         public ActionResult<IEnumerable<Attendance>> GetAllPersonnel(DateTime date, int activityId, TimeOfDay timeOfDay)
         {
             return _dayActivityRepository.GetCustomDayActivity(date, timeOfDay, activityId).Attendances.Where(a => !a.User.UserType.Equals(UserType.CLIENT)).ToList();
@@ -75,7 +75,7 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="userId">The id of the attending user</param>
         /// <returns>The attendance</returns>
         [HttpPost]
-        [Route("{date}/{timeOfDay}/{activityId}/{userId}")]
+        [Route("{date}/{timeOfDay}/activity/{activityId}/user/{userId}")]
         public ActionResult<Attendance> Add(DateTime date, TimeOfDay timeOfDay, int activityId, int userId)
         {
             DayActivity dayActivity = _dayActivityRepository.GetCustomDayActivity(date, timeOfDay, activityId);
@@ -95,7 +95,7 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="userId">The id of the attending user</param>
         /// <returns>The attendance</returns>
         [HttpDelete]
-        [Route("{date}/{timeOfDay}/{activityId}/{userId}")]
+        [Route("{date}/{timeOfDay}/activity/{activityId}/user/{userId}")]
         public ActionResult<Attendance> Remove(DateTime date, TimeOfDay timeOfDay, int activityId, int userId)
         {
             DayActivity dayActivity = _dayActivityRepository.GetCustomDayActivity(date, timeOfDay, activityId);
@@ -115,7 +115,7 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="model">The comment</param>
         /// <returns>The attendance</returns>
         [HttpPost]
-        [Route("comment/{date}/{timeOfDay}/{activityId}/{userId}")]
+        [Route("comment/{date}/{timeOfDay}/activity/{activityId}/user/{userId}")]
         public ActionResult<Attendance> AddComment(DateTime date, TimeOfDay timeOfDay, int activityId, int userId, CommentDTO model)
         {
             Attendance attendanceToEdit = _dayActivityRepository.GetCustomDayActivity(date, timeOfDay, activityId).Attendances.SingleOrDefault(a => a.UserId == userId);
@@ -133,7 +133,7 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="userId">The id of the attending user</param>
         /// <returns>The attendance</returns>
         [HttpDelete]
-        [Route("comment/{date}/{timeOfDay}/{activityId}/{userId}")]
+        [Route("comment/{date}/{timeOfDay}/activity/{activityId}/user/{userId}")]
         public ActionResult<Attendance> RemoveComment(DateTime date, TimeOfDay timeOfDay, int activityId, int userId)
         {
             Attendance attendanceToEdit = _dayActivityRepository.GetCustomDayActivity(date, timeOfDay, activityId).Attendances.SingleOrDefault(a => a.UserId == userId);

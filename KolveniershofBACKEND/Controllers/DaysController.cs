@@ -77,7 +77,7 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="date">The date of the custom day</param>
         /// <returns>The custom day of the user with his attended activities</returns>
         [HttpGet]
-        [Route("{date}/{userId}")]
+        [Route("{date}/user/{userId}")]
         public ActionResult<CustomDay> GetForUser(int userId, DateTime date)
         {
             CustomDay customDay = _customDayRepository.GetByDate(date);
@@ -104,7 +104,7 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="date">The date of the custom day</param>
         /// <returns>The absent users of the custom day</returns>
         [HttpGet]
-        [Route("absent/{date}")]
+        [Route("{date}/absent")]
         public ActionResult<IEnumerable<User>> GetAbsent(DateTime date)
         {
             return _customDayRepository.GetAbsentUsersForDay(date).ToList();
@@ -116,7 +116,7 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="date">The date of the custom day</param>
         /// <returns>The sick users of the custom day</returns>
         [HttpGet]
-        [Route("sick/{date}")]
+        [Route("{date}/sick")]
         public ActionResult<IEnumerable<User>> GetSick(DateTime date)
         {
             return _customDayRepository.GetSickUsersForDay(date).ToList();
@@ -128,7 +128,7 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="date">The date of the custom day</param>
         /// <returns>The notes of the custom day</returns>
         [HttpGet]
-        [Route("notes/{date}")]
+        [Route("{date}/notes")]
         public ActionResult<IEnumerable<Note>> GetNotes(DateTime date)
         {
             return _customDayRepository.GetNotesForDay(date).ToList();
@@ -140,7 +140,7 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="date">The date of the custom day</param>
         /// <returns>The helpers of the custom day</returns>
         [HttpGet]
-        [Route("helpers/{date}")]
+        [Route("{date}/helpers")]
         public ActionResult<IEnumerable<Helper>> GetHelpers(DateTime date)
         {
             return _customDayRepository.GetHelpersForDay(date).ToList();
@@ -232,7 +232,7 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="model">The activity</param>
         /// <returns>The activity</returns>
         [HttpPost]
-        [Route("activity/{date}")]
+        [Route("{date}/activity")]
         public ActionResult<DayActivity> AddActivity(DateTime date, DayActivityDTO model)
         {
             CustomDay customDayToEdit = _customDayRepository.GetByDate(date);
@@ -251,7 +251,7 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="timeOfDay">The time of day</param>
         /// <returns>The activity</returns>
         [HttpDelete]
-        [Route("activity/{date}/{timeOfDay}/{activityId}")]
+        [Route("{date}/{timeOfDay}/activity/{activityId}")]
         public ActionResult<DayActivity> RemoveActivity(DateTime date, int activityId, TimeOfDay timeOfDay)
         {
             CustomDay dayToEdit = _customDayRepository.GetByDate(date);
@@ -268,7 +268,7 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="model">The helper</param>
         /// <returns>The helper</returns>
         [HttpPost]
-        [Route("helper/{date}")]
+        [Route("{date}/helper")]
         public ActionResult<Helper> AddHelper(DateTime date, HelperDTO model)
         {
             CustomDay customDayToEdit = _customDayRepository.GetByDate(date);
@@ -286,7 +286,7 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="userId">The id of the helper</param>
         /// <returns>The helper</returns>
         [HttpDelete]
-        [Route("helper/{date}/{userId}")]
+        [Route("{date}/helper/{userId}")]
         public ActionResult<Helper> RemoveHelper(DateTime date, int userId)
         {
             CustomDay dayToEdit = _customDayRepository.GetByDate(date);
@@ -303,7 +303,7 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="model">The note</param>
         /// <returns>The note</returns>
         [HttpPost]
-        [Route("note/{date}")]
+        [Route("{date}/note")]
         public ActionResult<Note> AddNote(DateTime date, NoteDTO model)
         {
             CustomDay customDayToEdit = _customDayRepository.GetByDate(date);
@@ -320,7 +320,7 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="noteId">The id of the note</param>
         /// <returns>The note</returns>
         [HttpDelete]
-        [Route("note/{date}/{noteId}")]
+        [Route("{date}/note/{noteId}")]
         public ActionResult<Note> RemoveNote(DateTime date, int noteId)
         {
             CustomDay dayToEdit = _customDayRepository.GetByDate(date);
