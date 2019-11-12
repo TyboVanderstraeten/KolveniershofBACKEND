@@ -127,7 +127,7 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="model">The activity</param>
         /// <returns>The activity</returns>
         [HttpPost]
-        [Route("activity/{templateName}/{weekNr}/{dayNr}")]
+        [Route("{templateName}/{weekNr}/{dayNr}/activity")]
         public ActionResult<DayActivity> AddActivity(string templateName, int weekNr, int dayNr, DayActivityDTO model)
         {
             Day dayToEdit = _dayRepository.GetByWeekAndDay(templateName, weekNr, dayNr);
@@ -148,7 +148,7 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="timeOfDay">The time of day</param>
         /// <returns>The activity</returns>
         [HttpDelete]
-        [Route("activity/{templateName}/{weekNr}/{dayNr}/{activityId}/{timeOfDay}")]
+        [Route("{templateName}/{weekNr}/{dayNr}/{timeOfDay}/activity/{activityId}")]
         public ActionResult<DayActivity> RemoveActivity(string templateName, int weekNr, int dayNr, int activityId, TimeOfDay timeOfDay)
         {
             Day dayToEdit = _dayRepository.GetByWeekAndDay(templateName, weekNr, dayNr);
@@ -167,7 +167,7 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="model">The helper</param>
         /// <returns>The helper</returns>
         [HttpPost]
-        [Route("helper/{templateName}/{weekNr}/{dayNr}")]
+        [Route("/{templateName}/{weekNr}/{dayNr}/helper")]
         public ActionResult<Helper> AddHelper(string templateName, int weekNr, int dayNr, HelperDTO model)
         {
             Day dayToEdit = _dayRepository.GetByWeekAndDay(templateName, weekNr, dayNr);
@@ -187,7 +187,7 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="userId">The id of the helper</param>
         /// <returns>The helper</returns>
         [HttpDelete]
-        [Route("helper/{templateName}/{weekNr}/{dayNr}/{userId}")]
+        [Route("{templateName}/{weekNr}/{dayNr}/helper/{userId}")]
         public ActionResult<Helper> RemoveHelper(string templateName, int weekNr, int dayNr, int userId)
         {
             Day dayToEdit = _dayRepository.GetByWeekAndDay(templateName, weekNr, dayNr);
