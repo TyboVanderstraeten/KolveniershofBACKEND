@@ -8,6 +8,19 @@ namespace KolveniershofBACKEND.Models.Domain
         public string TemplateName { get; set; }
         public int WeekNr { get; set; }
         public int DayNr { get; set; }
+        public string DayName {
+            get {
+                switch (DayNr)
+                {
+                    case 1: return "Maandag";
+                    case 2: return "Dinsdag";
+                    case 3: return "Woensdag";
+                    case 4: return "Donderdag";
+                    case 5: return "Vrijdag";
+                    default: return "Invalid";
+                }
+            }
+        }
         public ICollection<DayActivity> DayActivities { get; set; }
         public ICollection<Helper> Helpers { get; set; }
 

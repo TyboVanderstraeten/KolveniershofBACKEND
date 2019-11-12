@@ -187,7 +187,7 @@ namespace KolveniershofBACKEND.Controllers
                 Day templateDayChosen = _dayRepository.GetByWeekAndDay(model.TemplateName, model.WeekNr, model.DayNr);
                 dayToEdit.TemplateName = templateDayChosen.TemplateName;
                 dayToEdit.WeekNr = templateDayChosen.WeekNr;
-                dayToEdit.DayNr = templateDayChosen.WeekNr;
+                dayToEdit.DayNr = templateDayChosen.DayNr;
                 dayToEdit.DayActivities = new List<DayActivity>();
                 dayToEdit.Helpers = new List<Helper>();
                 foreach (DayActivity dayActivity in templateDayChosen.DayActivities)
