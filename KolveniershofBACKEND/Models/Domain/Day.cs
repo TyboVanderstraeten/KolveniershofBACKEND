@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace KolveniershofBACKEND.Models.Domain
 {
@@ -8,6 +10,19 @@ namespace KolveniershofBACKEND.Models.Domain
         public string TemplateName { get; set; }
         public int WeekNr { get; set; }
         public int DayNr { get; set; }
+        public string DayName {
+            get {
+                switch (DayNr)
+                {
+                    case 1: return "Maandag";
+                    case 2: return "Dinsdag";
+                    case 3: return "Woensdag";
+                    case 4: return "Donderdag";
+                    case 5: return "Vrijdag";
+                    default: return "Invalid";
+                }
+            }
+        }
         public ICollection<DayActivity> DayActivities { get; set; }
         public ICollection<Helper> Helpers { get; set; }
 
@@ -28,22 +43,50 @@ namespace KolveniershofBACKEND.Models.Domain
 
         public void AddHelper(Helper helper)
         {
-            Helpers.Add(helper);
+            if (Helpers.SingleOrDefault(h => h.DayId == helper.DayId && h.UserId == helper.UserId) == null)
+            {
+                Helpers.Add(helper);
+            }
+            else
+            {
+                throw new ArgumentException("Helper already exists");
+            }
         }
 
         public void RemoveHelper(Helper helper)
         {
-            Helpers.Remove(helper);
+            if (Helpers.SingleOrDefault(h => h.DayId == helper.DayId && h.UserId == helper.UserId) != null)
+            {
+                Helpers.Remove(helper);
+            }
+            else
+            {
+                throw new ArgumentException("Helper doesn't exist");
+            }
         }
 
         public void AddDayActivity(DayActivity dayActivity)
         {
-            DayActivities.Add(dayActivity);
+            if (DayActivities.SingleOrDefault(da => da.DayId == dayActivity.DayId && da.ActivityId == dayActivity.ActivityId && da.TimeOfDay == dayActivity.TimeOfDay) == null)
+            {
+                DayActivities.Add(dayActivity);
+            }
+            else
+            {
+                throw new ArgumentException("DayActivity already exists");
+            }
         }
 
         public void RemoveDayActivity(DayActivity dayActivity)
         {
-            DayActivities.Remove(dayActivity);
+            if (DayActivities.SingleOrDefault(da => da.DayId == dayActivity.DayId && da.ActivityId == dayActivity.ActivityId && da.TimeOfDay == dayActivity.TimeOfDay) != null)
+            {
+                DayActivities.Remove(dayActivity);
+            }
+            else
+            {
+                throw new ArgumentException("DayActivity doesn't exist");
+            }
         }
     }
 }

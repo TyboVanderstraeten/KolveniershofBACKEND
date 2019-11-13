@@ -13,7 +13,7 @@ namespace KolveniershofBACKEND.Data.Mappers
             builder.HasKey(a => a.ActivityId);
             builder.Property(a => a.ActivityType).HasConversion(new EnumToStringConverter<ActivityType>()).IsRequired();
             builder.Property(a => a.Name).IsRequired();
-            builder.Property(a => a.Description).IsRequired();
+            builder.Property(a => a.Description).IsRequired(false);
             builder.Property(a => a.Pictogram).IsRequired();                
         }
     }

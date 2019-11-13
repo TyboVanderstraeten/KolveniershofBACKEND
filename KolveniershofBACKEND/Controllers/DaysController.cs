@@ -42,7 +42,15 @@ namespace KolveniershofBACKEND.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<CustomDay>> GetAll()
         {
-            return _customDayRepository.GetAll().ToList();
+            IEnumerable<CustomDay> customDays = _customDayRepository.GetAll().ToList();
+            if (customDays == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(customDays);
+            }
         }
 
         /// <summary>
@@ -55,19 +63,15 @@ namespace KolveniershofBACKEND.Controllers
         [Route("{startDate}/{endDate}")]
         public ActionResult<IEnumerable<CustomDay>> GetAll(DateTime startDate, DateTime endDate)
         {
-            return _customDayRepository.GetAllInRange(startDate, endDate).ToList();
-        }
-
-        /// <summary>
-        /// Get a specific custom day
-        /// </summary>
-        /// <param name="dayId">The id of the custom day</param>
-        /// <returns>The custom day</returns>
-        [HttpGet]
-        [Route("{dayId}")]
-        public ActionResult<CustomDay> GetById(int dayId)
-        {
-            return _customDayRepository.GetById(dayId);
+            IEnumerable<CustomDay> customDays = _customDayRepository.GetAllInRange(startDate, endDate).ToList();
+            if (customDays == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(customDays);
+            }
         }
 
         /// <summary>
@@ -79,7 +83,15 @@ namespace KolveniershofBACKEND.Controllers
         [Route("date/{date}")]
         public ActionResult<CustomDay> GetByDate(DateTime date)
         {
-            return _customDayRepository.GetByDate(date);
+            CustomDay customDay = _customDayRepository.GetByDate(date);
+            if (customDay == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(customDay);
+            }
         }
 
         /// <summary>
@@ -89,25 +101,46 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="date">The date of the custom day</param>
         /// <returns>The custom day of the user with his attended activities</returns>
         [HttpGet]
-        [Route("{date}/{userId}")]
+        [Route("{date}/user/{userId}")]
         public ActionResult<CustomDay> GetForUser(int userId, DateTime date)
         {
             CustomDay customDay = _customDayRepository.GetByDate(date);
-            IEnumerable<DayActivity> dayActivitiesAttended = customDay.DayActivities.Where(da => da.Attendances.Any(a => a.UserId == userId)).ToList();
-            CustomDay customDayUser = new CustomDay(
-                customDay.TemplateName,
-                customDay.WeekNr,
-                customDay.DayNr,
-                customDay.Date,
-                customDay.PreDish,
-                customDay.MainDish,
-                customDay.Dessert
-                );
-            customDayUser.DayId = customDay.DayId;
-            customDayUser.DayActivities = dayActivitiesAttended.ToList();
-            customDayUser.Helpers = customDay.Helpers;
-            customDayUser.Notes = customDay.Notes;
-            return customDayUser;
+            if (customDay == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                IEnumerable<DayActivity> dayActivitiesAttended = customDay.DayActivities.Where(da => da.Attendances.Any(a => a.UserId == userId)).ToList();
+                if (dayActivitiesAttended == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    try
+                    {
+                        CustomDay customDayUser = new CustomDay(
+                            customDay.TemplateName,
+                            customDay.WeekNr,
+                            customDay.DayNr,
+                            customDay.Date,
+                            customDay.PreDish,
+                            customDay.MainDish,
+                            customDay.Dessert
+                            );
+                        customDayUser.DayId = customDay.DayId;
+                        customDayUser.DayActivities = dayActivitiesAttended.ToList();
+                        customDayUser.Helpers = customDay.Helpers;
+                        customDayUser.Notes = customDay.Notes;
+                        return Ok(customDayUser);
+                    }
+                    catch (Exception ex)
+                    {
+                        return BadRequest(ex.Message);
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -116,10 +149,18 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="date">The date of the custom day</param>
         /// <returns>The absent users of the custom day</returns>
         [HttpGet]
-        [Route("absent/{date}")]
+        [Route("{date}/absent")]
         public ActionResult<IEnumerable<User>> GetAbsent(DateTime date)
         {
-            return _customDayRepository.GetAbsentUsersForDay(date).ToList();
+            IEnumerable<User> users = _customDayRepository.GetAbsentUsersForDay(date).ToList();
+            if (users == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(users);
+            }
         }
 
         /// <summary>
@@ -128,10 +169,18 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="date">The date of the custom day</param>
         /// <returns>The sick users of the custom day</returns>
         [HttpGet]
-        [Route("sick/{date}")]
+        [Route("{date}/sick")]
         public ActionResult<IEnumerable<User>> GetSick(DateTime date)
         {
-            return _customDayRepository.GetSickUsersForDay(date).ToList();
+            IEnumerable<User> users = _customDayRepository.GetSickUsersForDay(date).ToList();
+            if (users == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(users);
+            }
         }
 
         /// <summary>
@@ -140,10 +189,18 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="date">The date of the custom day</param>
         /// <returns>The notes of the custom day</returns>
         [HttpGet]
-        [Route("notes/{date}")]
+        [Route("{date}/notes")]
         public ActionResult<IEnumerable<Note>> GetNotes(DateTime date)
         {
-            return _customDayRepository.GetNotesForDay(date).ToList();
+            IEnumerable<Note> notes = _customDayRepository.GetNotesForDay(date).ToList();
+            if (notes == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(notes);
+            }
         }
 
         /// <summary>
@@ -152,10 +209,18 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="date">The date of the custom day</param>
         /// <returns>The helpers of the custom day</returns>
         [HttpGet]
-        [Route("helpers/{date}")]
+        [Route("{date}/helpers")]
         public ActionResult<IEnumerable<Helper>> GetHelpers(DateTime date)
         {
-            return _customDayRepository.GetHelpersForDay(date).ToList();
+            IEnumerable<Helper> helpers = _customDayRepository.GetHelpersForDay(date).ToList();
+            if (helpers == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(helpers);
+            }
         }
 
         /// <summary>
@@ -167,20 +232,34 @@ namespace KolveniershofBACKEND.Controllers
         public ActionResult<CustomDay> Add(CustomDayDTO model)
         {
             Day templateDayChosen = _dayRepository.GetByWeekAndDay(model.TemplateName, model.WeekNr, model.DayNr);
-            CustomDay customDayToCreate = new CustomDay(templateDayChosen.TemplateName, templateDayChosen.WeekNr, templateDayChosen.DayNr, model.Date, model.PreDish, model.MainDish, model.Dessert);
-            foreach (DayActivity dayActivity in templateDayChosen.DayActivities)
+            if (templateDayChosen == null)
             {
-                DayActivity dayActivityToAdd = new DayActivity(customDayToCreate, dayActivity.Activity, dayActivity.TimeOfDay);
-                customDayToCreate.AddDayActivity(dayActivityToAdd);
+                return NotFound();
             }
-            foreach (Helper helper in templateDayChosen.Helpers)
+            else
             {
-                Helper helperToAdd = new Helper(customDayToCreate, helper.User);
-                customDayToCreate.AddHelper(helperToAdd);
+                try
+                {
+                    CustomDay customDayToCreate = new CustomDay(templateDayChosen.TemplateName, templateDayChosen.WeekNr, templateDayChosen.DayNr, model.Date, model.PreDish, model.MainDish, model.Dessert);
+                    foreach (DayActivity dayActivity in templateDayChosen.DayActivities)
+                    {
+                        DayActivity dayActivityToAdd = new DayActivity(customDayToCreate, dayActivity.Activity, dayActivity.TimeOfDay);
+                        customDayToCreate.AddDayActivity(dayActivityToAdd);
+                    }
+                    foreach (Helper helper in templateDayChosen.Helpers)
+                    {
+                        Helper helperToAdd = new Helper(customDayToCreate, helper.User);
+                        customDayToCreate.AddHelper(helperToAdd);
+                    }
+                    _customDayRepository.Add(customDayToCreate);
+                    _customDayRepository.SaveChanges();
+                    return Ok(customDayToCreate);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
             }
-            _customDayRepository.Add(customDayToCreate);
-            _customDayRepository.SaveChanges();
-            return customDayToCreate;
         }
 
         /// <summary>
@@ -194,32 +273,54 @@ namespace KolveniershofBACKEND.Controllers
         public ActionResult<CustomDay> Edit(DateTime date, CustomDayDTO model)
         {
             CustomDay dayToEdit = _customDayRepository.GetByDate(date);
-            if (!(dayToEdit.WeekNr.Equals(model.TemplateName)) || (dayToEdit.WeekNr != model.WeekNr) || (dayToEdit.DayNr != model.DayNr))
+            if (dayToEdit == null)
             {
-                Day templateDayChosen = _dayRepository.GetByWeekAndDay(model.TemplateName, model.WeekNr, model.DayNr);
-                dayToEdit.TemplateName = templateDayChosen.TemplateName;
-                dayToEdit.WeekNr = templateDayChosen.WeekNr;
-                dayToEdit.DayNr = templateDayChosen.WeekNr;
-                dayToEdit.DayActivities = new List<DayActivity>();
-                dayToEdit.Helpers = new List<Helper>();
-                foreach (DayActivity dayActivity in templateDayChosen.DayActivities)
-                {
-                    DayActivity dayActivityToAdd = new DayActivity(dayToEdit, dayActivity.Activity, dayActivity.TimeOfDay);
-                    dayToEdit.AddDayActivity(dayActivityToAdd);
-                }
-
-                foreach (Helper helper in templateDayChosen.Helpers)
-                {
-                    Helper helperToAdd = new Helper(dayToEdit, helper.User);
-                    dayToEdit.AddHelper(helperToAdd);
-                }
+                return NotFound();
             }
-            dayToEdit.Date = model.Date;
-            dayToEdit.PreDish = model.PreDish;
-            dayToEdit.MainDish = model.MainDish;
-            dayToEdit.Dessert = model.Dessert;
-            _customDayRepository.SaveChanges();
-            return dayToEdit;
+            else
+            {
+                if (!dayToEdit.WeekNr.Equals(model.TemplateName) || (dayToEdit.WeekNr != model.WeekNr) || (dayToEdit.DayNr != model.DayNr))
+                {
+                    try
+                    {
+                        Day templateDayChosen = _dayRepository.GetByWeekAndDay(model.TemplateName, model.WeekNr, model.DayNr);
+                        dayToEdit.TemplateName = templateDayChosen.TemplateName;
+                        dayToEdit.WeekNr = templateDayChosen.WeekNr;
+                        dayToEdit.DayNr = templateDayChosen.DayNr;
+                        dayToEdit.DayActivities = new List<DayActivity>();
+                        dayToEdit.Helpers = new List<Helper>();
+                        foreach (DayActivity dayActivity in templateDayChosen.DayActivities)
+                        {
+                            DayActivity dayActivityToAdd = new DayActivity(dayToEdit, dayActivity.Activity, dayActivity.TimeOfDay);
+                            dayToEdit.AddDayActivity(dayActivityToAdd);
+                        }
+
+                        foreach (Helper helper in templateDayChosen.Helpers)
+                        {
+                            Helper helperToAdd = new Helper(dayToEdit, helper.User);
+                            dayToEdit.AddHelper(helperToAdd);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return BadRequest(ex.Message);
+                    }
+                }
+                try
+                {
+                    dayToEdit.Date = model.Date;
+                    dayToEdit.PreDish = model.PreDish;
+                    dayToEdit.MainDish = model.MainDish;
+                    dayToEdit.Dessert = model.Dessert;
+                    _customDayRepository.SaveChanges();
+                    return Ok(dayToEdit);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                };
+
+            }
         }
 
         /// <summary>
@@ -232,9 +333,23 @@ namespace KolveniershofBACKEND.Controllers
         public ActionResult<CustomDay> Remove(DateTime date)
         {
             CustomDay dayToRemove = _customDayRepository.GetByDate(date);
-            _customDayRepository.Remove(dayToRemove);
-            _customDayRepository.SaveChanges();
-            return dayToRemove;
+            if (dayToRemove == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                try
+                {
+                    _customDayRepository.Remove(dayToRemove);
+                    _customDayRepository.SaveChanges();
+                    return Ok(dayToRemove);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
+            }
         }
 
         /// <summary>
@@ -244,15 +359,36 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="model">The activity</param>
         /// <returns>The activity</returns>
         [HttpPost]
-        [Route("activity/{date}")]
+        [Route("{date}/activity")]
         public ActionResult<DayActivity> AddActivity(DateTime date, DayActivityDTO model)
         {
             CustomDay customDayToEdit = _customDayRepository.GetByDate(date);
-            Activity activity = _activityRepository.GetById(model.ActivityId);
-            DayActivity dayActivityToAdd = new DayActivity(customDayToEdit, activity, model.TimeOfDay);
-            customDayToEdit.AddDayActivity(dayActivityToAdd);
-            _customDayRepository.SaveChanges();
-            return dayActivityToAdd;
+            if (customDayToEdit == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                Activity activity = _activityRepository.GetById(model.ActivityId);
+                if (activity == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    try
+                    {
+                        DayActivity dayActivityToAdd = new DayActivity(customDayToEdit, activity, model.TimeOfDay);
+                        customDayToEdit.AddDayActivity(dayActivityToAdd);
+                        _customDayRepository.SaveChanges();
+                        return Ok(dayActivityToAdd);
+                    }
+                    catch (Exception ex)
+                    {
+                        return BadRequest(ex.Message);
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -263,14 +399,35 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="timeOfDay">The time of day</param>
         /// <returns>The activity</returns>
         [HttpDelete]
-        [Route("activity/{date}/{timeOfDay}/{activityId}")]
+        [Route("{date}/{timeOfDay}/activity/{activityId}")]
         public ActionResult<DayActivity> RemoveActivity(DateTime date, int activityId, TimeOfDay timeOfDay)
         {
             CustomDay dayToEdit = _customDayRepository.GetByDate(date);
-            DayActivity dayActivityToRemove = _dayActivityRepository.GetCustomDayActivity(date, timeOfDay, activityId);
-            dayToEdit.RemoveDayActivity(dayActivityToRemove);
-            _customDayRepository.SaveChanges();
-            return dayActivityToRemove;
+            if (dayToEdit == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                DayActivity dayActivityToRemove = _dayActivityRepository.GetCustomDayActivity(date, timeOfDay, activityId);
+                if (dayActivityToRemove == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    try
+                    {
+                        dayToEdit.RemoveDayActivity(dayActivityToRemove);
+                        _customDayRepository.SaveChanges();
+                        return Ok(dayActivityToRemove);
+                    }
+                    catch (Exception ex)
+                    {
+                        return BadRequest(ex.Message);
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -280,15 +437,36 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="model">The helper</param>
         /// <returns>The helper</returns>
         [HttpPost]
-        [Route("helper/{date}")]
+        [Route("{date}/helper")]
         public ActionResult<Helper> AddHelper(DateTime date, HelperDTO model)
         {
             CustomDay customDayToEdit = _customDayRepository.GetByDate(date);
-            User user = _userRepository.GetById(model.UserId);
-            Helper helperToAdd = new Helper(customDayToEdit, user);
-            customDayToEdit.AddHelper(helperToAdd);
-            _customDayRepository.SaveChanges();
-            return helperToAdd;
+            if (customDayToEdit == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                User user = _userRepository.GetById(model.UserId);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    try
+                    {
+                        Helper helperToAdd = new Helper(customDayToEdit, user);
+                        customDayToEdit.AddHelper(helperToAdd);
+                        _customDayRepository.SaveChanges();
+                        return Ok(helperToAdd);
+                    }
+                    catch (Exception ex)
+                    {
+                        return BadRequest(ex.Message);
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -298,14 +476,35 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="userId">The id of the helper</param>
         /// <returns>The helper</returns>
         [HttpDelete]
-        [Route("helper/{date}/{userId}")]
+        [Route("{date}/helper/{userId}")]
         public ActionResult<Helper> RemoveHelper(DateTime date, int userId)
         {
             CustomDay dayToEdit = _customDayRepository.GetByDate(date);
-            Helper helperToRemove = _helperRepository.GetCustomDayHelper(date, userId);
-            dayToEdit.RemoveHelper(helperToRemove);
-            _customDayRepository.SaveChanges();
-            return helperToRemove;
+            if (dayToEdit == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                Helper helperToRemove = _helperRepository.GetCustomDayHelper(date, userId);
+                if (helperToRemove == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    try
+                    {
+                        dayToEdit.RemoveHelper(helperToRemove);
+                        _customDayRepository.SaveChanges();
+                        return Ok(helperToRemove);
+                    }
+                    catch (Exception ex)
+                    {
+                        return BadRequest(ex.Message);
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -315,14 +514,28 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="model">The note</param>
         /// <returns>The note</returns>
         [HttpPost]
-        [Route("note/{date}")]
+        [Route("{date}/note")]
         public ActionResult<Note> AddNote(DateTime date, NoteDTO model)
         {
             CustomDay customDayToEdit = _customDayRepository.GetByDate(date);
-            Note noteToAdd = new Note(model.NoteType, model.Content);
-            customDayToEdit.AddNote(noteToAdd);
-            _customDayRepository.SaveChanges();
-            return noteToAdd;
+            if (customDayToEdit == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                try
+                {
+                    Note noteToAdd = new Note(model.NoteType, model.Content);
+                    customDayToEdit.AddNote(noteToAdd);
+                    _customDayRepository.SaveChanges();
+                    return Ok(noteToAdd);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
+            }
         }
 
         /// <summary>
@@ -332,14 +545,35 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="noteId">The id of the note</param>
         /// <returns>The note</returns>
         [HttpDelete]
-        [Route("note/{date}/{noteId}")]
+        [Route("{date}/note/{noteId}")]
         public ActionResult<Note> RemoveNote(DateTime date, int noteId)
         {
             CustomDay dayToEdit = _customDayRepository.GetByDate(date);
-            Note noteToRemove = _noteRepository.GetCustomDayNote(date, noteId);
-            dayToEdit.RemoveNote(noteToRemove);
-            _customDayRepository.SaveChanges();
-            return noteToRemove;
+            if (dayToEdit == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                Note noteToRemove = _noteRepository.GetCustomDayNote(date, noteId);
+                if (noteToRemove == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    try
+                    {
+                        dayToEdit.RemoveNote(noteToRemove);
+                        _customDayRepository.SaveChanges();
+                        return Ok(noteToRemove);
+                    }
+                    catch (Exception ex)
+                    {
+                        return BadRequest(ex.Message);
+                    }
+                }
+            }
         }
     }
 }

@@ -100,9 +100,9 @@ namespace KolveniershofBACKEND.Tests.Data
         {
             #region init Users
             int userId = 1;
-            U1 = new User(UserType.BEGELEIDER, "Tybo", "Vanderstraeten", "tybo@hotmail.com", "string.jpeg", null) { UserId = userId++ };
-            U2 = new User(UserType.CLIENT, "Rob", "De Putter", "rob@hotmail.com", "string.jpeg", 2) { UserId = userId++ };
-            U3 = new User(UserType.STAGIAIR, "Tim", "Geldof", "tim@hotmail.com", "string.jpeg", null) { UserId = userId++ };
+            U1 = new User(UserType.BEGELEIDER, "Tybo", "Vanderstraeten", "tybo@hotmail.com", "string.jpeg", null,null) { UserId = userId++ };
+            U2 = new User(UserType.CLIENT, "Rob", "De Putter", "rob@hotmail.com", "string.jpeg", 2,null) { UserId = userId++ };
+            U3 = new User(UserType.STAGIAIR, "Tim", "Geldof", "tim@hotmail.com", "string.jpeg", null,null) { UserId = userId++ };
 
             Users = new[] { U1, U2, U3 };
             #endregion
@@ -140,7 +140,7 @@ namespace KolveniershofBACKEND.Tests.Data
             Attendance1 = new Attendance(DayActivity1, U1);
             Attendance5 = new Attendance(DayActivity1, U2);
             Attendance6 = new Attendance(DayActivity1, U2);
-            Attendances1.Add(Attendance1);
+            //Attendances1.Add(Attendance1);
             Attendances1.Add(Attendance5);
             Attendances1.Add(Attendance6);
             DayActivity1.Attendances = Attendances1;
@@ -173,7 +173,7 @@ namespace KolveniershofBACKEND.Tests.Data
             Helper1 = new Helper(Day1, U1);
             Helper2 = new Helper(Day1, U3);
             Helpers1 = new List<Helper>();
-            Helpers1.Add(Helper1);
+            //Helpers1.Add(Helper1);
             Helpers1.Add(Helper2);
 
             Day1.Helpers = Helpers1;
@@ -211,7 +211,7 @@ namespace KolveniershofBACKEND.Tests.Data
             Note1 = new Note(NoteType.VERVOER, "Florian neemt de bus niet vandaag");
             Note2 = new Note(NoteType.VARIA, "Vandaag zullen er geen bekertjes aanwezig zijn");
             Notes = new List<Note>();
-            Notes.Add(Note1);
+            //Notes.Add(Note1);
             Notes.Add(Note2);
 
             CustomDay1 = new CustomDay("eerste_week_eerste_dag",1, 1, DateTime.Today, "Wortelsoep", "Kip zoetzuur", "chocomousse");

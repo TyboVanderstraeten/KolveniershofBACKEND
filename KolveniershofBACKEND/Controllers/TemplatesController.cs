@@ -38,7 +38,15 @@ namespace KolveniershofBACKEND.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Day>> GetAll()
         {
-            return _dayRepository.GetAll().ToList();
+            IEnumerable<Day> days = _dayRepository.GetAll().ToList();
+            if (days == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(days);
+            }
         }
 
         /// <summary>
@@ -50,7 +58,15 @@ namespace KolveniershofBACKEND.Controllers
         [Route("{templateName}")]
         public ActionResult<IEnumerable<Day>> GetAll(string templateName)
         {
-            return _dayRepository.GetAllByTemplateName(templateName).ToList();
+            IEnumerable<Day> days = _dayRepository.GetAllByTemplateName(templateName).ToList();
+            if (days == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(days);
+            }
         }
 
         /// <summary>
@@ -63,19 +79,15 @@ namespace KolveniershofBACKEND.Controllers
         [Route("{templateName}/{weekNr}")]
         public ActionResult<IEnumerable<Day>> GetAll(string templateName, int weekNr)
         {
-            return _dayRepository.GetAllByWeek(templateName, weekNr).ToList();
-        }
-
-        /// <summary>
-        /// Get a specific template day
-        /// </summary>
-        /// <param name="id">The id of the template day</param>
-        /// <returns>The template day</returns>
-        [HttpGet]
-        [Route("{id}")]
-        public ActionResult<Day> GetById(int id)
-        {
-            return _dayRepository.GetById(id);
+            IEnumerable<Day> days = _dayRepository.GetAllByWeek(templateName, weekNr).ToList();
+            if (days == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(days);
+            }
         }
 
         /// <summary>
@@ -89,7 +101,15 @@ namespace KolveniershofBACKEND.Controllers
         [Route("{templateName}/{weekNr}/{dayNr}")]
         public ActionResult<Day> GetByWeekAndDay(string templateName, int weekNr, int dayNr)
         {
-            return _dayRepository.GetByWeekAndDay(templateName, weekNr, dayNr);
+            Day day = _dayRepository.GetByWeekAndDay(templateName, weekNr, dayNr);
+            if (day == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(day);
+            }
         }
 
         /// <summary>
@@ -100,16 +120,24 @@ namespace KolveniershofBACKEND.Controllers
         [HttpPost]
         public ActionResult<Day> Add(DayDTO model)
         {
-            if (_dayRepository.GetByWeekAndDay(model.TemplateName, model.WeekNr, model.DayNr) == null)
+            Day day = _dayRepository.GetByWeekAndDay(model.TemplateName, model.WeekNr, model.DayNr);
+            if (day != null)
             {
-                Day dayToAdd = new Day(model.TemplateName, model.WeekNr, model.DayNr);
-                _dayRepository.Add(dayToAdd);
-                _dayRepository.SaveChanges();
-                return dayToAdd;
+                return BadRequest("A day with this weekNr and dayNr already exists for this template");
             }
             else
             {
-                return BadRequest("A day with this weekNr and dayNr already exists for this template");
+                try
+                {
+                    Day dayToAdd = new Day(model.TemplateName, model.WeekNr, model.DayNr);
+                    _dayRepository.Add(dayToAdd);
+                    _dayRepository.SaveChanges();
+                    return Ok(dayToAdd);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
             }
         }
 
@@ -125,9 +153,23 @@ namespace KolveniershofBACKEND.Controllers
         public ActionResult<Day> Remove(string templateName, int weekNr, int dayNr)
         {
             Day dayToRemove = _dayRepository.GetByWeekAndDay(templateName, weekNr, dayNr);
-            _dayRepository.Remove(dayToRemove);
-            _dayRepository.SaveChanges();
-            return dayToRemove;
+            if (dayToRemove == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                try
+                {
+                    _dayRepository.Remove(dayToRemove);
+                    _dayRepository.SaveChanges();
+                    return dayToRemove;
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
+            }
         }
 
         /// <summary>
@@ -139,7 +181,7 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="model">The activity</param>
         /// <returns>The activity</returns>
         [HttpPost]
-        [Route("activity/{templateName}/{weekNr}/{dayNr}")]
+        [Route("{templateName}/{weekNr}/{dayNr}/activity")]
         public ActionResult<DayActivity> AddActivity(string templateName, int weekNr, int dayNr, DayActivityDTO model)
         {
             Day dayToEdit = _dayRepository.GetByWeekAndDay(templateName, weekNr, dayNr);
@@ -160,14 +202,35 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="timeOfDay">The time of day</param>
         /// <returns>The activity</returns>
         [HttpDelete]
-        [Route("activity/{templateName}/{weekNr}/{dayNr}/{activityId}/{timeOfDay}")]
+        [Route("{templateName}/{weekNr}/{dayNr}/{timeOfDay}/activity/{activityId}")]
         public ActionResult<DayActivity> RemoveActivity(string templateName, int weekNr, int dayNr, int activityId, TimeOfDay timeOfDay)
         {
             Day dayToEdit = _dayRepository.GetByWeekAndDay(templateName, weekNr, dayNr);
-            DayActivity dayActivityToRemove = _dayActivityRepository.GetTemplateDayActivity(templateName, weekNr, dayNr, timeOfDay, activityId);
-            dayToEdit.RemoveDayActivity(dayActivityToRemove);
-            _dayRepository.SaveChanges();
-            return dayActivityToRemove;
+            if (dayToEdit == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                DayActivity dayActivityToRemove = _dayActivityRepository.GetTemplateDayActivity(templateName, weekNr, dayNr, timeOfDay, activityId);
+                if (dayActivityToRemove == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    try
+                    {
+                        dayToEdit.RemoveDayActivity(dayActivityToRemove);
+                        _dayRepository.SaveChanges();
+                        return Ok(dayActivityToRemove);
+                    }
+                    catch (Exception ex)
+                    {
+                        return BadRequest(ex.Message);
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -179,15 +242,36 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="model">The helper</param>
         /// <returns>The helper</returns>
         [HttpPost]
-        [Route("helper/{templateName}/{weekNr}/{dayNr}")]
+        [Route("/{templateName}/{weekNr}/{dayNr}/helper")]
         public ActionResult<Helper> AddHelper(string templateName, int weekNr, int dayNr, HelperDTO model)
         {
             Day dayToEdit = _dayRepository.GetByWeekAndDay(templateName, weekNr, dayNr);
-            User user = _userRepository.GetById(model.UserId);
-            Helper helperToAdd = new Helper(dayToEdit, user);
-            dayToEdit.AddHelper(helperToAdd);
-            _dayRepository.SaveChanges();
-            return helperToAdd;
+            if (dayToEdit == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                User user = _userRepository.GetById(model.UserId);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    try
+                    {
+                        Helper helperToAdd = new Helper(dayToEdit, user);
+                        dayToEdit.AddHelper(helperToAdd);
+                        _dayRepository.SaveChanges();
+                        return Ok(helperToAdd);
+                    }
+                    catch (Exception ex)
+                    {
+                        return BadRequest(ex.Message);
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -199,14 +283,35 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="userId">The id of the helper</param>
         /// <returns>The helper</returns>
         [HttpDelete]
-        [Route("helper/{templateName}/{weekNr}/{dayNr}/{userId}")]
+        [Route("{templateName}/{weekNr}/{dayNr}/helper/{userId}")]
         public ActionResult<Helper> RemoveHelper(string templateName, int weekNr, int dayNr, int userId)
         {
             Day dayToEdit = _dayRepository.GetByWeekAndDay(templateName, weekNr, dayNr);
-            Helper helperToRemove = _helperRepository.GetTemplateDayHelper(templateName, weekNr, dayNr, userId);
-            dayToEdit.RemoveHelper(helperToRemove);
-            _dayRepository.SaveChanges();
-            return helperToRemove;
+            if (dayToEdit == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                Helper helperToRemove = _helperRepository.GetTemplateDayHelper(templateName, weekNr, dayNr, userId);
+                if (helperToRemove == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    try
+                    {
+                        dayToEdit.RemoveHelper(helperToRemove);
+                        _dayRepository.SaveChanges();
+                        return Ok(helperToRemove);
+                    }
+                    catch (Exception ex)
+                    {
+                        return BadRequest(ex.Message);
+                    }
+                }
+            }
         }
     }
 }
