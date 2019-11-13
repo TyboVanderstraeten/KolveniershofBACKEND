@@ -105,7 +105,7 @@ namespace KolveniershofBACKEND.Data
                         BusDriver busDriver3 = new BusDriver(day, driver3, TimeOfDay.OCHTEND, BusColor.BLAUW);
                         BusDriver busDriver4 = new BusDriver(day, driver4, TimeOfDay.AVOND, BusColor.BEIGE);
                         BusDriver busDriver5 = new BusDriver(day, driver5, TimeOfDay.AVOND, BusColor.GEEL);
-                        BusDriver busDriver6 = new BusDriver(day, driver6, TimeOfDay.AVOND, BusColor.BEIGE);
+                        BusDriver busDriver6 = new BusDriver(day, driver6, TimeOfDay.AVOND, BusColor.BLAUW);
 
                         day.AddBusDriver(busDriver1);
                         day.AddBusDriver(busDriver2);

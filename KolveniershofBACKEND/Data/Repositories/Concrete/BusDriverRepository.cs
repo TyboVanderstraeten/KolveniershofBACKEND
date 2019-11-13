@@ -17,9 +17,14 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
             _busDrivers = _dbContext.BusDrivers;
         }
 
+        // The reason i 'hardcode' summer is because it doesn't matter for this functionality
+        // summer or winter the busses need to drive
         public IEnumerable<BusDriver> GetDriversByWeek(int weekNr)
         {
-            return  _busDrivers.Include(b => b.Day).Include(b => b.Driver).Where(b => b.Day.WeekNr == weekNr).ToList();
+            return  _busDrivers.Include(b => b.Day)
+                .Include(b => b.Driver)
+                .Where(b => b.Day.WeekNr == weekNr && b.Day.TemplateName == "zomer")
+                .ToList();
         }
     }
 }
