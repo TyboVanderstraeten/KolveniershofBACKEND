@@ -90,7 +90,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
         {
             _userRepository.Setup(u => u.GetAll()).Returns(_dummyDBContext.Users);
             ActionResult<IEnumerable<User>> actionResult = _controller.GetAll();
-            IList<User> users = actionResult.Value as IList<User>;
+            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
+            IList<User> users = okObjectResult.Value as IList<User>;
 
             Assert.Equal(3, users.Count);
         }
@@ -138,7 +139,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
             int userId = 1;
             _userRepository.Setup(u => u.GetById(userId)).Returns(_dummyDBContext.U1);
             ActionResult<User> actionResult = _controller.GetById(userId);
-            User user = actionResult.Value;
+            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
+            User user = okObjectResult.Value as User;
 
             Assert.Equal("Tybo", user.FirstName);
         }
@@ -164,7 +166,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
             _userRepository.Setup(u => u.GetByEmail(email)).Returns(_dummyDBContext.U1);
 
             ActionResult<User> actionResult = _controller.GetByEmail(email);
-            User user = actionResult.Value;
+            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
+            User user = okObjectResult.Value as User;
 
             Assert.Equal(email, user.Email);
         }
@@ -201,7 +204,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
             _userManager.Setup(u => u.FindByEmailAsync(email)).ReturnsAsync((IdentityUser)null);
 
             ActionResult<bool> actionResult = await _controller.CheckAvailibilityEmail(email);
-            Assert.True(actionResult.Value);
+            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
+            Assert.True((bool)okObjectResult.Value);
         }
         #endregion
 
@@ -221,8 +225,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
             User user = new User(UserType.BEGELEIDER, "Florian", "Landuyt", "florian@hotmail.com", null, null,null);
             _userRepository.Setup(u => u.GetByEmail(user.Email)).Returns((User)null);
             ActionResult<User> actionResult = await _controller.Add(userDTO);
-            CreatedAtActionResult actionResult2 = actionResult.Result as CreatedAtActionResult;
-            User userResult = actionResult2.Value as User;
+            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
+            User userResult = okObjectResult.Value as User;
             Assert.Equal(userDTO.Email, userResult.Email);
             _userRepository.Verify(u => u.Add(It.IsAny<User>()), Times.Once());
             _userRepository.Verify(u => u.SaveChanges(), Times.Once());
@@ -271,7 +275,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
             _userRepository.Setup(a => a.GetById(userId)).Returns((User)null);
 
             ActionResult<User> actionResult = await _controller.Remove(userId);
-            Assert.IsType<NoContentResult>(actionResult.Result);
+            Assert.IsType<NotFoundResult>(actionResult.Result);
             _userRepository.Verify(u => u.Remove(It.IsAny<User>()), Times.Never());
             _userRepository.Verify(u => u.SaveChanges(), Times.Never());
         }

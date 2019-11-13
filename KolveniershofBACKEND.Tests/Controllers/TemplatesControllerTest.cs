@@ -43,7 +43,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
 
             _dayRepository.Setup(d => d.GetAll()).Returns(_dummyDBContext.Days);
             ActionResult<IEnumerable<Day>> actionResult = _controller.GetAll();
-            IList<Day> days = actionResult.Value as IList<Day>;
+            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
+            IList<Day> days = okObjectResult.Value as IList<Day>;
             Assert.Equal(3, days.Count);
         }
 
@@ -55,7 +56,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
 
             _dayRepository.Setup(d => d.GetAllByTemplateName(templateName)).Returns(daysWeek1);
             ActionResult<IEnumerable<Day>> actionResult = _controller.GetAll(templateName);
-            IList<Day> days = actionResult.Value as IList<Day>;
+            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
+            IList<Day> days = okObjectResult.Value as IList<Day>;
             Assert.Equal(1, days.Count);
         }
 
@@ -68,7 +70,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
 
             _dayRepository.Setup(d => d.GetAllByWeek(templateName, weekNr)).Returns(daysWeek1);
             ActionResult<IEnumerable<Day>> actionResult = _controller.GetAll(templateName, weekNr);
-            IList<Day> days = actionResult.Value as IList<Day>;
+            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
+            IList<Day> days = okObjectResult.Value as IList<Day>;
             Assert.Equal(1, days.Count);
         }
 
@@ -80,9 +83,10 @@ namespace KolveniershofBACKEND.Tests.Controllers
             string templatename = "eerste_week_eerste_dag";
             _dayRepository.Setup(d => d.GetByWeekAndDay(templatename, weekNr, dayNr)).Returns(_dummyDBContext.Day1);
             ActionResult<Day> actionResult = _controller.GetByWeekAndDay(templatename, weekNr, dayNr);
-            Assert.Equal(4, actionResult.Value.DayActivities.Count);
-            Assert.Equal(1, actionResult.Value.DayNr);
-            Assert.Equal(1, actionResult.Value.WeekNr);
+            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
+            Assert.Equal(4, (okObjectResult.Value as Day).DayActivities.Count);
+            Assert.Equal(1, (okObjectResult.Value as Day).DayNr);
+            Assert.Equal(1, (okObjectResult.Value as Day).WeekNr);
         }
 
         [Fact]
@@ -109,7 +113,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
             };
 
             ActionResult<Day> actionResult = _controller.Add(dayDTO);
-            Day dayResult = actionResult.Value;
+            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
+            Day dayResult = okObjectResult.Value as Day;
             Assert.Equal("tweede_week_eerste_dag", dayResult.TemplateName);
             _dayRepository.Verify(d => d.Add(It.IsAny<Day>()), Times.Once());
             _dayRepository.Verify(d => d.SaveChanges(), Times.Once());
@@ -173,7 +178,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
             _dayActivityRepository.Setup(d => d.GetTemplateDayActivity(templateName, weekNr, dayNr, timeOfDay, activityId)).Returns(_dummyDBContext.DayActivity1);
 
             ActionResult<DayActivity> actionResult = _controller.RemoveActivity(templateName, weekNr, dayNr, activityId, timeOfDay);
-            Assert.Equal(TimeOfDay.VOLLEDIG, actionResult.Value.TimeOfDay);
+            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
+            Assert.Equal(TimeOfDay.VOLLEDIG, (okObjectResult.Value as DayActivity).TimeOfDay);
             _dayRepository.Verify(d => d.SaveChanges(), Times.Once());
 
         }
@@ -194,10 +200,11 @@ namespace KolveniershofBACKEND.Tests.Controllers
             int dayNr = 1;
 
             _dayRepository.Setup(d => d.GetByWeekAndDay(templateName, weekNr, dayNr)).Returns(_dummyDBContext.Day1);
-            _userRepository.Setup(d => d.GetById(helperDTO.UserId)).Returns(_dummyDBContext.U1);
+            _userRepository.Setup(d => d.GetById(helperDTO.UserId)).Returns(_dummyDBContext.UserNew);
 
             ActionResult<Helper> actionResult = _controller.AddHelper(templateName, weekNr, dayNr, helperDTO);
-            Assert.Equal("Tybo", actionResult.Value.User.FirstName);
+            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
+            Assert.Equal("Florian", (okObjectResult.Value as Helper).User.FirstName);
             _dayRepository.Verify(d => d.SaveChanges(), Times.Once());
         }
 
@@ -213,7 +220,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
             _helperRepository.Setup(d => d.GetTemplateDayHelper(templateName, weekNr, dayNr, userId)).Returns(_dummyDBContext.Helper1);
 
             ActionResult<Helper> actionResult = _controller.RemoveHelper(templateName, weekNr, dayNr, userId);
-            Assert.Equal("Tybo", actionResult.Value.User.FirstName);
+            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
+            Assert.Equal("Tybo", (okObjectResult.Value as Helper).User.FirstName);
             _dayRepository.Verify(d => d.SaveChanges(), Times.Once());
         }
         #endregion
