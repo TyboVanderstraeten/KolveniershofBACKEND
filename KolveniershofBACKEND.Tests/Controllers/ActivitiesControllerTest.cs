@@ -31,7 +31,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
         {
             _activityRepository.Setup(a => a.GetAll()).Returns(_dummyDBContext.Activities);
             ActionResult<IEnumerable<Activity>> actionResult = _controller.GetAll();
-            IList<Activity> activitiesInModel = actionResult.Value as IList<Activity>;
+            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
+            IList<Activity> activitiesInModel = okObjectResult.Value as IList<Activity>;
             Assert.Equal(7, activitiesInModel.Count);
         }
 
@@ -41,7 +42,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
             int activityId = 1;
             _activityRepository.Setup(a => a.GetById(activityId)).Returns(_dummyDBContext.Activity1);
             ActionResult<Activity> actionResult = _controller.GetById(activityId);
-            Activity activity = actionResult.Value;
+            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
+            Activity activity = okObjectResult.Value as Activity;
             Assert.Equal("Testatelier", activity.Name);
         }
 
@@ -69,9 +71,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
             };
 
             ActionResult<Activity> actionResult = _controller.Add(activityDTO);
-            CreatedAtActionResult actionResult2 = actionResult.Result as CreatedAtActionResult; //good? --> not isolated?
+            OkObjectResult actionResult2 = actionResult.Result as OkObjectResult; //good? --> not isolated?
             Activity activity = actionResult2.Value as Activity;
-            Assert.Equal("GetById", actionResult2.ActionName);
             Assert.Equal("Zwemmen", activity.Name);
             _activityRepository.Verify(a => a.Add(It.IsAny<Activity>()), Times.Once());
             _activityRepository.Verify(a => a.SaveChanges(), Times.Once());
@@ -167,7 +168,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
             _activityRepository.Setup(a => a.GetById(activityId)).Returns((Activity)null);
 
             ActionResult<Activity> actionResult = _controller.Remove(activityId);
-            Assert.IsType<NoContentResult>(actionResult.Result);
+            Assert.IsType<NotFoundResult>(actionResult.Result);
             _activityRepository.Verify(a => a.Remove(It.IsAny<Activity>()), Times.Never());
             _activityRepository.Verify(a => a.SaveChanges(), Times.Never());
 

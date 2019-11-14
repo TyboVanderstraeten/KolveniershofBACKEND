@@ -16,6 +16,8 @@ namespace KolveniershofBACKEND.Tests.Data
         public User U2 { get; }
         public User U3 { get; }
         public User[] Users { get; }
+
+        public User UserNew { get; }
         #endregion
 
         #region Activities
@@ -27,6 +29,8 @@ namespace KolveniershofBACKEND.Tests.Data
         public Activity Activity6 { get; }
         public Activity Activity7 { get; }
         public Activity[] Activities { get; }
+
+        public Activity ActivityNew { get; }
         #endregion
 
         #region TemplateDay
@@ -92,7 +96,7 @@ namespace KolveniershofBACKEND.Tests.Data
 
         public Note Note1 { get; }
         public Note Note2 { get; }
-        public IList<Note> Notes { get; } 
+        public IList<Note> Notes { get; }
         #endregion
 
 
@@ -100,9 +104,10 @@ namespace KolveniershofBACKEND.Tests.Data
         {
             #region init Users
             int userId = 1;
-            U1 = new User(UserType.BEGELEIDER, "Tybo", "Vanderstraeten", "tybo@hotmail.com", "string.jpeg", null,null) { UserId = userId++ };
-            U2 = new User(UserType.CLIENT, "Rob", "De Putter", "rob@hotmail.com", "string.jpeg", 2,null) { UserId = userId++ };
-            U3 = new User(UserType.STAGIAIR, "Tim", "Geldof", "tim@hotmail.com", "string.jpeg", null,null) { UserId = userId++ };
+            U1 = new User(UserType.BEGELEIDER, "Tybo", "Vanderstraeten", "tybo@hotmail.com", "string.jpeg", null, null) { UserId = userId++ };
+            U2 = new User(UserType.CLIENT, "Rob", "De Putter", "rob@hotmail.com", "string.jpeg", 2, null) { UserId = userId++ };
+            U3 = new User(UserType.STAGIAIR, "Tim", "Geldof", "tim@hotmail.com", "string.jpeg", null, null) { UserId = userId++ };
+            UserNew = new User(UserType.BEGELEIDER, "Florian", "Landuyt", "florian@hotmail.com", "string.jpeg", null, null) { UserId = userId++ };
 
             Users = new[] { U1, U2, U3 };
             #endregion
@@ -119,28 +124,30 @@ namespace KolveniershofBACKEND.Tests.Data
             Activity7 = new Activity(ActivityType.KOFFIE, "Koffie", "Koffie", "Koffie.picto") { ActivityId = activityId++ };
 
             Activities = new[] { Activity1, Activity2, Activity3, Activity4, Activity5, Activity6, Activity7 };
+
+            ActivityNew = new Activity(ActivityType.VERVOER, "Bus", "Bus", "bus.picto") { ActivityId = activityId++ };
             #endregion
 
             #region init Days
             int dayId = 1;
 
-            Day1 = new Day("eerste_week_eerste_dag",1, 1) { DayId = dayId++ };
-            Day2 = new Day("eerste_week_tweede_dag",1, 2) { DayId = dayId++ };
-            Day3 = new Day("eerste_week_derde_dag",1, 3) { DayId = dayId++ };
-          
+            Day1 = new Day("eerste_week_eerste_dag", 1, 1) { DayId = dayId++ };
+            Day2 = new Day("eerste_week_tweede_dag", 1, 2) { DayId = dayId++ };
+            Day3 = new Day("eerste_week_derde_dag", 1, 3) { DayId = dayId++ };
+
 
             Attendances1 = new List<Attendance>();
             Attendances2 = new List<Attendance>();
             Attendances3 = new List<Attendance>();
             Attendances4 = new List<Attendance>();
 
-            
+
             DayActivity1 = new DayActivity(Day1, Activity5, TimeOfDay.VOLLEDIG);
 
             Attendance1 = new Attendance(DayActivity1, U1);
             Attendance5 = new Attendance(DayActivity1, U2);
             Attendance6 = new Attendance(DayActivity1, U2);
-            //Attendances1.Add(Attendance1);
+            Attendances1.Add(Attendance1);
             Attendances1.Add(Attendance5);
             Attendances1.Add(Attendance6);
             DayActivity1.Attendances = Attendances1;
@@ -173,7 +180,7 @@ namespace KolveniershofBACKEND.Tests.Data
             Helper1 = new Helper(Day1, U1);
             Helper2 = new Helper(Day1, U3);
             Helpers1 = new List<Helper>();
-            //Helpers1.Add(Helper1);
+            Helpers1.Add(Helper1);
             Helpers1.Add(Helper2);
 
             Day1.Helpers = Helpers1;
@@ -208,24 +215,27 @@ namespace KolveniershofBACKEND.Tests.Data
             #endregion
 
             #region init CustomDays
-            Note1 = new Note(NoteType.VERVOER, "Florian neemt de bus niet vandaag");
-            Note2 = new Note(NoteType.VARIA, "Vandaag zullen er geen bekertjes aanwezig zijn");
+            int noteId = 1;
+            Note1 = new Note(NoteType.VERVOER, "Florian neemt de bus niet vandaag") { NoteId = noteId++};
+            Note2 = new Note(NoteType.VARIA, "Vandaag zullen er geen bekertjes aanwezig zijn") { NoteId = noteId++ };
             Notes = new List<Note>();
-            //Notes.Add(Note1);
+            Notes.Add(Note1);
             Notes.Add(Note2);
 
-            CustomDay1 = new CustomDay("eerste_week_eerste_dag",1, 1, DateTime.Today, "Wortelsoep", "Kip zoetzuur", "chocomousse");
+            int customDayId = 1;
+
+            CustomDay1 = new CustomDay("eerste_week_eerste_dag", 1, 1, DateTime.Today, "Wortelsoep", "Kip zoetzuur", "chocomousse") { DayId = customDayId++};
             CustomDay1.DayActivities = DayActivities1;
             CustomDay1.Helpers = Helpers1;
             CustomDay1.Notes = Notes;
             
 
-            CustomDay2 = new CustomDay("eerste_week_tweede_dag", 1, 2, DateTime.Today.AddDays(1), "Wortelsoep", "Kip zoetzuur", "chocomousse");
+            CustomDay2 = new CustomDay("eerste_week_tweede_dag", 1, 2, DateTime.Today.AddDays(1), "Wortelsoep", "Kip zoetzuur", "chocomousse") { DayId = customDayId++ }; ;
             CustomDay2.DayActivities = DayActivities2;
             CustomDay2.Helpers = Helpers2;
             CustomDay2.Notes = Notes;
 
-            CustomDay3 = new CustomDay("eerste_week_derde_dag",1, 3, DateTime.Today.AddDays(2), "Wortelsoep", "Kip zoetzuur", "chocomousse");
+            CustomDay3 = new CustomDay("eerste_week_derde_dag",1, 3, DateTime.Today.AddDays(2), "Wortelsoep", "Kip zoetzuur", "chocomousse") { DayId = customDayId++ }; ;
             CustomDay3.DayActivities = DayActivities3;
             CustomDay3.Helpers = Helpers3;
             CustomDay3.Notes = Notes;
