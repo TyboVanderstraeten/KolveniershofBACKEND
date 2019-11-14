@@ -73,8 +73,7 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
                                       && d.WeekNr == weekNr
                                       && d.DayNr == dayNr)
                                       .SelectMany(d => d.Helpers).Include(h => h.User)
-                                      .Select(h => h.User)
-                                      .ToList())
+                                      .Select(h => h.User))
                                       .ToList();
         }
 
@@ -87,8 +86,8 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
                                       .SelectMany(d => d.DayActivities).Include(da => da.Activity)
                                       .Where(da => da.TimeOfDay.Equals(timeOfDay))
                                       .Select(da => da.Activity)
+                                      )
                                       .Except(_activities.Where(a => a.ActivityType.Equals(ActivityType.AFWEZIG) || a.ActivityType.Equals(ActivityType.ZIEK)))
-                                      .ToList())
                                       .ToList();
         }
 
