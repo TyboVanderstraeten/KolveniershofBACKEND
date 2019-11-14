@@ -123,7 +123,7 @@ namespace KolveniershofBACKEND.Controllers
         [Route("{templateName}/{weekNr}/{dayNr}/possiblehelpers")]
         public ActionResult<User> GetPossibleHelpers(string templateName, int weekNr, int dayNr)
         {
-            IEnumerable<User> users = _dayRepository.GetPossibleHelpersForDay(templateName, weekNr, dayNr);
+            IEnumerable<User> users = _dayRepository.GetPossibleHelpers(templateName, weekNr, dayNr);
             if (users == null)
             {
                 return NotFound();
@@ -131,6 +131,29 @@ namespace KolveniershofBACKEND.Controllers
             else
             {
                 return Ok(users);
+            }
+        }
+
+        ///<summary>
+        /// Get all day activities that are not yet added to a specific template day
+        /// </summary>
+        /// <param name="templateName">The name of the template</param>
+        /// <param name="weekNr">The number of the week</param>
+        /// <param name="dayNr">The number of the day</param>
+        /// <param name="timeOfDay">The time of day</param>
+        /// <returns>The day activities that are not yet added to the template day</returns>
+        [HttpGet]
+        [Route("{templateName}/{weekNr}/{dayNr}/possibledayactivities")]
+        public ActionResult<Activity> GetPossibleDayActivities(string templateName, int weekNr, int dayNr, TimeOfDay timeOfDay)
+        {
+            IEnumerable<Activity> activities = _dayRepository.GetPossibleDayActivities(templateName, weekNr, dayNr, timeOfDay);
+            if (activities == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(activities);
             }
         }
 

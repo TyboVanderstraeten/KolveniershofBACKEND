@@ -11,12 +11,14 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
         private readonly DBContext _dbContext;
         private readonly DbSet<Day> _days;
         private readonly DbSet<User> _users;
+        private readonly DbSet<Activity> _activities;
 
         public DayRepository(DBContext dbContext)
         {
             _dbContext = dbContext;
             _days = dbContext.Days;
             _users = dbContext.Users;
+            _activities = dbContext.Activities;
         }
 
 
@@ -63,7 +65,7 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
                         .SingleOrDefault(d => d.WeekNr == weekNr && d.DayNr == dayNr);
         }
 
-        public IEnumerable<User> GetPossibleHelpersForDay(string templateName, int weekNr, int dayNr)
+        public IEnumerable<User> GetPossibleHelpers(string templateName, int weekNr, int dayNr)
         {
             return _users.Where(u => u.UserType.Equals(UserType.STAGIAIR) || u.UserType.Equals(UserType.VRIJWILLIGER))
                          .Except(_days.Where(d => !(d is CustomDay)
@@ -72,8 +74,24 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
                                       && d.DayNr == dayNr)
                                       .SelectMany(d => d.Helpers).Include(h => h.User)
                                       .Select(h => h.User)
-                                      .ToList());
+                                      .ToList())
+                                      .ToList();
         }
+
+        public IEnumerable<Activity> GetPossibleDayActivities(string templateName, int weekNr, int dayNr, TimeOfDay timeOfDay)
+        {
+            return _activities.Except(_days.Where(d => !(d is CustomDay)
+                                      && d.TemplateName.ToLower().Trim().Equals(templateName.ToLower().Trim())
+                                      && d.WeekNr == weekNr
+                                      && d.DayNr == dayNr)
+                                      .SelectMany(d => d.DayActivities).Include(da => da.Activity)
+                                      .Where(da => da.TimeOfDay.Equals(timeOfDay))
+                                      .Select(da => da.Activity)
+                                      .Except(_activities.Where(a => a.ActivityType.Equals(ActivityType.AFWEZIG) || a.ActivityType.Equals(ActivityType.ZIEK)))
+                                      .ToList())
+                                      .ToList();
+        }
+
 
         public void Add(Day day)
         {
