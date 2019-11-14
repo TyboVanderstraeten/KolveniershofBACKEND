@@ -112,6 +112,28 @@ namespace KolveniershofBACKEND.Controllers
             }
         }
 
+        ///<summary>
+        /// Get all helpers that are not yet helping on a specific template day
+        /// </summary>
+        /// <param name="templateName">The name of the template</param>
+        /// <param name="weekNr">The number of the week</param>
+        /// <param name="dayNr">The number of the day</param>
+        /// <returns>The helpers that are not yet helping on the template day</returns>
+        [HttpGet]
+        [Route("{templateName}/{weekNr}/{dayNr}/possiblehelpers")]
+        public ActionResult<User> GetPossibleHelpers(string templateName, int weekNr, int dayNr)
+        {
+            IEnumerable<User> users = _dayRepository.GetPossibleHelpersForDay(templateName, weekNr, dayNr);
+            if (users == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(users);
+            }
+        }
+
         /// <summary>
         /// Create a new template day
         /// </summary>
@@ -242,7 +264,7 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="model">The helper</param>
         /// <returns>The helper</returns>
         [HttpPost]
-        [Route("/{templateName}/{weekNr}/{dayNr}/helper")]
+        [Route("{templateName}/{weekNr}/{dayNr}/helper")]
         public ActionResult<Helper> AddHelper(string templateName, int weekNr, int dayNr, HelperDTO model)
         {
             Day dayToEdit = _dayRepository.GetByWeekAndDay(templateName, weekNr, dayNr);

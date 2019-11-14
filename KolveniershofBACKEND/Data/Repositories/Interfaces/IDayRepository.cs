@@ -10,6 +10,7 @@ namespace KolveniershofBACKEND.Data.Repositories.Interfaces
         IEnumerable<Day> GetAllByTemplateName(string templateName);
         Day GetById(int id);
         Day GetByWeekAndDay(string templateName, int weekNr, int dayNr);
+        IEnumerable<User> GetPossibleHelpersForDay(string templateName, int weekNr, int dayNr);
         void Add(Day day);
         void Remove(Day day);
         void SaveChanges();
