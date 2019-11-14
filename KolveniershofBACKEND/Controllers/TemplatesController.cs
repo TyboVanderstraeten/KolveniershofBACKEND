@@ -143,7 +143,7 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="timeOfDay">The time of day</param>
         /// <returns>The day activities that are not yet added to the template day</returns>
         [HttpGet]
-        [Route("{templateName}/{weekNr}/{dayNr}/possibledayactivities")]
+        [Route("{templateName}/{weekNr}/{dayNr}/{timeOfDay}/possibledayactivities")]
         public ActionResult<Activity> GetPossibleDayActivities(string templateName, int weekNr, int dayNr, TimeOfDay timeOfDay)
         {
             IEnumerable<Activity> activities = _dayRepository.GetPossibleDayActivities(templateName, weekNr, dayNr, timeOfDay);
