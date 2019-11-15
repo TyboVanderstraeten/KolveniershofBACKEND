@@ -24,6 +24,7 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
                               .Include(cd => cd.DayActivities).ThenInclude(da => da.Activity)
                               .Include(cd => cd.DayActivities).ThenInclude(da => da.Attendances).ThenInclude(a => a.User)
                               .Include(cd => cd.Helpers).ThenInclude(h => h.User)
+                              .OrderBy(cd=>cd.Date)
                               .ToList();
         }
 
