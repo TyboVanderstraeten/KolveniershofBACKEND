@@ -265,6 +265,27 @@ namespace KolveniershofBACKEND.Controllers
             }
         }
 
+        ///<summary>
+        /// Get all day activities that are not yet added to a specific custom day
+        /// </summary>
+        /// <param name="date">The date of the custom day</param>
+        /// <param name="timeOfDay">The time of day</param>
+        /// <returns>The day activities that are not yet added to the custom day</returns>
+        [HttpGet]
+        [Route("{date}/{timeOfDay}/possibledayactivities")]
+        public ActionResult<Activity> GetPossibleDayActivities(DateTime date, TimeOfDay timeOfDay)
+        {
+            IEnumerable<Activity> activities = _customDayRepository.GetPossibleDayActivities(date, timeOfDay);
+            if (activities == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(activities);
+            }
+        }
+
         /// <summary>
         /// Create a new custom day based upon a template day
         /// </summary>

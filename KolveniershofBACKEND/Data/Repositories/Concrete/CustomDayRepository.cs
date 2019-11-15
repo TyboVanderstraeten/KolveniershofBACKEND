@@ -12,12 +12,14 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
         private readonly DBContext _dbContext;
         private readonly DbSet<CustomDay> _customDays;
         private readonly DbSet<User> _users;
+        private readonly DbSet<Activity> _activities;
 
         public CustomDayRepository(DBContext dbContext)
         {
             _dbContext = dbContext;
             _customDays = dbContext.CustomDays;
             _users = dbContext.Users;
+            _activities = dbContext.Activities;
         }
 
         public IEnumerable<CustomDay> GetAll()
@@ -99,6 +101,17 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
                          .Except(_customDays.Where(d => d.Date.Date == date.Date)
                                       .SelectMany(d => d.Helpers).Include(h => h.User)
                                       .Select(h => h.User))
+                                      .ToList();
+        }
+
+        public IEnumerable<Activity> GetPossibleDayActivities(DateTime date, TimeOfDay timeOfDay)
+        {
+            return _activities.Except(_customDays.Where(d => d.Date.Date == date.Date)
+                                      .SelectMany(d => d.DayActivities).Include(da => da.Activity)
+                                      .Where(da => da.TimeOfDay.Equals(timeOfDay))
+                                      .Select(da => da.Activity)
+                                      )
+                                      .Except(_activities.Where(a => a.ActivityType.Equals(ActivityType.AFWEZIG) || a.ActivityType.Equals(ActivityType.ZIEK)))
                                       .ToList();
         }
 
