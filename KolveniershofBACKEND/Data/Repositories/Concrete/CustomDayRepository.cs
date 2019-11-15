@@ -22,7 +22,7 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
         {
             return _customDays.Include(cd => cd.Notes)
                               .Include(cd => cd.DayActivities).ThenInclude(da => da.Activity)
-                              .Include(cd => cd.DayActivities).ThenInclude(da => da.Attendances).ThenInclude(a=>a.User)
+                              .Include(cd => cd.DayActivities).ThenInclude(da => da.Attendances).ThenInclude(a => a.User)
                               .Include(cd => cd.Helpers).ThenInclude(h => h.User)
                               .ToList();
         }
@@ -30,11 +30,37 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
         public IEnumerable<CustomDay> GetAllInRange(DateTime start, DateTime end)
         {
             return _customDays.Where(cd => cd.Date.Date >= start.Date && cd.Date.Date <= end.Date)
+                .Include(cd => cd.Notes)
+                .Include(cd => cd.DayActivities).ThenInclude(da => da.Activity)
+                .Include(cd => cd.DayActivities).ThenInclude(da => da.Attendances).ThenInclude(a => a.User)
+                .Include(cd => cd.Helpers).ThenInclude(h => h.User)
+                .ToList();
+        }
+
+        public IEnumerable<CustomDay> GetAllInRangeForUser(DateTime start, DateTime end, int userId)
+        {
+            // All customdays in a range
+            IEnumerable<CustomDay> customDaysRange = _customDays.Where(cd => cd.Date.Date >= start.Date && cd.Date.Date <= end.Date)
                               .Include(cd => cd.Notes)
                               .Include(cd => cd.DayActivities).ThenInclude(da => da.Activity)
                               .Include(cd => cd.DayActivities).ThenInclude(da => da.Attendances).ThenInclude(a => a.User)
                               .Include(cd => cd.Helpers).ThenInclude(h => h.User)
                               .ToList();
+
+            // All day activities attended by a person in a range
+            IEnumerable<DayActivity> dayActivitiesAttendedByUser =
+                                        _customDays.Where(cd => cd.Date.Date >= start.Date && cd.Date.Date <= end.Date)
+                                        .Include(cd => cd.DayActivities).ThenInclude(da => da.Attendances).ThenInclude(a => a.User)
+                                        .SelectMany(cd => cd.DayActivities)
+                                        .Where(da => da.Attendances.Any(a => a.UserId == userId))
+                                        .ToList();
+
+            // Replace customdays dayactivities with those attended
+            foreach(var customDay in customDaysRange) {
+                customDay.DayActivities = dayActivitiesAttendedByUser.Where(da=>da.DayId==customDay.DayId).ToList();
+            }
+            
+            return customDaysRange.ToList();
         }
 
         public IEnumerable<User> GetAbsentUsersForDay(DateTime date)
