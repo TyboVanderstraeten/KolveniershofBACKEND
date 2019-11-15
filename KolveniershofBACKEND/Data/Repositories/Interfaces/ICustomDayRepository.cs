@@ -13,6 +13,7 @@ namespace KolveniershofBACKEND.Data.Repositories.Interfaces
         IEnumerable<User> GetSickUsersForDay(DateTime date);
         IEnumerable<Note> GetNotesForDay(DateTime date);
         IEnumerable<Helper> GetHelpersForDay(DateTime date);
+        IEnumerable<User> GetPossibleHelpers(DateTime date);
         CustomDay GetById(int id);
         CustomDay GetByDate(DateTime date);
         void Add(CustomDay customDay);

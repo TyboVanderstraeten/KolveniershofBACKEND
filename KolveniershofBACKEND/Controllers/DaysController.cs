@@ -245,6 +245,26 @@ namespace KolveniershofBACKEND.Controllers
             }
         }
 
+        ///<summary>
+        /// Get all helpers that are not yet helping on a specific custom day
+        /// </summary>
+        /// <param name="date">The date of the custom day</param>
+        /// <returns>The helpers that are not yet helping on the custom day</returns>
+        [HttpGet]
+        [Route("{date}/possiblehelpers")]
+        public ActionResult<User> GetPossibleHelpers(DateTime date)
+        {
+            IEnumerable<User> users = _customDayRepository.GetPossibleHelpers(date);
+            if (users == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(users);
+            }
+        }
+
         /// <summary>
         /// Create a new custom day based upon a template day
         /// </summary>
