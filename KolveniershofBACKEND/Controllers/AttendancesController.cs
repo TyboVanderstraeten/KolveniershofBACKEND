@@ -102,7 +102,7 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="activityId">The id of the activity</param>
         /// <returns>The clients that are not yet attending the activity</returns>
         [HttpGet]
-        [Route("{date}/{timeOfDay}/{activityId}/possibleclients")]
+        [Route("{date}/{timeOfDay}/activity/{activityId}/possibleclients")]
         public ActionResult<IEnumerable<User>> GetPossibleClients(DateTime date, TimeOfDay timeOfDay, int activityId)
         {
             IEnumerable<User> users = _attendanceRepository.GetPossibleClients(date, timeOfDay, activityId);
@@ -124,7 +124,7 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="activityId">The id of the activity</param>
         /// <returns>The personnel that are not yet attending the activity</returns>
         [HttpGet]
-        [Route("{date}/{timeOfDay}/{activityId}/possiblepersonnel")]
+        [Route("{date}/{timeOfDay}/activity/{activityId}/possiblepersonnel")]
         public ActionResult<IEnumerable<User>> GetPossiblePersonnel(DateTime date, TimeOfDay timeOfDay, int activityId)
         {
             IEnumerable<User> users = _attendanceRepository.GetPossiblePersonnel(date, timeOfDay, activityId);
