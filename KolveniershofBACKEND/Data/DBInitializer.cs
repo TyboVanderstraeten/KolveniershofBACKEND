@@ -19,6 +19,7 @@ namespace KolveniershofBACKEND.Data
 
         public async Task seedDatabase()
         {
+            
             #region Activities
             Activity a1 = new Activity(ActivityType.ATELIER, "Testatelier", "Dit is een testatelier", "test.picto");
             Activity a2 = new Activity(ActivityType.ATELIER, "Koken", "We gaan koken", "koken.picto");
@@ -66,6 +67,26 @@ namespace KolveniershofBACKEND.Data
             Driver driver4 = new Driver("Nick");
             Driver driver5 = new Driver("Hedwig");
             Driver driver6 = new Driver("Koen");
+            Driver driver7 = new Driver("Frieza");
+            Driver driver8 = new Driver("Dina");
+            Driver driver9 = new Driver("Freddy");
+            Driver driver10 = new Driver("An");
+            Driver driver11 = new Driver("Anja");
+            Driver driver12 = new Driver("Ann T");
+
+            _dbContext.Drivers.Add(driver1);
+            _dbContext.Drivers.Add(driver2);
+            _dbContext.Drivers.Add(driver3);
+            _dbContext.Drivers.Add(driver4);
+            _dbContext.Drivers.Add(driver5);
+            _dbContext.Drivers.Add(driver6);
+            _dbContext.Drivers.Add(driver7);
+            _dbContext.Drivers.Add(driver8);
+            _dbContext.Drivers.Add(driver9);
+            _dbContext.Drivers.Add(driver9);
+            _dbContext.Drivers.Add(driver10);
+            _dbContext.Drivers.Add(driver11);
+            _dbContext.Drivers.Add(driver12);
             #endregion
 
             #region TemplateDay

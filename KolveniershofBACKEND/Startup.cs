@@ -54,7 +54,8 @@ namespace KolveniershofBACKEND
                 .AddScoped<IHelperRepository, HelperRepository>()
                 .AddScoped<IWeekendDayRepository, WeekendDayRepository>()
                 .AddScoped<IAttendanceRepository, AttendanceRepository>()
-                .AddScoped<IBusDriverRepository, BusDriverRepository>();
+                .AddScoped<IBusDriverRepository, BusDriverRepository>()
+                .AddScoped<IDriverRepository, DriverRepository>();
             #endregion
 
             #region NSwag
