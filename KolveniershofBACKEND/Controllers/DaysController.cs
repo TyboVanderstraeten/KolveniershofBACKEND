@@ -304,6 +304,10 @@ namespace KolveniershofBACKEND.Controllers
                 try
                 {
                     CustomDay customDayToCreate = new CustomDay(templateDayChosen.TemplateName, templateDayChosen.WeekNr, templateDayChosen.DayNr, model.Date, model.PreDish, model.MainDish, model.Dessert);
+                    if (_customDayRepository.GetByDate(customDayToCreate.Date) != null)
+                    {
+                        return BadRequest("A day for this date already exists");
+                    }
                     foreach (DayActivity dayActivity in templateDayChosen.DayActivities)
                     {
                         DayActivity dayActivityToAdd = new DayActivity(customDayToCreate, dayActivity.Activity, dayActivity.TimeOfDay);

@@ -91,6 +91,25 @@ namespace KolveniershofBACKEND.Controllers
         }
 
         /// <summary>
+        /// Get all distinct template names
+        /// </summary>
+        /// <returns>All distinct template names</returns>
+        [HttpGet]
+        [Route("templatenames")]
+        public ActionResult<IEnumerable<string>> GetAllTemplateNames()
+        {
+            IEnumerable<string> names = _dayRepository.GetAllTemplateNames().ToList();
+            if (names == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(names);
+            }
+        }
+
+        /// <summary>
         /// Get a template day from a specific template, week and day
         /// </summary>
         /// <param name="templateName">The name of the template</param>

@@ -48,6 +48,12 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
                         .Include(d => d.Helpers).ThenInclude(h => h.User)
                         .ToList();
         }
+
+        public IEnumerable<string> GetAllTemplateNames()
+        {
+            return _days.Select(d => d.TemplateName).Distinct().ToList();
+        }
+
         public Day GetById(int id)
         {
             return _days.Where(d => !(d is CustomDay))
