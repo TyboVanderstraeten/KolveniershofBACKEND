@@ -13,7 +13,6 @@ namespace KolveniershofBACKEND.Models.Domain
         public TimeOfDay TimeOfDay { get; set; }
         [JsonIgnore]
         public DayActivity DayActivity { get; set; }
-        [JsonIgnore]
         public User User { get; set; }
         public string Comment { get; set; }
 

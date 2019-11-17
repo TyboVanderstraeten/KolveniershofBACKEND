@@ -11,11 +11,15 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
     {
         private readonly DBContext _dbContext;
         private readonly DbSet<CustomDay> _customDays;
+        private readonly DbSet<User> _users;
+        private readonly DbSet<Activity> _activities;
 
         public CustomDayRepository(DBContext dbContext)
         {
             _dbContext = dbContext;
             _customDays = dbContext.CustomDays;
+            _users = dbContext.Users;
+            _activities = dbContext.Activities;
         }
 
         public IEnumerable<CustomDay> GetAll()
@@ -24,6 +28,7 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
                               .Include(cd => cd.DayActivities).ThenInclude(da => da.Activity)
                               .Include(cd => cd.DayActivities).ThenInclude(da => da.Attendances).ThenInclude(a => a.User)
                               .Include(cd => cd.Helpers).ThenInclude(h => h.User)
+                              .OrderBy(cd => cd.Date)
                               .ToList();
         }
 
@@ -48,10 +53,11 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
                               .ToList();
 
             // Replace customdays dayactivities with those attended
-            foreach(var customDay in customDaysRange) {
+            foreach (var customDay in customDaysRange)
+            {
                 customDay.DayActivities = customDay.DayActivities.Where(da => da.Attendances.Any(a => a.UserId == userId)).ToList();
             }
-            
+
             return customDaysRange.ToList();
         }
 
@@ -87,6 +93,26 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
             return _customDays.Where(d => d.Date.Date == date.Date)
                               .SelectMany(d => d.Helpers).Include(h => h.User)
                               .ToList();
+        }
+
+        public IEnumerable<User> GetPossibleHelpers(DateTime date)
+        {
+            return _users.Where(u => u.UserType.Equals(UserType.STAGIAIR) || u.UserType.Equals(UserType.VRIJWILLIGER))
+                         .Except(_customDays.Where(d => d.Date.Date == date.Date)
+                                      .SelectMany(d => d.Helpers).Include(h => h.User)
+                                      .Select(h => h.User))
+                                      .ToList();
+        }
+
+        public IEnumerable<Activity> GetPossibleDayActivities(DateTime date, TimeOfDay timeOfDay)
+        {
+            return _activities.Except(_customDays.Where(d => d.Date.Date == date.Date)
+                                      .SelectMany(d => d.DayActivities).Include(da => da.Activity)
+                                      .Where(da => da.TimeOfDay.Equals(timeOfDay))
+                                      .Select(da => da.Activity)
+                                      )
+                                      .Except(_activities.Where(a => a.ActivityType.Equals(ActivityType.AFWEZIG) || a.ActivityType.Equals(ActivityType.ZIEK)))
+                                      .ToList();
         }
 
         public CustomDay GetByDate(DateTime date)

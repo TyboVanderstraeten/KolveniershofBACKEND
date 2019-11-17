@@ -102,7 +102,7 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="date">The date of the custom day</param>
         /// <returns>The custom day</returns>
         [HttpGet]
-        [Route("date/{date}")]
+        [Route("{date}")]
         public ActionResult<CustomDay> GetByDate(DateTime date)
         {
             CustomDay customDay = _customDayRepository.GetByDate(date);
@@ -245,6 +245,47 @@ namespace KolveniershofBACKEND.Controllers
             }
         }
 
+        ///<summary>
+        /// Get all helpers that are not yet helping on a specific custom day
+        /// </summary>
+        /// <param name="date">The date of the custom day</param>
+        /// <returns>The helpers that are not yet helping on the custom day</returns>
+        [HttpGet]
+        [Route("{date}/possiblehelpers")]
+        public ActionResult<User> GetPossibleHelpers(DateTime date)
+        {
+            IEnumerable<User> users = _customDayRepository.GetPossibleHelpers(date);
+            if (users == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(users);
+            }
+        }
+
+        ///<summary>
+        /// Get all day activities that are not yet added to a specific custom day
+        /// </summary>
+        /// <param name="date">The date of the custom day</param>
+        /// <param name="timeOfDay">The time of day</param>
+        /// <returns>The day activities that are not yet added to the custom day</returns>
+        [HttpGet]
+        [Route("{date}/{timeOfDay}/possibledayactivities")]
+        public ActionResult<Activity> GetPossibleDayActivities(DateTime date, TimeOfDay timeOfDay)
+        {
+            IEnumerable<Activity> activities = _customDayRepository.GetPossibleDayActivities(date, timeOfDay);
+            if (activities == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(activities);
+            }
+        }
+
         /// <summary>
         /// Create a new custom day based upon a template day
         /// </summary>
@@ -263,6 +304,10 @@ namespace KolveniershofBACKEND.Controllers
                 try
                 {
                     CustomDay customDayToCreate = new CustomDay(templateDayChosen.TemplateName, templateDayChosen.WeekNr, templateDayChosen.DayNr, model.Date, model.PreDish, model.MainDish, model.Dessert);
+                    if (_customDayRepository.GetByDate(customDayToCreate.Date) != null)
+                    {
+                        return BadRequest("A day for this date already exists");
+                    }
                     foreach (DayActivity dayActivity in templateDayChosen.DayActivities)
                     {
                         DayActivity dayActivityToAdd = new DayActivity(customDayToCreate, dayActivity.Activity, dayActivity.TimeOfDay);
