@@ -40,6 +40,10 @@ namespace KolveniershofBACKEND.Tests.Data
         public Day Day1 { get; }
         public Day Day2 { get; }
         public Day Day3 { get; }
+        public Day Day4 { get; }
+        public Day Day5 { get; }
+        public Day Day6 { get; }
+
         public Day[] Days { get; }
 
         public DayActivity DayActivity1 { get; }
@@ -145,7 +149,10 @@ namespace KolveniershofBACKEND.Tests.Data
             Day1 = new Day("eerste_week_eerste_dag",1, 1) { DayId = dayId++ };
             Day2 = new Day("eerste_week_tweede_dag",1, 2) { DayId = dayId++ };
             Day3 = new Day("eerste_week_derde_dag",1, 3) { DayId = dayId++ };
-          
+            Day4 = new Day("eerste_week_vierde_dag", 1, 4) { DayId = dayId++ };
+            Day5 = new Day("eerste_week_vijfde_dag", 1, 5) { DayId = dayId++ };
+            Day6 = new Day("tweede_week_eerste_dag", 2, 1) { DayId = dayId++ };
+
 
             Attendances1 = new List<Attendance>();
             Attendances2 = new List<Attendance>();
@@ -187,6 +194,7 @@ namespace KolveniershofBACKEND.Tests.Data
             DayActivities1.Add(DayActivity3);
             DayActivities1.Add(DayActivity4);
             Day1.DayActivities = DayActivities1;
+            Day5.DayActivities = DayActivities1;
 
             Helper1 = new Helper(Day1, U1);
             Helper2 = new Helper(Day1, U3);
@@ -195,6 +203,7 @@ namespace KolveniershofBACKEND.Tests.Data
             Helpers1.Add(Helper2);
 
             Day1.Helpers = Helpers1;
+            Day4.Helpers = Helpers1;
 
             DayActivity5 = new DayActivity(Day2, Activity5, TimeOfDay.VOORMIDDAG);
             DayActivity6 = new DayActivity(Day2, Activity7, TimeOfDay.MIDDAG);
