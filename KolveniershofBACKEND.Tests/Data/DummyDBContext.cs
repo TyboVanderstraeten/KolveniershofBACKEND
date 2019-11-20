@@ -15,7 +15,14 @@ namespace KolveniershofBACKEND.Tests.Data
         public User U1 { get; }
         public User U2 { get; }
         public User U3 { get; }
+        public User U4 { get; set; }
         public User[] Users { get; }
+        #endregion
+
+        #region WeekendDays
+        public WeekendDay GoingOutWithGirlfriendOn24112019 { get; set; }
+        public WeekendDay PicknickingWithParentsOn23112019 { get; set; }
+        public WeekendDay GamingWithBestFriendOn24112019 { get; set; }
         #endregion
 
         #region Activities
@@ -98,13 +105,22 @@ namespace KolveniershofBACKEND.Tests.Data
 
         public DummyDBContext()
         {
+            #region init WeekendDays
+            int weekendDayId = 1;
+            GoingOutWithGirlfriendOn24112019 = new WeekendDay(new DateTime(2019, 11, 24), "afspreken met liefje") { WeekendDayId = weekendDayId++ };
+            PicknickingWithParentsOn23112019 = new WeekendDay(new DateTime(2019, 11, 23), "gaan picknicken met ouders") { WeekendDayId = weekendDayId++ };
+            GamingWithBestFriendOn24112019 = new WeekendDay(new DateTime(2019, 11, 24), "gamen met beste vriend") { WeekendDayId = weekendDayId++ };
+            #endregion
+
             #region init Users
             int userId = 1;
             U1 = new User(UserType.BEGELEIDER, "Tybo", "Vanderstraeten", "tybo@hotmail.com", "string.jpeg", null,null) { UserId = userId++ };
             U2 = new User(UserType.CLIENT, "Rob", "De Putter", "rob@hotmail.com", "string.jpeg", 2,null) { UserId = userId++ };
             U3 = new User(UserType.STAGIAIR, "Tim", "Geldof", "tim@hotmail.com", "string.jpeg", null,null) { UserId = userId++ };
+            U4 = new User(UserType.CLIENT, "Alihan", "Fevziev", "alihan@hotmail.com", "string.jpeg", 1, 3) { UserId = userId++ };
+            U4.AddWeekendDay(GoingOutWithGirlfriendOn24112019);
 
-            Users = new[] { U1, U2, U3 };
+            Users = new[] { U1, U2, U3, U4 };
             #endregion
 
             #region init Activities
