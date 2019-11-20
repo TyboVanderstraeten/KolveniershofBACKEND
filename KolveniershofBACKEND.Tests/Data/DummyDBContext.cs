@@ -80,6 +80,7 @@ namespace KolveniershofBACKEND.Tests.Data
         public CustomDay CustomDay1 { get; }
         public CustomDay CustomDay2 { get; }
         public CustomDay CustomDay3 { get; }
+        public CustomDay CustomDay4 { get; set; }
         public CustomDay[] CustomDays { get; }
 
         public Attendance Attendance1 { get; }
@@ -99,6 +100,8 @@ namespace KolveniershofBACKEND.Tests.Data
 
         public Note Note1 { get; }
         public Note Note2 { get; }
+        public Note Note3 { get; }
+        public Note Note4 { get; }
         public IList<Note> Notes { get; }
         #endregion
 
@@ -223,11 +226,15 @@ namespace KolveniershofBACKEND.Tests.Data
             #endregion
 
             #region init CustomDays
-            Note1 = new Note(NoteType.VERVOER, "Florian neemt de bus niet vandaag");
-            Note2 = new Note(NoteType.VARIA, "Vandaag zullen er geen bekertjes aanwezig zijn");
+            int noteId = 1;
+            Note1 = new Note(NoteType.VERVOER, "Florian neemt de bus niet vandaag") { NoteId = noteId++ };
+            Note2 = new Note(NoteType.VARIA, "Vandaag zullen er geen bekertjes aanwezig zijn") { NoteId = noteId++ };
+            Note3 = new Note(NoteType.VERVOER, "Beige bus zal niet rijden") { NoteId = noteId++ };
+            Note4 = new Note(NoteType.CLIENTEN, "Deano is ziek") { NoteId = noteId++ };
             Notes = new List<Note>();
             //Notes.Add(Note1);
             Notes.Add(Note2);
+            Notes.Add(Note3);
 
             CustomDay1 = new CustomDay("eerste_week_eerste_dag",1, 1, DateTime.Today, "Wortelsoep", "Kip zoetzuur", "chocomousse");
             CustomDay1.DayActivities = DayActivities1;
@@ -245,7 +252,9 @@ namespace KolveniershofBACKEND.Tests.Data
             CustomDay3.Helpers = Helpers3;
             CustomDay3.Notes = Notes;
 
-            CustomDays = new[] { CustomDay1, CustomDay2, CustomDay3 };
+            CustomDay4 = new CustomDay("eerste_week_vierde_dag", 1, 4, DateTime.Today.AddDays(3), "kippensoep", "steak", "appeltaart");
+            
+            CustomDays = new[] { CustomDay1, CustomDay2, CustomDay3, CustomDay4 };
             #endregion
         }
     }
