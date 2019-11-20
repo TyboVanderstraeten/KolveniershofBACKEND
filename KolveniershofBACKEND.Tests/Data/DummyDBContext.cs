@@ -99,9 +99,8 @@ namespace KolveniershofBACKEND.Tests.Data
 
         public Note Note1 { get; }
         public Note Note2 { get; }
-        public IList<Note> Notes { get; } 
+        public IList<Note> Notes { get; }
         #endregion
-
 
         public DummyDBContext()
         {
@@ -249,7 +248,5 @@ namespace KolveniershofBACKEND.Tests.Data
             CustomDays = new[] { CustomDay1, CustomDay2, CustomDay3 };
             #endregion
         }
-
-
     }
 }
