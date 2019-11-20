@@ -22,10 +22,11 @@ namespace KolveniershofBACKEND.Tests.Models
             _weekendDay3 = _dummyDbContext.GamingWithBestFriendOn24112019;
         }
 
+        #region Constructor
         [Fact]
         public void WeekendDays_UserWithoutWeekendDays_ReturnsZero()
         {
-            Assert.Equal(0, _userWithoutWeekendDays.WeekendDays.Count);
+            Assert.Empty(_userWithoutWeekendDays.WeekendDays);
         }
 
         [Fact]
@@ -33,6 +34,7 @@ namespace KolveniershofBACKEND.Tests.Models
         {
             Assert.Equal(1, _userWithOneWeekendDay.WeekendDays.Count);
         }
+        #endregion
 
         #region AddWeekendDay
         [Fact]
@@ -63,7 +65,7 @@ namespace KolveniershofBACKEND.Tests.Models
         {
             _userWithOneWeekendDay.RemoveWeekendDay(_weekendDay1);
 
-            Assert.Equal(0, _userWithOneWeekendDay.WeekendDays.Count);
+            Assert.Empty(_userWithOneWeekendDay.WeekendDays);
         }
 
         [Fact]
