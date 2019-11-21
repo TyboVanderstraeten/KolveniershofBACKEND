@@ -41,7 +41,6 @@ namespace KolveniershofBACKEND.Tests.Controllers
             int activityId = 1;
             TimeOfDay timeOfDay = TimeOfDay.AVOND;
             var actualLengthAttendances = _dummyDBContext.DayActivity1.Attendances.Count();
-
             _dayActivityRepository.Setup(d => d.GetCustomDayActivity(date, timeOfDay, activityId)).Returns(_dummyDBContext.DayActivity1);
 
             ActionResult<IEnumerable<Attendance>> actionResult = _controller.GetAll(date, activityId, timeOfDay);
@@ -57,6 +56,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
             DateTime date = DateTime.Today;
             int activityId = 99;
             TimeOfDay timeOfDay = TimeOfDay.AVOND;
+            _dayActivityRepository.Setup(d => d.GetCustomDayActivity(date, timeOfDay, 1)).Returns(_dummyDBContext.DayActivity1);
+
 
             ActionResult<IEnumerable<Attendance>> actionResult = _controller.GetAll(date, activityId, timeOfDay);
 
@@ -87,6 +88,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
             DateTime date = DateTime.Today;
             int activityId = 99;
             TimeOfDay timeOfDay = TimeOfDay.AVOND;
+            _dayActivityRepository.Setup(d => d.GetCustomDayActivity(date, timeOfDay, 1)).Returns(_dummyDBContext.DayActivity1);
 
             ActionResult<IEnumerable<Attendance>> actionResult = _controller.GetAllClients(date, activityId, timeOfDay);
 
@@ -118,6 +120,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
             DateTime date = DateTime.Today;
             int activityId = 99;
             TimeOfDay timeOfDay = TimeOfDay.AVOND;
+            _dayActivityRepository.Setup(d => d.GetCustomDayActivity(date, timeOfDay, 1)).Returns(_dummyDBContext.DayActivity1);
 
             ActionResult<IEnumerable<Attendance>> actionResult = _controller.GetAllPersonnel(date, activityId, timeOfDay);
 
@@ -152,8 +155,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
             DateTime date = DateTime.Today;
             TimeOfDay timeOfDay = TimeOfDay.AVOND;
             int activityId = 1;
-            int userId = 1;
-
+            int userId = 40;
+            _userRepository.Setup(d => d.GetById(1)).Returns(_dummyDBContext.U1);
             _dayActivityRepository.Setup(d => d.GetCustomDayActivity(date, timeOfDay, activityId)).Returns(_dummyDBContext.DayActivity1);
 
             ActionResult<Attendance> actionResult = _controller.Add(date, timeOfDay, activityId, userId);
@@ -167,7 +170,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
             DateTime date = DateTime.Today;
             TimeOfDay timeOfDay = TimeOfDay.AVOND;
             int activityId = 150;
-            int userId = 75;
+            int userId = 1;
+            _dayActivityRepository.Setup(d => d.GetCustomDayActivity(date, timeOfDay, 1)).Returns(_dummyDBContext.DayActivity1);
 
             ActionResult<Attendance> actionResult = _controller.Add(date, timeOfDay, activityId, userId);
 
@@ -183,7 +187,6 @@ namespace KolveniershofBACKEND.Tests.Controllers
             TimeOfDay timeOfDay = TimeOfDay.VOLLEDIG;
             int activityId = 5;
             int userId = 3;
-
             _dayActivityRepository.Setup(d => d.GetCustomDayActivity(date, timeOfDay, activityId)).Returns(_dummyDBContext.DayActivity1);
             _attendanceRepository.Setup(d => d.GetForUser(date, timeOfDay, activityId, userId)).Returns(_dummyDBContext.Attendance6);
 
@@ -201,7 +204,9 @@ namespace KolveniershofBACKEND.Tests.Controllers
             DateTime date = DateTime.Today;
             TimeOfDay timeOfDay = TimeOfDay.VOLLEDIG;
             int activityId = 55;
-            int userId = -3;
+            int userId = 3;
+            _dayActivityRepository.Setup(d => d.GetCustomDayActivity(date, timeOfDay, 1)).Returns(_dummyDBContext.DayActivity1);
+            _attendanceRepository.Setup(d => d.GetForUser(date, timeOfDay, activityId, userId)).Returns(_dummyDBContext.Attendance6);
 
             ActionResult<Attendance> actionResult = _controller.Remove(date, timeOfDay, activityId, userId);
 
@@ -213,8 +218,10 @@ namespace KolveniershofBACKEND.Tests.Controllers
         {
             DateTime date = DateTime.Today;
             TimeOfDay timeOfDay = TimeOfDay.VOLLEDIG;
-            int activityId = 55;
+            int activityId = 1;
             int userId = -3;
+            _dayActivityRepository.Setup(d => d.GetCustomDayActivity(date, timeOfDay, activityId)).Returns(_dummyDBContext.DayActivity1);
+            _attendanceRepository.Setup(d => d.GetForUser(date, timeOfDay, activityId, 3)).Returns(_dummyDBContext.Attendance6);
 
             ActionResult<Attendance> actionResult = _controller.Remove(date, timeOfDay, activityId, userId);
 
@@ -234,7 +241,6 @@ namespace KolveniershofBACKEND.Tests.Controllers
             {
                 Comment = "Dit was een zeer leuke activiteit"
             };
-
             _dayActivityRepository.Setup(d => d.GetCustomDayActivity(date, timeOfDay, activityId)).Returns(_dummyDBContext.DayActivity1);
 
             ActionResult<Attendance> actionResult = _controller.AddComment(date, timeOfDay, activityId, userId, commentDTO);
@@ -256,6 +262,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
             {
                 Comment = "Dit was een zeer leuke activiteit"
             };
+            _dayActivityRepository.Setup(d => d.GetCustomDayActivity(date, timeOfDay, 1)).Returns(_dummyDBContext.DayActivity1);
 
             ActionResult<Attendance> actionResult = _controller.AddComment(date, timeOfDay, activityId, userId, commentDTO);
 
@@ -273,6 +280,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
             {
                 Comment = "Dit was een zeer leuke activiteit"
             };
+            _dayActivityRepository.Setup(d => d.GetCustomDayActivity(date, timeOfDay, activityId)).Returns(_dummyDBContext.DayActivity1);
 
             ActionResult<Attendance> actionResult = _controller.AddComment(date, timeOfDay, activityId, userId, commentDTO);
 
@@ -286,7 +294,6 @@ namespace KolveniershofBACKEND.Tests.Controllers
             TimeOfDay timeOfDay = TimeOfDay.VOLLEDIG;
             int activityId = 1;
             int userId = 2;
-
             _dayActivityRepository.Setup(d => d.GetCustomDayActivity(date, timeOfDay, activityId)).Returns(_dummyDBContext.DayActivity1);
 
             ActionResult<Attendance> actionResult = _controller.RemoveComment(date, timeOfDay, activityId, userId);
@@ -308,6 +315,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
             {
                 Comment = "Dit was een zeer leuke activiteit"
             };
+            _dayActivityRepository.Setup(d => d.GetCustomDayActivity(date, timeOfDay, 1)).Returns(_dummyDBContext.DayActivity1);
 
             ActionResult<Attendance> actionResult = _controller.RemoveComment(date, timeOfDay, activityId, userId);
 
@@ -325,6 +333,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
             {
                 Comment = "Dit was een zeer leuke activiteit"
             };
+            _dayActivityRepository.Setup(d => d.GetCustomDayActivity(date, timeOfDay, activityId)).Returns(_dummyDBContext.DayActivity1);
 
             ActionResult<Attendance> actionResult = _controller.RemoveComment(date, timeOfDay, activityId, userId);
 

@@ -141,7 +141,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
                 Description = "",
                 Pictogram = null
             };
-            
+            _activityRepository.Setup(m => m.GetById(2)).Returns(_dummyDBContext.Activity2);
+
             ActionResult<Activity> actionResult = _controller.Edit(activityDTO);
 
             Assert.IsType<NotFoundResult>(actionResult?.Result);

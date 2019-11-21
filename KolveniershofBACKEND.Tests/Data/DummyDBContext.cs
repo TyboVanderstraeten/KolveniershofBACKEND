@@ -125,6 +125,7 @@ namespace KolveniershofBACKEND.Tests.Data
             U3 = new User(UserType.STAGIAIR, "Tim", "Geldof", "tim@hotmail.com", "string.jpeg", null,null) { UserId = userId++ };
             U4 = new User(UserType.CLIENT, "Alihan", "Fevziev", "alihan@hotmail.com", "string.jpeg", 1, 3) { UserId = userId++ };
             U4.AddWeekendDay(GoingOutWithGirlfriendOn24112019);
+            GoingOutWithGirlfriendOn24112019.UserId = U4.UserId;
 
             Users = new[] { U1, U2, U3, U4 };
             #endregion

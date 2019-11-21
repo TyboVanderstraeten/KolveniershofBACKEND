@@ -41,7 +41,6 @@ namespace KolveniershofBACKEND.Tests.Controllers
                 _dayActivityRepository.Object, _helperRepository.Object, _noteRepository.Object);
         }
 
-
         #region Get
         [Fact]
         public void GetAll_Succeeds()
@@ -76,6 +75,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
         {
             DateTime startDate = new DateTime(1945, 1, 1);
             DateTime endDate = new DateTime(1945, 12, 1);
+            _customDayRepository.Setup(a => a.GetAllInRange(new DateTime(2019, 11, 1), new DateTime(2019, 11, 30))).Returns(_dummyDBContext.CustomDays);
 
             ActionResult<IEnumerable<CustomDay>> actionResult = _controller.GetAll(startDate, endDate);
 
@@ -99,6 +99,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
         public void GetByDate_WrongDate_ReturnsNotFound()
         {
             DateTime date = new DateTime(1945, 1, 1);
+            _customDayRepository.Setup(a => a.GetByDate(new DateTime(2019, 11, 21))).Returns(_dummyDBContext.CustomDay1);
 
             ActionResult<CustomDay> actionResult = _controller.GetByDate(date);
 
@@ -124,6 +125,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
         {
             int userId = 1;
             DateTime date = new DateTime(1945, 1, 1);
+            _customDayRepository.Setup(a => a.GetByDate(new DateTime(2019, 11, 21))).Returns(_dummyDBContext.CustomDay1);
 
             ActionResult<CustomDay> actionResult = _controller.GetForUser(userId, date);
 
@@ -136,6 +138,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
             int userId = -15;
             DateTime date = DateTime.Today;
             _customDayRepository.Setup(d => d.GetByDate(date)).Returns(_dummyDBContext.CustomDay1);
+            _userRepository.Setup(u => u.GetById(1)).Returns(_dummyDBContext.U1);
 
             ActionResult<CustomDay> actionResult = _controller.GetForUser(userId, date);
 
@@ -161,6 +164,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
         public void GetAbsentUsers_WrongDate_ReturnsNotFound()
         {
             DateTime date = new DateTime(1945, 1, 1);
+            _customDayRepository.Setup(a => a.GetByDate(new DateTime(2019, 11, 21))).Returns(_dummyDBContext.CustomDay1);
 
             ActionResult<IEnumerable<User>> actionResult = _controller.GetAbsent(date);
 
@@ -171,6 +175,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
         public void GetSickUsers_WrongDate_ReturnsNotFound()
         {
             DateTime date = new DateTime(1945, 1, 1);
+            _customDayRepository.Setup(a => a.GetByDate(new DateTime(2019, 11, 21))).Returns(_dummyDBContext.CustomDay1);
 
             ActionResult<IEnumerable<User>> actionResult = _controller.GetSick(date);
 
@@ -194,6 +199,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
         public void GetNotesForDate_WrongDate_ReturnsNotFound()
         {
             DateTime date = new DateTime(1945, 1, 1);
+            _customDayRepository.Setup(a => a.GetByDate(new DateTime(2019, 11, 21))).Returns(_dummyDBContext.CustomDay1);
 
             ActionResult<IEnumerable<Note>> actionResult = _controller.GetNotes(date);
 
@@ -204,6 +210,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
         public void GetHelpersForDate_WrongDate_ReturnsNotFound()
         {
             DateTime date = new DateTime(1945, 1, 1);
+            _customDayRepository.Setup(a => a.GetByDate(new DateTime(2019, 11, 21))).Returns(_dummyDBContext.CustomDay1);
 
             ActionResult<IEnumerable<Note>> actionResult = _controller.GetNotes(date);
 
@@ -244,7 +251,6 @@ namespace KolveniershofBACKEND.Tests.Controllers
         [Fact]
         public void AddCustomDay_NonExistingWeekNrAndDayNr_ReturnsNotFound()
         {
-
             CustomDayDTO dayDTO = new CustomDayDTO()
             {
                 TemplateName = "eerste_week_eerste_dag",
@@ -256,6 +262,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
                 Dessert = "Chocomousse",
                 Notes = null
             };
+            _dayRepository.Setup(a => a.GetByWeekAndDay(dayDTO.TemplateName, 1, 1)).Returns(_dummyDBContext.CustomDay1);
 
             ActionResult<CustomDay> actionResult = _controller.Add(dayDTO);
 
@@ -299,7 +306,6 @@ namespace KolveniershofBACKEND.Tests.Controllers
         public void EditCustomDay_WrongDate_ReturnsNotFound()
         {
             DateTime date = new DateTime(1945, 1, 1);
-
             CustomDayDTO dayDTO = new CustomDayDTO()
             {
                 TemplateName = "eerste_week_eerste_dag",
@@ -311,6 +317,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
                 Dessert = "Chocomousse",
                 Notes = null
             };
+            _customDayRepository.Setup(c => c.GetByDate(new DateTime(2019, 11, 21))).Returns(_dummyDBContext.CustomDay1);
 
             ActionResult<CustomDay> actionResult = _controller.Edit(date, dayDTO);
 
@@ -340,6 +347,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
         public void DeleteCustomDay_WrongDate_DeletesCustomDay()
         {
             DateTime date = new DateTime(1945, 1, 1);
+            _customDayRepository.Setup(c => c.GetByDate(DateTime.Today)).Returns(_dummyDBContext.CustomDay1);
 
             ActionResult<CustomDay> actionResult = _controller.Remove(date);
 
@@ -383,6 +391,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
                 TimeOfDay = TimeOfDay.VOORMIDDAG,
                 Attendances = null
             };
+            _customDayRepository.Setup(c => c.GetByDate(DateTime.Today)).Returns(_dummyDBContext.CustomDay1);
 
             ActionResult<DayActivity> actionResult = _controller.AddActivity(date, dayActivityDTO);
 
@@ -393,13 +402,15 @@ namespace KolveniershofBACKEND.Tests.Controllers
         [Fact]
         public void AddActivityToCustomDay_RightDateButWrongActivityId_ReturnsNotFound()
         {
-            DateTime date = new DateTime(1945, 1, 1);
+            DateTime date = DateTime.Today;
             DayActivityDTO dayActivityDTO = new DayActivityDTO()
             {
                 ActivityId = -2,
                 TimeOfDay = TimeOfDay.VOORMIDDAG,
                 Attendances = null
             };
+            _customDayRepository.Setup(c => c.GetByDate(date)).Returns(_dummyDBContext.CustomDay1);
+            _activityRepository.Setup(a => a.GetById(2)).Returns(_dummyDBContext.Activity2);
 
             ActionResult<DayActivity> actionResult = _controller.AddActivity(date, dayActivityDTO);
 
@@ -431,7 +442,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
             DateTime date = new DateTime(1945, 1, 1);
             int activityId = 1;
             TimeOfDay timeOfDay = TimeOfDay.OCHTEND;
-            
+            _customDayRepository.Setup(c => c.GetByDate(DateTime.Today)).Returns(_dummyDBContext.CustomDay1);
+            _dayActivityRepository.Setup(d => d.GetCustomDayActivity(date, timeOfDay, activityId)).Returns(_dummyDBContext.DayActivity2);
 
             ActionResult<DayActivity> actionResult = _controller.RemoveActivity(date, activityId, timeOfDay);
 
@@ -446,6 +458,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
             int activityId = -3;
             TimeOfDay timeOfDay = TimeOfDay.NAMIDDAG;
             _customDayRepository.Setup(c => c.GetByDate(date)).Returns(_dummyDBContext.CustomDay1);
+            _dayActivityRepository.Setup(d => d.GetCustomDayActivity(date, timeOfDay, 2)).Returns(_dummyDBContext.DayActivity2);
 
             ActionResult<DayActivity> actionResult = _controller.RemoveActivity(date, activityId, timeOfDay);
 
@@ -464,6 +477,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
                 UserId = 747
             };
             _customDayRepository.Setup(c => c.GetByDate(date)).Returns(_dummyDBContext.CustomDay1);
+            _userRepository.Setup(u => u.GetById(2)).Returns(_dummyDBContext.U2);
 
             ActionResult<Helper> actionResult = _controller.AddHelper(date, helperDTO);
 
@@ -475,11 +489,11 @@ namespace KolveniershofBACKEND.Tests.Controllers
         public void AddHelper_WrongDate_ReturnsNotFound()
         {
             DateTime date = new DateTime(1945, 1, 1);
-
             HelperDTO helperDTO = new HelperDTO()
             {
-                UserId = 1
+                UserId = 2
             };
+            _customDayRepository.Setup(c => c.GetByDate(DateTime.Today)).Returns(_dummyDBContext.CustomDay1);
 
             ActionResult<Helper> actionResult = _controller.AddHelper(date, helperDTO);
 
@@ -492,7 +506,6 @@ namespace KolveniershofBACKEND.Tests.Controllers
         {
             DateTime date = DateTime.Today;
             int userId = 3;
-
             _customDayRepository.Setup(c => c.GetByDate(date)).Returns(_dummyDBContext.CustomDay1);
             _helperRepository.Setup(h => h.GetCustomDayHelper(date, userId)).Returns(_dummyDBContext.Helper2);
 
@@ -509,6 +522,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
         {
             DateTime date = new DateTime(1945, 1, 1);
             int userId = 3;
+            _customDayRepository.Setup(c => c.GetByDate(DateTime.Today)).Returns(_dummyDBContext.CustomDay1);
 
             ActionResult<Helper> actionResult = _controller.RemoveHelper(date, userId);
 
@@ -521,7 +535,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
         {
             DateTime date = DateTime.Today;
             int userId = 33;
-
+            _helperRepository.Setup(h => h.GetCustomDayHelper(date, 2)).Returns(_dummyDBContext.Helper2);
             _customDayRepository.Setup(c => c.GetByDate(date)).Returns(_dummyDBContext.CustomDay1);
 
             ActionResult<Helper> actionResult = _controller.RemoveHelper(date, userId);
@@ -558,6 +572,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
         public void AddNote_WrongDate_ReturnsNotFound()
         {
             DateTime date = new DateTime(1944, 1, 1);
+            _customDayRepository.Setup(c => c.GetByDate(DateTime.Today)).Returns(_dummyDBContext.CustomDay1);
 
             NoteDTO noteDTO = new NoteDTO()
             {
@@ -593,6 +608,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
         {
             DateTime date = new DateTime(1945, 1, 1);
             int noteId = 2;
+            _customDayRepository.Setup(c => c.GetByDate(DateTime.Today)).Returns(_dummyDBContext.CustomDay1);
+            _noteRepository.Setup(n => n.GetCustomDayNote(DateTime.Today, noteId)).Returns(_dummyDBContext.Note2);
 
             ActionResult<Note> actionResult = _controller.RemoveNote(date, noteId);
 
@@ -605,8 +622,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
         {
             DateTime date = DateTime.Today;
             int noteId = 29;
-
             _customDayRepository.Setup(c => c.GetByDate(date)).Returns(_dummyDBContext.CustomDay1);
+            _noteRepository.Setup(n => n.GetCustomDayNote(DateTime.Today, 2)).Returns(_dummyDBContext.Note2);
 
             ActionResult<Note> actionResult = _controller.RemoveNote(date, noteId);
 

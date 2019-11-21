@@ -180,7 +180,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
             string templateName = "vijfde_week_zesde_dag";
             int weekNr = 5;
             int dayNr = 6;
-
+            _dayRepository.Setup(d => d.GetByWeekAndDay(templateName, 1, 1)).Returns(_dummyDBContext.Day1);
             
             ActionResult<Day> actionResult = _controller.Remove(templateName, weekNr, dayNr);
 
@@ -213,7 +213,6 @@ namespace KolveniershofBACKEND.Tests.Controllers
             _dayRepository.Verify(d => d.SaveChanges(), Times.Once());
         }
 
-
         [Fact]
         public void RemoveActivity_Succeeds()
         {
@@ -240,12 +239,12 @@ namespace KolveniershofBACKEND.Tests.Controllers
         [Fact]
         public void RemoveActivity_WrongWeekIdAndDayId_ReturnsNotFound()
         {
-
             string templateName = "eerste_week_eerste_dag";
             int weekNr = 5;
             int dayNr = 9;
             int activityId = 1;
             TimeOfDay timeOfDay = TimeOfDay.VOLLEDIG;
+            _dayRepository.Setup(d => d.GetByWeekAndDay(templateName, 1, 1)).Returns(_dummyDBContext.Day1);
 
             ActionResult<DayActivity> actionResult = _controller.RemoveActivity(templateName, weekNr, dayNr, activityId, timeOfDay);
 
@@ -262,9 +261,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
             int dayNr = 1;
             int activityId = 99;
             TimeOfDay timeOfDay = TimeOfDay.VOLLEDIG;
-
-
             _dayRepository.Setup(d => d.GetByWeekAndDay(templateName, weekNr, dayNr)).Returns(_dummyDBContext.Day1);
+            _dayActivityRepository.Setup(d => d.GetTemplateDayActivity(templateName, 1, 1, timeOfDay, 1)).Returns(_dummyDBContext.DayActivity1);
 
             ActionResult<DayActivity> actionResult = _controller.RemoveActivity(templateName, weekNr, dayNr, activityId, timeOfDay);
 
@@ -306,10 +304,11 @@ namespace KolveniershofBACKEND.Tests.Controllers
                 UserId = 3,
                 DayId = 1
             };
-
             string templateName = "eerste_week_eerste_dag";
             int weekNr = 15;
             int dayNr = -1;
+            _dayRepository.Setup(d => d.GetByWeekAndDay(templateName, 1, 1)).Returns(_dummyDBContext.Day1);
+            _userRepository.Setup(u => u.GetById(helperDTO.UserId)).Returns(_dummyDBContext.U3);
 
             ActionResult<Helper> actionResult = _controller.AddHelper(templateName, weekNr, dayNr, helperDTO);
 
@@ -325,11 +324,10 @@ namespace KolveniershofBACKEND.Tests.Controllers
                 UserId = 30,
                 DayId = 1
             };
-
             string templateName = "eerste_week_eerste_dag";
             int weekNr = 1;
             int dayNr = 1;
-
+            _userRepository.Setup(u => u.GetById(1)).Returns(_dummyDBContext.U1);
             _dayRepository.Setup(d => d.GetByWeekAndDay(templateName, weekNr, dayNr)).Returns(_dummyDBContext.Day1);
 
             ActionResult<Helper> actionResult = _controller.AddHelper(templateName, weekNr, dayNr, helperDTO);
@@ -345,7 +343,6 @@ namespace KolveniershofBACKEND.Tests.Controllers
             int weekNr = 1;
             int dayNr = 1;
             int userId = 3;
-
             _dayRepository.Setup(d => d.GetByWeekAndDay(templateName, weekNr, dayNr)).Returns(_dummyDBContext.Day1);
             _helperRepository.Setup(d => d.GetTemplateDayHelper(templateName, weekNr, dayNr, userId)).Returns(_dummyDBContext.Helper2);
 
@@ -364,6 +361,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
             int weekNr = 4;
             int dayNr = 20;
             int userId = 3;
+            _dayRepository.Setup(d => d.GetByWeekAndDay("eerste_week_tweede_dag", 1, 2)).Returns(_dummyDBContext.Day1);
+            _helperRepository.Setup(d => d.GetTemplateDayHelper("eerste_week_tweede_dag", 1, 2, 1)).Returns(_dummyDBContext.Helper1);
 
             ActionResult<Helper> actionResult = _controller.RemoveHelper(templateName, weekNr, dayNr, userId);
 
@@ -378,7 +377,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
             int weekNr = 1;
             int dayNr = 1;
             int userId = 33;
-
+            _helperRepository.Setup(d => d.GetTemplateDayHelper(templateName, weekNr, dayNr, 1)).Returns(_dummyDBContext.Helper1);
             _dayRepository.Setup(d => d.GetByWeekAndDay(templateName, weekNr, dayNr)).Returns(_dummyDBContext.Day1);
 
             ActionResult<Helper> actionResult = _controller.RemoveHelper(templateName, weekNr, dayNr, userId);
