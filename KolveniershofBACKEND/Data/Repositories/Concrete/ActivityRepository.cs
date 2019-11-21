@@ -19,7 +19,8 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
 
         public IEnumerable<Activity> GetAll()
         {
-            return _activities.OrderBy(a => a.ActivityType).ThenBy(a => a.Name).ToList();
+            return _activities.Where(a => !(a.ActivityType.Equals(ActivityType.AFWEZIG) || a.ActivityType.Equals(ActivityType.ZIEK)))
+                .OrderBy(a => a.Name).ThenBy(a => a.ActivityType).ToList();
         }
 
         public Activity GetById(int id)

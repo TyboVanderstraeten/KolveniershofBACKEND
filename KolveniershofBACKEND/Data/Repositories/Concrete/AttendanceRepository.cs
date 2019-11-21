@@ -39,6 +39,7 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
                                        .Where(da => da.TimeOfDay.Equals(timeOfDay) && da.ActivityId == activityId)
                                        .SelectMany(da => da.Attendances).Include(a => a.User)
                                        .Select(a => a.User))
+                                       .OrderBy(u=>u.FirstName).ThenBy(u=>u.LastName)
                                        .ToList();
         }
 
@@ -50,6 +51,7 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
                            .Where(da => da.TimeOfDay.Equals(timeOfDay) && da.ActivityId == activityId)
                            .SelectMany(da => da.Attendances).Include(a => a.User)
                            .Select(a => a.User))
+                           .OrderBy(u => u.FirstName).ThenBy(u => u.LastName)
                            .ToList();
         }
 
