@@ -37,6 +37,7 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
             && d.TemplateName.ToLower().Trim().Equals(templateName.ToLower().Trim()))
                         .Include(d => d.DayActivities).ThenInclude(da => da.Activity)
                         .Include(d => d.Helpers).ThenInclude(h => h.User)
+                        .OrderBy(d => d.TemplateName).ThenBy(d => d.WeekNr).ThenBy(d => d.DayNr)
                         .ToList();
         }
 
@@ -46,12 +47,13 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
             && d.TemplateName.ToLower().Trim().Equals(templateName.ToLower().Trim()))
                         .Include(d => d.DayActivities).ThenInclude(da => da.Activity)
                         .Include(d => d.Helpers).ThenInclude(h => h.User)
+                        .OrderBy(d => d.TemplateName).ThenBy(d => d.WeekNr).ThenBy(d => d.DayNr)
                         .ToList();
         }
 
         public IEnumerable<string> GetAllTemplateNames()
         {
-            return _days.Select(d => d.TemplateName).Distinct().ToList();
+            return _days.Select(d => d.TemplateName).Distinct().OrderBy(s => s).ToList();
         }
 
         public Day GetById(int id)
@@ -80,6 +82,7 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
                                       && d.DayNr == dayNr)
                                       .SelectMany(d => d.Helpers).Include(h => h.User)
                                       .Select(h => h.User))
+                                      .OrderBy(u => u.FirstName).ThenBy(u => u.LastName)
                                       .ToList();
         }
 
@@ -94,9 +97,9 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
                                       .Select(da => da.Activity)
                                       )
                                       .Except(_activities.Where(a => a.ActivityType.Equals(ActivityType.AFWEZIG) || a.ActivityType.Equals(ActivityType.ZIEK)))
+                                      .OrderBy(a => a.Name).ThenBy(a => a.ActivityType)
                                       .ToList();
         }
-
 
         public void Add(Day day)
         {

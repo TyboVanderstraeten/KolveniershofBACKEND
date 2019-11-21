@@ -39,6 +39,7 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
                 .Include(cd => cd.DayActivities).ThenInclude(da => da.Activity)
                 .Include(cd => cd.DayActivities).ThenInclude(da => da.Attendances).ThenInclude(a => a.User)
                 .Include(cd => cd.Helpers).ThenInclude(h => h.User)
+                .OrderBy(cd => cd.Date)
                 .ToList();
         }
 
@@ -50,6 +51,7 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
                               .Include(cd => cd.DayActivities).ThenInclude(da => da.Activity)
                               .Include(cd => cd.DayActivities).ThenInclude(da => da.Attendances).ThenInclude(a => a.User)
                               .Include(cd => cd.Helpers).ThenInclude(h => h.User)
+                              .OrderBy(cd => cd.Date)
                               .ToList();
 
             // Replace customdays dayactivities with those attended
@@ -58,7 +60,7 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
                 customDay.DayActivities = customDay.DayActivities.Where(da => da.Attendances.Any(a => a.UserId == userId)).ToList();
             }
 
-            return customDaysRange.ToList();
+            return customDaysRange.OrderBy(cd=>cd.Date).ToList();
         }
 
         public IEnumerable<User> GetAbsentUsersForDay(DateTime date)
@@ -68,6 +70,7 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
                                     .Where(da => da.Activity.ActivityType.Equals(ActivityType.AFWEZIG))
                                     .SelectMany(da => da.Attendances
                                             .Select(a => a.User)))
+                                            .OrderBy(u => u.FirstName).ThenBy(u => u.LastName)
                               .ToList();
         }
 
@@ -78,6 +81,7 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
                                     .Where(da => da.Activity.ActivityType.Equals(ActivityType.ZIEK))
                                     .SelectMany(da => da.Attendances
                                             .Select(a => a.User)))
+                                            .OrderBy(u => u.FirstName).ThenBy(u => u.LastName)
                               .ToList();
         }
 
@@ -92,6 +96,7 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
         {
             return _customDays.Where(d => d.Date.Date == date.Date)
                               .SelectMany(d => d.Helpers).Include(h => h.User)
+                              .OrderBy(h => h.User.FirstName).ThenBy(h => h.User.LastName)
                               .ToList();
         }
 
@@ -101,6 +106,7 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
                          .Except(_customDays.Where(d => d.Date.Date == date.Date)
                                       .SelectMany(d => d.Helpers).Include(h => h.User)
                                       .Select(h => h.User))
+                                      .OrderBy(u => u.FirstName).ThenBy(u => u.LastName)
                                       .ToList();
         }
 
@@ -112,6 +118,7 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
                                       .Select(da => da.Activity)
                                       )
                                       .Except(_activities.Where(a => a.ActivityType.Equals(ActivityType.AFWEZIG) || a.ActivityType.Equals(ActivityType.ZIEK)))
+                                      .OrderBy(a => a.Name).ThenBy(a => a.ActivityType)
                                       .ToList();
         }
 

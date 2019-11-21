@@ -19,17 +19,17 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
 
         public IEnumerable<User> GetAll()
         {
-            return _users.Include(u=>u.WeekendDays).ToList();
+            return _users.Include(u=>u.WeekendDays).OrderBy(u=>u.FirstName).ThenBy(u=>u.LastName).ToList();
         }
 
         public IEnumerable<User> GetAllFromGroup(int group)
         {
-            return _users.Include(u => u.WeekendDays).Where(u => u.Group == group).ToList();
+            return _users.Include(u => u.WeekendDays).Where(u => u.Group == group).OrderBy(u => u.FirstName).ThenBy(u => u.LastName).ToList();
         }
 
         public IEnumerable<User> GetAllWithType(UserType userType)
         {
-            return _users.Include(u => u.WeekendDays).Where(u => u.UserType == userType).ToList();
+            return _users.Include(u => u.WeekendDays).Where(u => u.UserType == userType).OrderBy(u => u.FirstName).ThenBy(u => u.LastName).ToList();
         }
 
         public User GetById(int id)
