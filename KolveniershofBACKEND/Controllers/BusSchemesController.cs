@@ -29,7 +29,16 @@ namespace KolveniershofBACKEND.Controllers
         [Route("getByWeek/{weekNr}")]
         public ActionResult<IEnumerable<BusDriver>> GetBusScheme(int weekNr)
         {
-            return _busDriverRepository.GetDriversByWeek(weekNr).ToList();
+            var busDrivers = _busDriverRepository.GetBusDriversByWeek(weekNr).ToList();
+
+            if(busDrivers == null || !busDrivers.Any())
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(busDrivers);
+            }
         }
 
         /// <summary>
@@ -42,9 +51,14 @@ namespace KolveniershofBACKEND.Controllers
         {
             var busDriver = _busDriverRepository.GetBusDriverByDayIdDriverIdAndTimeOfDay(busDriverDTO.DayId, busDriverDTO.OriginalDriverId, busDriverDTO.TimeOfDay);
 
-            if(busDriver == null)
+            if (busDriver == null)
             {
                 return NotFound();
+            }
+
+            if (busDriver.Driver.DriverId == busDriverDTO.NewDriverId)
+            {
+                return Forbid();
             }
 
             var newDriver = _driverRepository.GetById(busDriverDTO.NewDriverId);
@@ -60,7 +74,7 @@ namespace KolveniershofBACKEND.Controllers
             _busDriverRepository.Add(newBusDriver);
             _busDriverRepository.SaveChanges();
 
-            return newBusDriver;
+            return Ok(newBusDriver);
         }
     }
 }
