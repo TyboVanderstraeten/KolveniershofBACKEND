@@ -12,7 +12,6 @@ namespace KolveniershofBACKEND.Models.DTO
         public int UserId { get; set; }
         [Required(ErrorMessage = "Date is required")]
         public DateTime Date { get; set; }
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Comment is required")]
         public string Comment { get; set; }
     }
 }
