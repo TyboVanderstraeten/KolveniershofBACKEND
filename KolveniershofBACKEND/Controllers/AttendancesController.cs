@@ -35,7 +35,7 @@ namespace KolveniershofBACKEND.Controllers
         [Route("{date}/{timeOfDay}/activity/{activityId}")]
         public ActionResult<IEnumerable<Attendance>> GetAll(DateTime date, int activityId, TimeOfDay timeOfDay)
         {
-            IEnumerable<Attendance> attendances = _dayActivityRepository.GetCustomDayActivity(date, timeOfDay, activityId).Attendances.ToList();
+            IEnumerable<Attendance> attendances = _dayActivityRepository.GetCustomDayActivity(date, timeOfDay, activityId)?.Attendances.ToList();
             if (attendances == null)
             {
                 return NotFound();
@@ -58,7 +58,7 @@ namespace KolveniershofBACKEND.Controllers
         [Route("clients/{date}/{timeOfDay}/activity/{activityId}")]
         public ActionResult<IEnumerable<Attendance>> GetAllClients(DateTime date, int activityId, TimeOfDay timeOfDay)
         {
-            IEnumerable<Attendance> attendances = _dayActivityRepository.GetCustomDayActivity(date, timeOfDay, activityId).Attendances.Where(a => a.User.UserType.Equals(UserType.CLIENT)).ToList();
+            IEnumerable<Attendance> attendances = _dayActivityRepository.GetCustomDayActivity(date, timeOfDay, activityId)?.Attendances.Where(a => a.User.UserType.Equals(UserType.CLIENT)).ToList();
             if (attendances == null)
             {
                 return NotFound();
@@ -82,7 +82,7 @@ namespace KolveniershofBACKEND.Controllers
         public ActionResult<IEnumerable<Attendance>> GetAllPersonnel(DateTime date, int activityId, TimeOfDay timeOfDay)
         {
 
-            IEnumerable<Attendance> attendances = _dayActivityRepository.GetCustomDayActivity(date, timeOfDay, activityId).Attendances.Where(a => !a.User.UserType.Equals(UserType.CLIENT)).ToList();
+            IEnumerable<Attendance> attendances = _dayActivityRepository.GetCustomDayActivity(date, timeOfDay, activityId)?.Attendances.Where(a => !a.User.UserType.Equals(UserType.CLIENT)).ToList();
             if (attendances == null)
             {
                 return NotFound();
@@ -187,7 +187,7 @@ namespace KolveniershofBACKEND.Controllers
         [Route("comment/{date}/{timeOfDay}/activity/{activityId}/user/{userId}")]
         public ActionResult<Attendance> AddComment(DateTime date, TimeOfDay timeOfDay, int activityId, int userId, CommentDTO model)
         {
-            Attendance attendanceToEdit = _dayActivityRepository.GetCustomDayActivity(date, timeOfDay, activityId).Attendances.SingleOrDefault(a => a.UserId == userId);
+            Attendance attendanceToEdit = _dayActivityRepository.GetCustomDayActivity(date, timeOfDay, activityId)?.Attendances.SingleOrDefault(a => a.UserId == userId);
             if (attendanceToEdit == null)
             {
                 return NotFound();
@@ -219,7 +219,7 @@ namespace KolveniershofBACKEND.Controllers
         [Route("comment/{date}/{timeOfDay}/activity/{activityId}/user/{userId}")]
         public ActionResult<Attendance> RemoveComment(DateTime date, TimeOfDay timeOfDay, int activityId, int userId)
         {
-            Attendance attendanceToEdit = _dayActivityRepository.GetCustomDayActivity(date, timeOfDay, activityId).Attendances.SingleOrDefault(a => a.UserId == userId);
+            Attendance attendanceToEdit = _dayActivityRepository.GetCustomDayActivity(date, timeOfDay, activityId)?.Attendances.SingleOrDefault(a => a.UserId == userId);
             if (attendanceToEdit == null)
             {
                 return NotFound();

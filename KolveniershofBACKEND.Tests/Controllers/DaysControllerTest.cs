@@ -47,9 +47,12 @@ namespace KolveniershofBACKEND.Tests.Controllers
         public void GetAll_Succeeds()
         {
             _customDayRepository.Setup(a => a.GetAll()).Returns(_dummyDBContext.CustomDays);
+
             ActionResult<IEnumerable<CustomDay>> actionResult = _controller.GetAll();
-            IList<CustomDay> days = actionResult.Value.ToList();
-            Assert.Equal(3, days.Count);
+            var response = actionResult?.Result as OkObjectResult;
+            IEnumerable<CustomDay> days = response?.Value as IEnumerable<CustomDay>;
+
+            Assert.Equal(_dummyDBContext.CustomDays.Length, days.Count());
         }
 
         [Fact]
@@ -61,8 +64,22 @@ namespace KolveniershofBACKEND.Tests.Controllers
             _customDayRepository.Setup(c => c.GetAllInRange(startDate, endDate)).Returns(days);
 
             ActionResult<IEnumerable<CustomDay>> actionResult = _controller.GetAll(startDate, endDate);
-            IList<CustomDay> daysResult = actionResult.Value.ToList();
-            Assert.Equal(2, daysResult.Count);
+            var response = actionResult?.Result as OkObjectResult;
+            IEnumerable<CustomDay> daysResult = response?.Value as IEnumerable<CustomDay>;
+
+
+            Assert.Equal(2, daysResult.Count());
+        }
+
+        [Fact]
+        public void GetAllInRange_WrongDates_ReturnsNotFound()
+        {
+            DateTime startDate = new DateTime(1945, 1, 1);
+            DateTime endDate = new DateTime(1945, 12, 1);
+
+            ActionResult<IEnumerable<CustomDay>> actionResult = _controller.GetAll(startDate, endDate);
+
+            Assert.IsType<NotFoundResult>(actionResult?.Result);
         }
 
         [Fact]
@@ -70,9 +87,22 @@ namespace KolveniershofBACKEND.Tests.Controllers
         {
             DateTime date = DateTime.Today.AddDays(1);
             _customDayRepository.Setup(c => c.GetByDate(date)).Returns(_dummyDBContext.CustomDay2);
+
             ActionResult<CustomDay> actionResult = _controller.GetByDate(date);
-            CustomDay day = actionResult.Value;
+            var response = actionResult?.Result as OkObjectResult;
+            CustomDay day = response?.Value as CustomDay;
+
             Assert.Equal(2, day.DayNr);
+        }
+
+        [Fact]
+        public void GetByDate_WrongDate_ReturnsNotFound()
+        {
+            DateTime date = new DateTime(1945, 1, 1);
+
+            ActionResult<CustomDay> actionResult = _controller.GetByDate(date);
+
+            Assert.IsType<NotFoundResult>(actionResult?.Result);
         }
 
         [Fact]
@@ -81,9 +111,35 @@ namespace KolveniershofBACKEND.Tests.Controllers
             int userId = 1;
             DateTime date = DateTime.Today;
             _customDayRepository.Setup(d => d.GetByDate(date)).Returns(_dummyDBContext.CustomDay1);
-            ActionResult<CustomDay> actionResult = _controller.GetForUser(userId, date);
-            Assert.Equal("chocomousse", actionResult.Value.Dessert);
 
+            ActionResult<CustomDay> actionResult = _controller.GetForUser(userId, date);
+            var response = actionResult?.Result as OkObjectResult;
+            CustomDay customDay = response?.Value as CustomDay;
+
+            Assert.Equal("chocomousse", customDay.Dessert);
+        }
+
+        [Fact]
+        public void GetForUser_WrongDate_ReturnsNotFound()
+        {
+            int userId = 1;
+            DateTime date = new DateTime(1945, 1, 1);
+
+            ActionResult<CustomDay> actionResult = _controller.GetForUser(userId, date);
+
+            Assert.IsType<NotFoundResult>(actionResult?.Result);
+        }
+
+        [Fact]
+        public void GetForUser_RightDateButWrongUserId_ReturnsNotFound()
+        {
+            int userId = -15;
+            DateTime date = DateTime.Today;
+            _customDayRepository.Setup(d => d.GetByDate(date)).Returns(_dummyDBContext.CustomDay1);
+
+            ActionResult<CustomDay> actionResult = _controller.GetForUser(userId, date);
+
+            Assert.IsType<NotFoundResult>(actionResult?.Result);
         }
 
         [Fact]
@@ -92,9 +148,33 @@ namespace KolveniershofBACKEND.Tests.Controllers
             IList<User> absents = new List<User>();
             absents.Add(_dummyDBContext.U2);
             _customDayRepository.Setup(c => c.GetAbsentUsersForDay(DateTime.Today)).Returns(absents);
+
             ActionResult<IEnumerable<User>> actionResult = _controller.GetAbsent(DateTime.Today);
-            IList<User> absentsResult = actionResult.Value.ToList();
-            Assert.Equal(1, absentsResult.Count);
+            var response = actionResult?.Result as OkObjectResult;
+            IEnumerable<User> absentsResult = response?.Value as IEnumerable<User>;
+
+
+            Assert.Equal(1, absentsResult.Count());
+        }
+
+        [Fact]
+        public void GetAbsentUsers_WrongDate_ReturnsNotFound()
+        {
+            DateTime date = new DateTime(1945, 1, 1);
+
+            ActionResult<IEnumerable<User>> actionResult = _controller.GetAbsent(date);
+
+            Assert.IsType<NotFoundResult>(actionResult?.Result);
+        }
+
+        [Fact]
+        public void GetSickUsers_WrongDate_ReturnsNotFound()
+        {
+            DateTime date = new DateTime(1945, 1, 1);
+
+            ActionResult<IEnumerable<User>> actionResult = _controller.GetSick(date);
+
+            Assert.IsType<NotFoundResult>(actionResult?.Result);
         }
 
         [Fact]
@@ -102,9 +182,32 @@ namespace KolveniershofBACKEND.Tests.Controllers
         {
             DateTime date = DateTime.Today;
             _customDayRepository.Setup(d => d.GetNotesForDay(date)).Returns(_dummyDBContext.Notes);
+
             ActionResult<IEnumerable<Note>> actionResult = _controller.GetNotes(date);
-            IList<Note> notesResult = actionResult.Value as IList<Note>;
-            Assert.Equal(2, notesResult.Count);
+            var response = actionResult?.Result as OkObjectResult;
+            IEnumerable<Note> notesResult = response?.Value as IEnumerable<Note>;
+
+            Assert.Equal(2, notesResult.Count());
+        }
+
+        [Fact]
+        public void GetNotesForDate_WrongDate_ReturnsNotFound()
+        {
+            DateTime date = new DateTime(1945, 1, 1);
+
+            ActionResult<IEnumerable<Note>> actionResult = _controller.GetNotes(date);
+
+            Assert.IsType<NotFoundResult>(actionResult?.Result);
+        }
+
+        [Fact]
+        public void GetHelpersForDate_WrongDate_ReturnsNotFound()
+        {
+            DateTime date = new DateTime(1945, 1, 1);
+
+            ActionResult<IEnumerable<Note>> actionResult = _controller.GetNotes(date);
+
+            Assert.IsType<NotFoundResult>(actionResult?.Result);
         }
         #endregion
 
@@ -128,11 +231,36 @@ namespace KolveniershofBACKEND.Tests.Controllers
             _dayRepository.Setup(c => c.GetByWeekAndDay(dayDTO.TemplateName, dayDTO.WeekNr, dayDTO.DayNr)).Returns(_dummyDBContext.Day1);
 
             ActionResult<CustomDay> actionResult = _controller.Add(dayDTO);
-            CustomDay customDay = actionResult.Value;
+            var response = actionResult?.Result as OkObjectResult;
+            CustomDay customDay = response?.Value as CustomDay;
+
+
             Assert.Equal(4, customDay.DayActivities.Count);
             _customDayRepository.Verify(a => a.Add(It.IsAny<CustomDay>()), Times.Once);
             _customDayRepository.Verify(a => a.SaveChanges(), Times.Once);
 
+        }
+
+        [Fact]
+        public void AddCustomDay_NonExistingWeekNrAndDayNr_ReturnsNotFound()
+        {
+
+            CustomDayDTO dayDTO = new CustomDayDTO()
+            {
+                TemplateName = "eerste_week_eerste_dag",
+                DayNr = 8,
+                WeekNr = 5,
+                Date = DateTime.Today,
+                PreDish = "Kervelsoep",
+                MainDish = "Kip",
+                Dessert = "Chocomousse",
+                Notes = null
+            };
+
+            ActionResult<CustomDay> actionResult = _controller.Add(dayDTO);
+
+            Assert.IsType<NotFoundResult>(actionResult?.Result);
+            _customDayRepository.Verify(a => a.SaveChanges(), Times.Never);
         }
         #endregion
 
@@ -158,11 +286,68 @@ namespace KolveniershofBACKEND.Tests.Controllers
             _dayRepository.Setup(d => d.GetByWeekAndDay(dayDTO.TemplateName, dayDTO.WeekNr, dayDTO.DayNr)).Returns(_dummyDBContext.Day1);
 
             ActionResult<CustomDay> actionResult = _controller.Edit(date, dayDTO);
-            Assert.Equal("Chocomousse", actionResult.Value.Dessert);
+            var response = actionResult?.Result as OkObjectResult;
+            CustomDay customDay = response?.Value as CustomDay;
+
+            Assert.Equal("Chocomousse", customDay.Dessert);
+            Assert.Equal(dayDTO.DayNr, customDay.DayNr);
+            Assert.Equal(dayDTO.DayId, customDay.DayId);
             _customDayRepository.Verify(a => a.SaveChanges(), Times.Once);
+        }
+
+        [Fact]
+        public void EditCustomDay_WrongDate_ReturnsNotFound()
+        {
+            DateTime date = new DateTime(1945, 1, 1);
+
+            CustomDayDTO dayDTO = new CustomDayDTO()
+            {
+                TemplateName = "eerste_week_eerste_dag",
+                DayNr = 1,
+                WeekNr = 1,
+                Date = DateTime.Today,
+                PreDish = "Kervelsoep",
+                MainDish = "Kip",
+                Dessert = "Chocomousse",
+                Notes = null
+            };
+
+            ActionResult<CustomDay> actionResult = _controller.Edit(date, dayDTO);
+
+            Assert.IsType<NotFoundResult>(actionResult?.Result);
+            _customDayRepository.Verify(a => a.SaveChanges(), Times.Never);
         }
         #endregion
 
+        #region Delete CustomDay
+        [Fact]
+        public void DeleteCustomDay_RightDate_DeletesCustomDay()
+        {
+            DateTime date = DateTime.Today;
+            _customDayRepository.Setup(c => c.GetByDate(date)).Returns(_dummyDBContext.CustomDay1);
+
+            ActionResult<CustomDay> actionResult = _controller.Remove(date);
+            var response = actionResult?.Result as OkObjectResult;
+            CustomDay customDay = response?.Value as CustomDay;
+
+            Assert.IsType<OkObjectResult>(actionResult?.Result);
+            Assert.Equal("eerste_week_eerste_dag", customDay.TemplateName);
+            _customDayRepository.Verify(a => a.Remove(It.IsAny<CustomDay>()), Times.Once);
+            _customDayRepository.Verify(a => a.SaveChanges(), Times.Once);
+        }
+
+        [Fact]
+        public void DeleteCustomDay_WrongDate_DeletesCustomDay()
+        {
+            DateTime date = new DateTime(1945, 1, 1);
+
+            ActionResult<CustomDay> actionResult = _controller.Remove(date);
+
+            Assert.IsType<NotFoundResult>(actionResult?.Result);
+            _customDayRepository.Verify(a => a.SaveChanges(), Times.Never);
+        }
+
+        #endregion
 
         #region Add / Remove activity
         [Fact]
@@ -181,8 +366,45 @@ namespace KolveniershofBACKEND.Tests.Controllers
             _activityRepository.Setup(a => a.GetById(dayActivityDTO.ActivityId)).Returns(_dummyDBContext.Activity2);
 
             ActionResult<DayActivity> actionResult = _controller.AddActivity(date, dayActivityDTO);
-            Assert.Equal(TimeOfDay.VOORMIDDAG, actionResult.Value.TimeOfDay);
+            var response = actionResult?.Result as OkObjectResult;
+            DayActivity dayActivity = response?.Value as DayActivity;
+
+            Assert.Equal(TimeOfDay.VOORMIDDAG, dayActivity.TimeOfDay);
             _customDayRepository.Verify(a => a.SaveChanges(), Times.Once);
+        }
+
+        [Fact]
+        public void AddActivityToCustomDay_WrongDate_ReturnsNotFound()
+        {
+            DateTime date = new DateTime(1945, 1, 1);
+            DayActivityDTO dayActivityDTO = new DayActivityDTO()
+            {
+                ActivityId = 2,
+                TimeOfDay = TimeOfDay.VOORMIDDAG,
+                Attendances = null
+            };
+
+            ActionResult<DayActivity> actionResult = _controller.AddActivity(date, dayActivityDTO);
+
+            Assert.IsType<NotFoundResult>(actionResult?.Result);
+            _customDayRepository.Verify(a => a.SaveChanges(), Times.Never);
+        }
+
+        [Fact]
+        public void AddActivityToCustomDay_RightDateButWrongActivityId_ReturnsNotFound()
+        {
+            DateTime date = new DateTime(1945, 1, 1);
+            DayActivityDTO dayActivityDTO = new DayActivityDTO()
+            {
+                ActivityId = -2,
+                TimeOfDay = TimeOfDay.VOORMIDDAG,
+                Attendances = null
+            };
+
+            ActionResult<DayActivity> actionResult = _controller.AddActivity(date, dayActivityDTO);
+
+            Assert.IsType<NotFoundResult>(actionResult?.Result);
+            _customDayRepository.Verify(a => a.SaveChanges(), Times.Never);
         }
 
         [Fact]
@@ -196,42 +418,116 @@ namespace KolveniershofBACKEND.Tests.Controllers
             _dayActivityRepository.Setup(d => d.GetCustomDayActivity(date, timeOfDay, activityId)).Returns(_dummyDBContext.DayActivity2);
 
             ActionResult<DayActivity> actionResult = _controller.RemoveActivity(date, activityId, timeOfDay);
-            Assert.Equal("Koken", actionResult.Value.Activity.Name);
+            var response = actionResult?.Result as OkObjectResult;
+            DayActivity dayActivity = response?.Value as DayActivity;
+
+            Assert.Equal("Koken", dayActivity.Activity.Name);
             _customDayRepository.Verify(a => a.SaveChanges(), Times.Once);
+        }
+
+        [Fact]
+        public void RemoveActivityForCustomDay_WrongDate_ReturnsNotFound()
+        {
+            DateTime date = new DateTime(1945, 1, 1);
+            int activityId = 1;
+            TimeOfDay timeOfDay = TimeOfDay.OCHTEND;
+            
+
+            ActionResult<DayActivity> actionResult = _controller.RemoveActivity(date, activityId, timeOfDay);
+
+            Assert.IsType<NotFoundResult>(actionResult?.Result);
+            _customDayRepository.Verify(a => a.SaveChanges(), Times.Never);
+        }
+
+        [Fact]
+        public void RemoveActivityForCustomDay_RightDateButWrongActivityId_ReturnsNotFound()
+        {
+            DateTime date = DateTime.Today;
+            int activityId = -3;
+            TimeOfDay timeOfDay = TimeOfDay.NAMIDDAG;
+            _customDayRepository.Setup(c => c.GetByDate(date)).Returns(_dummyDBContext.CustomDay1);
+
+            ActionResult<DayActivity> actionResult = _controller.RemoveActivity(date, activityId, timeOfDay);
+
+            Assert.IsType<NotFoundResult>(actionResult?.Result);
+            _customDayRepository.Verify(a => a.SaveChanges(), Times.Never);
         }
         #endregion
 
         #region Add / Remove helper
         [Fact]
-        public void AddHelper_Succeeds()
+        public void AddHelper_RightDateButWrongUserId_ReturnsNotFound()
         {
             DateTime date = DateTime.Today;
+            HelperDTO helperDTO = new HelperDTO()
+            {
+                UserId = 747
+            };
+            _customDayRepository.Setup(c => c.GetByDate(date)).Returns(_dummyDBContext.CustomDay1);
+
+            ActionResult<Helper> actionResult = _controller.AddHelper(date, helperDTO);
+
+            Assert.IsType<NotFoundResult>(actionResult?.Result);
+            _customDayRepository.Verify(a => a.SaveChanges(), Times.Never);
+        }
+
+        [Fact]
+        public void AddHelper_WrongDate_ReturnsNotFound()
+        {
+            DateTime date = new DateTime(1945, 1, 1);
 
             HelperDTO helperDTO = new HelperDTO()
             {
                 UserId = 1
             };
 
-            _customDayRepository.Setup(c => c.GetByDate(date)).Returns(_dummyDBContext.CustomDay1);
-            _userRepository.Setup(u => u.GetById(helperDTO.UserId)).Returns(_dummyDBContext.U1);
-
             ActionResult<Helper> actionResult = _controller.AddHelper(date, helperDTO);
-            Assert.Equal("Tybo", actionResult.Value.User.FirstName);
-            _customDayRepository.Verify(c => c.SaveChanges(), Times.Once());
+
+            Assert.IsType<NotFoundResult>(actionResult?.Result);
+            _customDayRepository.Verify(a => a.SaveChanges(), Times.Never);
         }
 
         [Fact]
         public void RemoveHelper_Succeeds()
         {
             DateTime date = DateTime.Today;
-            int userId = 1;
+            int userId = 3;
 
             _customDayRepository.Setup(c => c.GetByDate(date)).Returns(_dummyDBContext.CustomDay1);
-            _helperRepository.Setup(h => h.GetCustomDayHelper(date, userId)).Returns(_dummyDBContext.Helper1);
+            _helperRepository.Setup(h => h.GetCustomDayHelper(date, userId)).Returns(_dummyDBContext.Helper2);
 
             ActionResult<Helper> actionResult = _controller.RemoveHelper(date, userId);
-            Assert.Equal("Tybo", actionResult.Value.User.FirstName);
+            var response = actionResult?.Result as OkObjectResult;
+            Helper helper = response?.Value as Helper;
+
+            Assert.Equal("Tim", helper.User.FirstName);
             _customDayRepository.Verify(c => c.SaveChanges(), Times.Once());
+        }
+
+        [Fact]
+        public void RemoveHelper_WrongDate_ReturnsNotFound()
+        {
+            DateTime date = new DateTime(1945, 1, 1);
+            int userId = 3;
+
+            ActionResult<Helper> actionResult = _controller.RemoveHelper(date, userId);
+
+            Assert.IsType<NotFoundResult>(actionResult?.Result);
+            _customDayRepository.Verify(a => a.SaveChanges(), Times.Never);
+        }
+
+        [Fact]
+        public void RemoveHelper_RightDateButWrongUserId_ReturnsNotFound()
+        {
+            DateTime date = DateTime.Today;
+            int userId = 33;
+
+            _customDayRepository.Setup(c => c.GetByDate(date)).Returns(_dummyDBContext.CustomDay1);
+
+            ActionResult<Helper> actionResult = _controller.RemoveHelper(date, userId);
+
+            Assert.IsType<NotFoundResult>(actionResult?.Result);
+            _customDayRepository.Verify(a => a.SaveChanges(), Times.Never);
         }
 
         #endregion
@@ -250,8 +546,29 @@ namespace KolveniershofBACKEND.Tests.Controllers
 
             _customDayRepository.Setup(c => c.GetByDate(date)).Returns(_dummyDBContext.CustomDay1);
             ActionResult<Note> actionResult = _controller.AddNote(date, noteDTO);
-            Assert.Equal(NoteType.VERVOER, actionResult.Value.NoteType);
+            var response = actionResult?.Result as OkObjectResult;
+            Note note = response?.Value as Note;
+
+            Assert.Equal(NoteType.VERVOER, note.NoteType);
+            Assert.Equal(noteDTO.Content, note.Content);
             _customDayRepository.Verify(c => c.SaveChanges(), Times.Once());
+        }
+
+        [Fact]
+        public void AddNote_WrongDate_ReturnsNotFound()
+        {
+            DateTime date = new DateTime(1944, 1, 1);
+
+            NoteDTO noteDTO = new NoteDTO()
+            {
+                NoteType = NoteType.VERVOER,
+                Content = "Jantje zijn moeder gaat hem brengen met de auto, hij zal de bus dus niet nemen"
+            };
+
+            ActionResult<Note> actionResult = _controller.AddNote(date, noteDTO);
+
+            Assert.IsType<NotFoundResult>(actionResult?.Result);
+            _customDayRepository.Verify(a => a.SaveChanges(), Times.Never);
         }
 
         [Fact]
@@ -264,8 +581,37 @@ namespace KolveniershofBACKEND.Tests.Controllers
             _noteRepository.Setup(n => n.GetCustomDayNote(date, noteId)).Returns(_dummyDBContext.Note2);
 
             ActionResult<Note> actionResult = _controller.RemoveNote(date, noteId);
-            Assert.Equal(NoteType.VERVOER, actionResult.Value.NoteType);
+            var response = actionResult?.Result as OkObjectResult;
+            Note note = response?.Value as Note;
+
+            Assert.Equal(NoteType.VARIA, note.NoteType);
             _customDayRepository.Verify(c => c.SaveChanges(), Times.Once());
+        }
+
+        [Fact]
+        public void RemoveNote_WrongDate_ReturnsNotFound()
+        {
+            DateTime date = new DateTime(1945, 1, 1);
+            int noteId = 2;
+
+            ActionResult<Note> actionResult = _controller.RemoveNote(date, noteId);
+
+            Assert.IsType<NotFoundResult>(actionResult?.Result);
+            _customDayRepository.Verify(a => a.SaveChanges(), Times.Never);
+        }
+
+        [Fact]
+        public void RemoveNote_RightDateButWrongNoteId_ReturnsNotFound()
+        {
+            DateTime date = DateTime.Today;
+            int noteId = 29;
+
+            _customDayRepository.Setup(c => c.GetByDate(date)).Returns(_dummyDBContext.CustomDay1);
+
+            ActionResult<Note> actionResult = _controller.RemoveNote(date, noteId);
+
+            Assert.IsType<NotFoundResult>(actionResult?.Result);
+            _customDayRepository.Verify(a => a.SaveChanges(), Times.Never);
         }
         #endregion
 

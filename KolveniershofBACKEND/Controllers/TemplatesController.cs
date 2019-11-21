@@ -59,7 +59,7 @@ namespace KolveniershofBACKEND.Controllers
         public ActionResult<IEnumerable<Day>> GetAll(string templateName)
         {
             IEnumerable<Day> days = _dayRepository.GetAllByTemplateName(templateName).ToList();
-            if (days == null)
+            if (days == null || !days.Any())
             {
                 return NotFound();
             }
@@ -80,7 +80,7 @@ namespace KolveniershofBACKEND.Controllers
         public ActionResult<IEnumerable<Day>> GetAll(string templateName, int weekNr)
         {
             IEnumerable<Day> days = _dayRepository.GetAllByWeek(templateName, weekNr).ToList();
-            if (days == null)
+            if (days == null || !days.Any())
             {
                 return NotFound();
             }

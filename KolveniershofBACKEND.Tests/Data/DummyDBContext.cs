@@ -164,7 +164,7 @@ namespace KolveniershofBACKEND.Tests.Data
 
             Attendance1 = new Attendance(DayActivity1, U1);
             Attendance5 = new Attendance(DayActivity1, U2);
-            Attendance6 = new Attendance(DayActivity1, U2);
+            Attendance6 = new Attendance(DayActivity1, U3);
             //Attendances1.Add(Attendance1);
             Attendances1.Add(Attendance5);
             Attendances1.Add(Attendance6);
