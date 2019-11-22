@@ -15,7 +15,7 @@ namespace KolveniershofBACKEND.Data.Mappers
             builder.ToTable("WeekendDay");
             builder.HasKey(w => w.WeekendDayId);
             builder.Property(w => w.Date).IsRequired();
-            builder.Property(w => w.Comment).IsRequired();
+            builder.Property(w => w.Comment).IsRequired(false);
         }
     }
 }

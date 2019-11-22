@@ -10,6 +10,19 @@ namespace KolveniershofBACKEND.Models.Domain
         public string PreDish { get; set; }
         public string MainDish { get; set; }
         public string Dessert { get; set; }
+        public new string DayName {
+            get {
+                switch (Date.DayOfWeek)
+                {
+                    case DayOfWeek.Monday: return "Maandag";
+                    case DayOfWeek.Tuesday: return "Dinsdag";
+                    case DayOfWeek.Wednesday: return "Woensdag";
+                    case DayOfWeek.Thursday: return "Donderdag";
+                    case DayOfWeek.Friday: return "Vrijdag";
+                    default: return "Invalid";
+                }
+            }
+        }
         public ICollection<Note> Notes { get; set; }
 
         protected CustomDay() : base()

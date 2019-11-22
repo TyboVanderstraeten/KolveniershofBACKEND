@@ -206,13 +206,14 @@ namespace KolveniershofBACKEND.Controllers
                     model.Group,
                     model.DegreeOfLimitation);
 
-                if (_userRepository.GetByEmail(userToCreate.Email) != null)
-                {
-                    return BadRequest("User already exists");
-                }
+
 
                 if (userToCreate.UserType.Equals(UserType.CLIENT) || userToCreate.UserType.Equals(UserType.BEGELEIDER))
                 {
+                    if (_userRepository.GetByEmail(userToCreate.Email) != null)
+                    {
+                        return BadRequest("User already exists");
+                    }
 
                     IdentityUser identityUserToCreate = new IdentityUser()
                     {
