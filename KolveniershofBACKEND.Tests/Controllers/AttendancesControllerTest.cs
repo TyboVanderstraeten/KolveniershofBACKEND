@@ -40,13 +40,28 @@ namespace KolveniershofBACKEND.Tests.Controllers
             DateTime date = DateTime.Today;
             int activityId = 1;
             TimeOfDay timeOfDay = TimeOfDay.AVOND;
-
+            var actualLengthAttendances = _dummyDBContext.DayActivity1.Attendances.Count();
             _dayActivityRepository.Setup(d => d.GetCustomDayActivity(date, timeOfDay, activityId)).Returns(_dummyDBContext.DayActivity1);
 
             ActionResult<IEnumerable<Attendance>> actionResult = _controller.GetAll(date, activityId, timeOfDay);
-            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
-            IList<Attendance> attendances = (okObjectResult.Value as IEnumerable<Attendance>).ToList();
-            Assert.Equal(3, attendances.Count);
+            var response = actionResult?.Result as OkObjectResult;
+            IEnumerable<Attendance> attendances = response?.Value as IEnumerable<Attendance>;
+
+            Assert.Equal(actualLengthAttendances, attendances?.Count());
+        }
+
+        [Fact]
+        public void GetAll_NonExistingActivityId_ReturnsNotFound()
+        {
+            DateTime date = DateTime.Today;
+            int activityId = 99;
+            TimeOfDay timeOfDay = TimeOfDay.AVOND;
+            _dayActivityRepository.Setup(d => d.GetCustomDayActivity(date, timeOfDay, 1)).Returns(_dummyDBContext.DayActivity1);
+
+
+            ActionResult<IEnumerable<Attendance>> actionResult = _controller.GetAll(date, activityId, timeOfDay);
+
+            Assert.IsType<NotFoundResult>(actionResult?.Result);
         }
 
         [Fact]
@@ -59,13 +74,29 @@ namespace KolveniershofBACKEND.Tests.Controllers
 
             IList<Attendance> attendances = _dummyDBContext.Attendances1.Where(attendance => attendance.User.UserType == UserType.CLIENT).ToList();
             _dayActivityRepository.Setup(d => d.GetCustomDayActivity(date, timeOfDay, activityId)).Returns(_dummyDBContext.DayActivity1);
+
+            ActionResult<IEnumerable<Attendance>> actionResult = _controller.GetAllClients(date, activityId, timeOfDay);
+            var response = actionResult?.Result as OkObjectResult;
+            IEnumerable<Attendance> attendancesResponse = response?.Value as IEnumerable<Attendance>;
+
+            Assert.Equal(attendances.Count, attendancesResponse.Count());
+        }
+
+        [Fact]
+        public void GetAllClients_NonExistingActivityId_ReturnsNotFound()
+        {
+            DateTime date = DateTime.Today;
+            int activityId = 99;
+            TimeOfDay timeOfDay = TimeOfDay.AVOND;
+            _dayActivityRepository.Setup(d => d.GetCustomDayActivity(date, timeOfDay, 1)).Returns(_dummyDBContext.DayActivity1);
+
             ActionResult<IEnumerable<Attendance>> actionResult = _controller.GetAllClients(date, activityId, timeOfDay);
             OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
 
-            Assert.Equal(attendances.Count, (okObjectResult.Value as IEnumerable<Attendance>).ToList().Count);
+            Assert.IsType<NotFoundResult>(actionResult?.Result);
+
         }
 
-        // Gives clients instead of personnel
         [Fact]
         public void GetAllPersonnel_Succeeds()
         {
@@ -76,11 +107,30 @@ namespace KolveniershofBACKEND.Tests.Controllers
 
             IList<Attendance> attendances = _dummyDBContext.Attendances1.Where(attendance => attendance.User.UserType != UserType.CLIENT).ToList();
             _dayActivityRepository.Setup(d => d.GetCustomDayActivity(date, timeOfDay, activityId)).Returns(_dummyDBContext.DayActivity1);
+
+            ActionResult<IEnumerable<Attendance>> actionResult = _controller.GetAllPersonnel(date, activityId, timeOfDay);
+            var response = actionResult?.Result as OkObjectResult;
+            IEnumerable<Attendance> attendancesResponse = response?.Value as IEnumerable<Attendance>;
+
+
+            Assert.Equal(attendances.Count, attendancesResponse.Count());
+        }
+
+        [Fact]
+        public void GetAllPersonnel_NonExistingActivityId_ReturnsNotFound()
+        {
+            DateTime date = DateTime.Today;
+            int activityId = 99;
+            TimeOfDay timeOfDay = TimeOfDay.AVOND;
+            _dayActivityRepository.Setup(d => d.GetCustomDayActivity(date, timeOfDay, 1)).Returns(_dummyDBContext.DayActivity1);
+
             ActionResult<IEnumerable<Attendance>> actionResult = _controller.GetAllPersonnel(date, activityId, timeOfDay);
             OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
 
-            Assert.Equal(attendances.Count, (okObjectResult.Value as IEnumerable<Attendance>).ToList().Count);
-        } 
+            Assert.IsType<NotFoundResult>(actionResult?.Result);
+        }
+
+
         #endregion
 
         #region Add
@@ -96,13 +146,42 @@ namespace KolveniershofBACKEND.Tests.Controllers
             _userRepository.Setup(d => d.GetById(userId)).Returns(_dummyDBContext.UserNew);
 
             ActionResult<Attendance> actionResult = _controller.Add(date, timeOfDay, activityId, userId);
-            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
-            Attendance attendance = okObjectResult.Value as Attendance;
+            var response = actionResult?.Result as OkObjectResult;
+            Attendance newAttendance = response?.Value as Attendance;
 
+            Assert.Equal("Tybo", newAttendance.User.FirstName);
 
-            Assert.Equal("Florian", attendance.User.FirstName);
             _dayActivityRepository.Verify(a => a.SaveChanges(), Times.Once());
-        } 
+        }
+
+        [Fact]
+        public void AddAttendance_NonExistingUserId_ReturnsNotFound()
+        {
+            DateTime date = DateTime.Today;
+            TimeOfDay timeOfDay = TimeOfDay.AVOND;
+            int activityId = 1;
+            int userId = 40;
+            _userRepository.Setup(d => d.GetById(1)).Returns(_dummyDBContext.U1);
+            _dayActivityRepository.Setup(d => d.GetCustomDayActivity(date, timeOfDay, activityId)).Returns(_dummyDBContext.DayActivity1);
+
+            ActionResult<Attendance> actionResult = _controller.Add(date, timeOfDay, activityId, userId);
+
+            Assert.IsType<NotFoundResult>(actionResult?.Result);
+        }
+
+        [Fact]
+        public void AddAttendance_NonExistingDayActivityId_ReturnsNotFound()
+        {
+            DateTime date = DateTime.Today;
+            TimeOfDay timeOfDay = TimeOfDay.AVOND;
+            int activityId = 150;
+            int userId = 1;
+            _dayActivityRepository.Setup(d => d.GetCustomDayActivity(date, timeOfDay, 1)).Returns(_dummyDBContext.DayActivity1);
+
+            ActionResult<Attendance> actionResult = _controller.Add(date, timeOfDay, activityId, userId);
+
+            Assert.IsType<NotFoundResult>(actionResult?.Result);
+        }
         #endregion
 
         #region Remove
@@ -110,18 +189,50 @@ namespace KolveniershofBACKEND.Tests.Controllers
         public void RemoveAttendance_Succeeds()
         {
             DateTime date = DateTime.Today;
-            TimeOfDay timeOfDay = TimeOfDay.AVOND;
-            int activityId = 1;
-            int userId = 1;
-
+            TimeOfDay timeOfDay = TimeOfDay.VOLLEDIG;
+            int activityId = 5;
+            int userId = 3;
             _dayActivityRepository.Setup(d => d.GetCustomDayActivity(date, timeOfDay, activityId)).Returns(_dummyDBContext.DayActivity1);
-            _attendanceRepository.Setup(d => d.GetForUser(date, timeOfDay, activityId, userId)).Returns(_dummyDBContext.Attendance1);
+            _attendanceRepository.Setup(d => d.GetForUser(date, timeOfDay, activityId, userId)).Returns(_dummyDBContext.Attendance6);
 
             ActionResult<Attendance> actionResult = _controller.Remove(date, timeOfDay, activityId, userId);
-            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
-            Assert.Equal("Tybo",(okObjectResult.Value as Attendance).User.FirstName);
+            var response = actionResult?.Result as OkObjectResult;
+            Attendance attendance = response?.Value as Attendance;
+
+            Assert.Equal("Tim", attendance?.User.FirstName);
+
             _dayActivityRepository.Verify(d => d.SaveChanges(), Times.Once());
-        } 
+        }
+
+        [Fact]
+        public void RemoveAttendance_NonExistingDayActivityId_ReturnsNotFound()
+        {
+            DateTime date = DateTime.Today;
+            TimeOfDay timeOfDay = TimeOfDay.VOLLEDIG;
+            int activityId = 55;
+            int userId = 3;
+            _dayActivityRepository.Setup(d => d.GetCustomDayActivity(date, timeOfDay, 1)).Returns(_dummyDBContext.DayActivity1);
+            _attendanceRepository.Setup(d => d.GetForUser(date, timeOfDay, activityId, userId)).Returns(_dummyDBContext.Attendance6);
+
+            ActionResult<Attendance> actionResult = _controller.Remove(date, timeOfDay, activityId, userId);
+
+            Assert.IsType<NotFoundResult>(actionResult?.Result);
+        }
+
+        [Fact]
+        public void RemoveAttendance_NonExistingUserId_ReturnsNotFound()
+        {
+            DateTime date = DateTime.Today;
+            TimeOfDay timeOfDay = TimeOfDay.VOLLEDIG;
+            int activityId = 1;
+            int userId = -3;
+            _dayActivityRepository.Setup(d => d.GetCustomDayActivity(date, timeOfDay, activityId)).Returns(_dummyDBContext.DayActivity1);
+            _attendanceRepository.Setup(d => d.GetForUser(date, timeOfDay, activityId, 3)).Returns(_dummyDBContext.Attendance6);
+
+            ActionResult<Attendance> actionResult = _controller.Remove(date, timeOfDay, activityId, userId);
+
+            Assert.IsType<NotFoundResult>(actionResult?.Result);
+        }
         #endregion
 
         #region Add / Remove comment
@@ -131,19 +242,56 @@ namespace KolveniershofBACKEND.Tests.Controllers
             DateTime date = DateTime.Today;
             TimeOfDay timeOfDay = TimeOfDay.AVOND;
             int activityId = 1;
-            int userId = 1;
+            int userId = 2;
             CommentDTO commentDTO = new CommentDTO()
             {
                 Comment = "Dit was een zeer leuke activiteit"
             };
-
             _dayActivityRepository.Setup(d => d.GetCustomDayActivity(date, timeOfDay, activityId)).Returns(_dummyDBContext.DayActivity1);
 
             ActionResult<Attendance> actionResult = _controller.AddComment(date, timeOfDay, activityId, userId, commentDTO);
-            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
-            Attendance attendance = okObjectResult.Value as Attendance;
-            Assert.Equal(commentDTO.Comment, attendance.Comment);
+            var response = actionResult?.Result as OkObjectResult;
+            Attendance attendanceToEdit = response?.Value as Attendance;
+
+            Assert.Equal(commentDTO.Comment, attendanceToEdit?.Comment);
+
             _dayActivityRepository.Verify(d => d.SaveChanges(), Times.Once());
+        }
+
+        [Fact]
+        public void AddComment_NonExistingActivityId_ReturnsNotFound()
+        {
+            DateTime date = DateTime.Today;
+            TimeOfDay timeOfDay = TimeOfDay.AVOND;
+            int activityId = 99;
+            int userId = 2;
+            CommentDTO commentDTO = new CommentDTO()
+            {
+                Comment = "Dit was een zeer leuke activiteit"
+            };
+            _dayActivityRepository.Setup(d => d.GetCustomDayActivity(date, timeOfDay, 1)).Returns(_dummyDBContext.DayActivity1);
+
+            ActionResult<Attendance> actionResult = _controller.AddComment(date, timeOfDay, activityId, userId, commentDTO);
+
+            Assert.IsType<NotFoundResult>(actionResult?.Result);
+        }
+
+        [Fact]
+        public void AddComment_RightActivityIdButNonExistingUserId_ReturnsNotFound()
+        {
+            DateTime date = DateTime.Today;
+            TimeOfDay timeOfDay = TimeOfDay.AVOND;
+            int activityId = 1;
+            int userId = -2;
+            CommentDTO commentDTO = new CommentDTO()
+            {
+                Comment = "Dit was een zeer leuke activiteit"
+            };
+            _dayActivityRepository.Setup(d => d.GetCustomDayActivity(date, timeOfDay, activityId)).Returns(_dummyDBContext.DayActivity1);
+
+            ActionResult<Attendance> actionResult = _controller.AddComment(date, timeOfDay, activityId, userId, commentDTO);
+
+            Assert.IsType<NotFoundResult>(actionResult?.Result);
         }
 
         [Fact]
@@ -152,16 +300,52 @@ namespace KolveniershofBACKEND.Tests.Controllers
             DateTime date = DateTime.Today;
             TimeOfDay timeOfDay = TimeOfDay.VOLLEDIG;
             int activityId = 1;
-            int userId = 1;
-
+            int userId = 2;
             _dayActivityRepository.Setup(d => d.GetCustomDayActivity(date, timeOfDay, activityId)).Returns(_dummyDBContext.DayActivity1);
 
             ActionResult<Attendance> actionResult = _controller.RemoveComment(date, timeOfDay, activityId, userId);
-            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
-            Attendance attendance = okObjectResult.Value as Attendance;
+            var response = actionResult?.Result as OkObjectResult;
+            Attendance attendance = response?.Value as Attendance;
+
             Assert.Equal(timeOfDay, attendance.TimeOfDay);
             _dayActivityRepository.Verify(d => d.SaveChanges(), Times.Once());
-        }  
+        }
+
+        [Fact]
+        public void RemoveComment_NonExistingActivityId_ReturnsNotFound()
+        {
+            DateTime date = DateTime.Today;
+            TimeOfDay timeOfDay = TimeOfDay.AVOND;
+            int activityId = 99;
+            int userId = 2;
+            CommentDTO commentDTO = new CommentDTO()
+            {
+                Comment = "Dit was een zeer leuke activiteit"
+            };
+            _dayActivityRepository.Setup(d => d.GetCustomDayActivity(date, timeOfDay, 1)).Returns(_dummyDBContext.DayActivity1);
+
+            ActionResult<Attendance> actionResult = _controller.RemoveComment(date, timeOfDay, activityId, userId);
+
+            Assert.IsType<NotFoundResult>(actionResult?.Result);
+        }
+
+        [Fact]
+        public void RemoveComment_RightActivityIdButNonExistingUserId_ReturnsNotFound()
+        {
+            DateTime date = DateTime.Today;
+            TimeOfDay timeOfDay = TimeOfDay.AVOND;
+            int activityId = 1;
+            int userId = -2;
+            CommentDTO commentDTO = new CommentDTO()
+            {
+                Comment = "Dit was een zeer leuke activiteit"
+            };
+            _dayActivityRepository.Setup(d => d.GetCustomDayActivity(date, timeOfDay, activityId)).Returns(_dummyDBContext.DayActivity1);
+
+            ActionResult<Attendance> actionResult = _controller.RemoveComment(date, timeOfDay, activityId, userId);
+
+            Assert.IsType<NotFoundResult>(actionResult?.Result);
+        }
         #endregion
 
     }

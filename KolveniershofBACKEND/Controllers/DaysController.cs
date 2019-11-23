@@ -64,7 +64,8 @@ namespace KolveniershofBACKEND.Controllers
         public ActionResult<IEnumerable<CustomDay>> GetAll(DateTime startDate, DateTime endDate)
         {
             IEnumerable<CustomDay> customDays = _customDayRepository.GetAllInRange(startDate, endDate).ToList();
-            if (customDays == null)
+            if (customDays == null || !customDays.Any()) // this condition was added because even if nothing matches the predicate a list with 0 items is returned
+                                                         // variable == is always false. The null check is probably not needed, but not sure.
             {
                 return NotFound();
             }
@@ -134,7 +135,8 @@ namespace KolveniershofBACKEND.Controllers
             else
             {
                 IEnumerable<DayActivity> dayActivitiesAttended = customDay.DayActivities.Where(da => da.Attendances.Any(a => a.UserId == userId)).ToList();
-                if (dayActivitiesAttended == null)
+                if (dayActivitiesAttended == null || !dayActivitiesAttended.Any()) // this condition was added because even if nothing matches the predicate a list with 0 items is returned
+                                                                                   // variable == is always false
                 {
                     return NotFound();
                 }
@@ -175,7 +177,8 @@ namespace KolveniershofBACKEND.Controllers
         public ActionResult<IEnumerable<User>> GetAbsent(DateTime date)
         {
             IEnumerable<User> users = _customDayRepository.GetAbsentUsersForDay(date).ToList();
-            if (users == null)
+            if (users == null || !users.Any()) // this condition was added because even if nothing matches the predicate a list with 0 items is returned
+                                               // variable == is always false
             {
                 return NotFound();
             }
@@ -195,7 +198,8 @@ namespace KolveniershofBACKEND.Controllers
         public ActionResult<IEnumerable<User>> GetSick(DateTime date)
         {
             IEnumerable<User> users = _customDayRepository.GetSickUsersForDay(date).ToList();
-            if (users == null)
+            if (users == null || !users.Any()) // this condition was added because even if nothing matches the predicate a list with 0 items is returned
+                               // variable == is always false
             {
                 return NotFound();
             }
@@ -215,7 +219,7 @@ namespace KolveniershofBACKEND.Controllers
         public ActionResult<IEnumerable<Note>> GetNotes(DateTime date)
         {
             IEnumerable<Note> notes = _customDayRepository.GetNotesForDay(date).ToList();
-            if (notes == null)
+            if (notes == null || !notes.Any())
             {
                 return NotFound();
             }
@@ -235,7 +239,7 @@ namespace KolveniershofBACKEND.Controllers
         public ActionResult<IEnumerable<Helper>> GetHelpers(DateTime date)
         {
             IEnumerable<Helper> helpers = _customDayRepository.GetHelpersForDay(date).ToList();
-            if (helpers == null)
+            if (helpers == null || !helpers.Any())
             {
                 return NotFound();
             }
