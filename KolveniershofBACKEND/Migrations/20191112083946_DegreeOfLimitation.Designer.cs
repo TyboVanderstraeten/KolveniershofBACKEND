@@ -4,18 +4,20 @@ using KolveniershofBACKEND.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace KolveniershofBACKEND.Migrations
 {
     [DbContext(typeof(DBContext))]
-    partial class DBContextModelSnapshot : ModelSnapshot
+    [Migration("20191112083946_DegreeOfLimitation")]
+    partial class DegreeOfLimitation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.8-servicing-32085")
+                .HasAnnotation("ProductVersion", "2.1.11-servicing-32099")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -28,7 +30,8 @@ namespace KolveniershofBACKEND.Migrations
                     b.Property<string>("ActivityType")
                         .IsRequired();
 
-                    b.Property<string>("Description");
+                    b.Property<string>("Description")
+                        .IsRequired();
 
                     b.Property<string>("Name")
                         .IsRequired();
@@ -60,24 +63,6 @@ namespace KolveniershofBACKEND.Migrations
                     b.HasIndex("DayId", "ActivityId", "TimeOfDay");
 
                     b.ToTable("Attendance");
-                });
-
-            modelBuilder.Entity("KolveniershofBACKEND.Models.Domain.BusDriver", b =>
-                {
-                    b.Property<int>("DayId");
-
-                    b.Property<int>("DriverId");
-
-                    b.Property<string>("TimeOfDay");
-
-                    b.Property<string>("BusColor")
-                        .IsRequired();
-
-                    b.HasKey("DayId", "DriverId", "TimeOfDay");
-
-                    b.HasIndex("DriverId");
-
-                    b.ToTable("BusDriver");
                 });
 
             modelBuilder.Entity("KolveniershofBACKEND.Models.Domain.Day", b =>
@@ -116,19 +101,6 @@ namespace KolveniershofBACKEND.Migrations
                     b.HasIndex("ActivityId");
 
                     b.ToTable("DayActivity");
-                });
-
-            modelBuilder.Entity("KolveniershofBACKEND.Models.Domain.Driver", b =>
-                {
-                    b.Property<int>("DriverId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name");
-
-                    b.HasKey("DriverId");
-
-                    b.ToTable("Driver");
                 });
 
             modelBuilder.Entity("KolveniershofBACKEND.Models.Domain.Helper", b =>
@@ -199,7 +171,8 @@ namespace KolveniershofBACKEND.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Comment");
+                    b.Property<string>("Comment")
+                        .IsRequired();
 
                     b.Property<DateTime>("Date");
 
@@ -379,12 +352,14 @@ namespace KolveniershofBACKEND.Migrations
 
                     b.Property<DateTime>("Date");
 
-                    b.Property<string>("Dessert");
+                    b.Property<string>("Dessert")
+                        .IsRequired();
 
                     b.Property<string>("MainDish")
                         .IsRequired();
 
-                    b.Property<string>("PreDish");
+                    b.Property<string>("PreDish")
+                        .IsRequired();
 
                     b.ToTable("CustomDay");
 
@@ -401,19 +376,6 @@ namespace KolveniershofBACKEND.Migrations
                     b.HasOne("KolveniershofBACKEND.Models.Domain.DayActivity", "DayActivity")
                         .WithMany("Attendances")
                         .HasForeignKey("DayId", "ActivityId", "TimeOfDay")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("KolveniershofBACKEND.Models.Domain.BusDriver", b =>
-                {
-                    b.HasOne("KolveniershofBACKEND.Models.Domain.Day", "Day")
-                        .WithMany("BusDrivers")
-                        .HasForeignKey("DayId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("KolveniershofBACKEND.Models.Domain.Driver", "Driver")
-                        .WithMany("DaysToDrive")
-                        .HasForeignKey("DriverId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

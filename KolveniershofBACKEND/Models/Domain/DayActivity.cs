@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace KolveniershofBACKEND.Models.Domain
 {
@@ -33,12 +35,34 @@ namespace KolveniershofBACKEND.Models.Domain
 
         public void AddAttendance(Attendance attendance)
         {
-            Attendances.Add(attendance);
+            if (Attendances.SingleOrDefault(a =>
+                a.ActivityId == attendance.ActivityId
+                && a.DayId == attendance.DayId
+                && a.UserId == attendance.UserId
+                && a.TimeOfDay == attendance.TimeOfDay) == null)
+            {
+                Attendances.Add(attendance);
+            }
+            else
+            {
+                throw new ArgumentException("Attendance already exists");
+            }
         }
 
         public void RemoveAttendance(Attendance attendance)
         {
-            Attendances.Remove(attendance);
+            if (Attendances.SingleOrDefault(a =>
+                 (a.ActivityId == attendance.ActivityId
+                 && a.DayId == attendance.DayId
+                 && a.UserId == attendance.UserId
+                 && a.TimeOfDay == attendance.TimeOfDay)) != null)
+            {
+                Attendances.Remove(attendance);
+            }
+            else
+            {
+                throw new ArgumentException("Attendance doesn't exist");
+            }
         }
     }
 }

@@ -39,25 +39,29 @@ namespace KolveniershofBACKEND.Data
 
             #region User
 
-            User u1 = new User(UserType.BEGELEIDER, "Tybo", "Vanderstraeten", "tybo@hotmail.com", null, null);
+            User u1 = new User(UserType.BEGELEIDER, "Tybo", "Vanderstraeten", "tybo@hotmail.com", null, null, null);
             await _userManager.CreateAsync(new IdentityUser() { Email = u1.Email, UserName = u1.Email, EmailConfirmed = true, }, "P@ssword1");
 
-            User u2 = new User(UserType.CLIENT, "Rob", "De Putter", "rob@hotmail.com", null, 2);
+            User u2 = new User(UserType.CLIENT, "Rob", "De Putter", "rob@hotmail.com", null, 2, 1);
             await _userManager.CreateAsync(new IdentityUser() { Email = u2.Email, UserName = u2.Email, EmailConfirmed = true, }, "P@ssword1");
 
-            User u3 = new User(UserType.STAGIAIR, "Tim", "Geldof", "tim@hotmail.com", null, null);
+            User u3 = new User(UserType.STAGIAIR, "Tim", "Geldof", null, null, null, null);
             await _userManager.CreateAsync(new IdentityUser() { Email = u3.Email, UserName = u3.Email, EmailConfirmed = true, }, "P@ssword1");
 
-            User u4 = new User(UserType.VRIJWILLIGER, "Dean", "Vandamme", "dean@hotmail.com", null, null);
+            User u4 = new User(UserType.VRIJWILLIGER, "Dean", "Vandamme", null, null, null, null);
             await _userManager.CreateAsync(new IdentityUser() { Email = u4.Email, UserName = u4.Email, EmailConfirmed = true, }, "P@ssword1");
 
-            User u5 = new User(UserType.CLIENT, "Alihan", "Fevziev", "xaml@hotmail.com", null, 2);
+            User u5 = new User(UserType.CLIENT, "Alihan", "Fevziev", "alihan@hotmail.com", null, 2, 2);
             await _userManager.CreateAsync(new IdentityUser() { Email = u5.Email, UserName = u5.Email, EmailConfirmed = true, }, "P@ssword1");
+
+            User u6 = new User(UserType.CLIENT, "Robrecht", "Eycke", "robrecht@hotmail.com", null, 2, 3);
+            await _userManager.CreateAsync(new IdentityUser() { Email = u6.Email, UserName = u6.Email, EmailConfirmed = true, }, "P@ssword1");
             _dbContext.Users.Add(u1);
             _dbContext.Users.Add(u2);
             _dbContext.Users.Add(u3);
             _dbContext.Users.Add(u4);
             _dbContext.Users.Add(u5);
+            _dbContext.Users.Add(u6);
             #endregion
 
             #region Drivers

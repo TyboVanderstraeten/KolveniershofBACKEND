@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace KolveniershofBACKEND.Models.Domain
 {
@@ -9,6 +10,19 @@ namespace KolveniershofBACKEND.Models.Domain
         public string PreDish { get; set; }
         public string MainDish { get; set; }
         public string Dessert { get; set; }
+        public new string DayName {
+            get {
+                switch (Date.DayOfWeek)
+                {
+                    case DayOfWeek.Monday: return "Maandag";
+                    case DayOfWeek.Tuesday: return "Dinsdag";
+                    case DayOfWeek.Wednesday: return "Woensdag";
+                    case DayOfWeek.Thursday: return "Donderdag";
+                    case DayOfWeek.Friday: return "Vrijdag";
+                    default: return "Invalid";
+                }
+            }
+        }
         public ICollection<Note> Notes { get; set; }
 
         protected CustomDay() : base()
@@ -27,12 +41,26 @@ namespace KolveniershofBACKEND.Models.Domain
 
         public void AddNote(Note note)
         {
-            Notes.Add(note);
+            if (Notes.SingleOrDefault(n => n.NoteId == note.NoteId && n.DayId == note.DayId) == null)
+            {
+                Notes.Add(note);
+            }
+            else
+            {
+                throw new ArgumentException("Note already exists");
+            }
         }
 
         public void RemoveNote(Note note)
         {
-            Notes.Remove(note);
+            if (Notes.SingleOrDefault(n => n.NoteId == note.NoteId && n.DayId == note.DayId) != null)
+            {
+                Notes.Remove(note);
+            }
+            else
+            {
+                throw new ArgumentException("Note doesn't exist");
+            }
         }
     }
 }

@@ -9,9 +9,9 @@ namespace KolveniershofBACKEND.Data.Mappers
         public void Configure(EntityTypeBuilder<CustomDay> builder)
         {
             builder.Property(cd => cd.Date).IsRequired();
-            builder.Property(cd => cd.PreDish).IsRequired();
+            builder.Property(cd => cd.PreDish).IsRequired(false);
             builder.Property(cd => cd.MainDish).IsRequired();
-            builder.Property(cd => cd.Dessert).IsRequired();
+            builder.Property(cd => cd.Dessert).IsRequired(false);
             builder.HasMany(cd => cd.Notes)
                 .WithOne()
                 .IsRequired()

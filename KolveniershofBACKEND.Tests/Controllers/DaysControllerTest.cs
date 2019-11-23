@@ -48,7 +48,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
         {
             _customDayRepository.Setup(a => a.GetAll()).Returns(_dummyDBContext.CustomDays);
             ActionResult<IEnumerable<CustomDay>> actionResult = _controller.GetAll();
-            IList<CustomDay> days = actionResult.Value.ToList();
+            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
+            IList<CustomDay> days = (okObjectResult.Value as IEnumerable<CustomDay>).ToList();
             Assert.Equal(3, days.Count);
         }
 
@@ -61,18 +62,9 @@ namespace KolveniershofBACKEND.Tests.Controllers
             _customDayRepository.Setup(c => c.GetAllInRange(startDate, endDate)).Returns(days);
 
             ActionResult<IEnumerable<CustomDay>> actionResult = _controller.GetAll(startDate, endDate);
-            IList<CustomDay> daysResult = actionResult.Value.ToList();
+            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
+            IList<CustomDay> daysResult = (okObjectResult.Value as IEnumerable<CustomDay>).ToList();
             Assert.Equal(2, daysResult.Count);
-        }
-
-        [Fact]
-        public void GetById_Succeeds()
-        {
-            int customDayId = 1;
-            _customDayRepository.Setup(c => c.GetById(customDayId)).Returns(_dummyDBContext.CustomDay1);
-            ActionResult<CustomDay> actionResult = _controller.GetById(customDayId);
-            CustomDay day = actionResult.Value;
-            Assert.Equal(DateTime.Today, day.Date);
         }
 
         [Fact]
@@ -81,7 +73,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
             DateTime date = DateTime.Today.AddDays(1);
             _customDayRepository.Setup(c => c.GetByDate(date)).Returns(_dummyDBContext.CustomDay2);
             ActionResult<CustomDay> actionResult = _controller.GetByDate(date);
-            CustomDay day = actionResult.Value;
+            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
+            CustomDay day = okObjectResult.Value as CustomDay;
             Assert.Equal(2, day.DayNr);
         }
 
@@ -92,7 +85,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
             DateTime date = DateTime.Today;
             _customDayRepository.Setup(d => d.GetByDate(date)).Returns(_dummyDBContext.CustomDay1);
             ActionResult<CustomDay> actionResult = _controller.GetForUser(userId, date);
-            Assert.Equal("chocomousse", actionResult.Value.Dessert);
+            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
+            Assert.Equal("chocomousse", (okObjectResult.Value as CustomDay).Dessert);
 
         }
 
@@ -103,7 +97,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
             absents.Add(_dummyDBContext.U2);
             _customDayRepository.Setup(c => c.GetAbsentUsersForDay(DateTime.Today)).Returns(absents);
             ActionResult<IEnumerable<User>> actionResult = _controller.GetAbsent(DateTime.Today);
-            IList<User> absentsResult = actionResult.Value.ToList();
+            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
+            IList<User> absentsResult = (okObjectResult.Value as IEnumerable<User>).ToList();
             Assert.Equal(1, absentsResult.Count);
         }
 
@@ -113,7 +108,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
             DateTime date = DateTime.Today;
             _customDayRepository.Setup(d => d.GetNotesForDay(date)).Returns(_dummyDBContext.Notes);
             ActionResult<IEnumerable<Note>> actionResult = _controller.GetNotes(date);
-            IList<Note> notesResult = actionResult.Value as IList<Note>;
+            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
+            IList<Note> notesResult = okObjectResult.Value as IList<Note>;
             Assert.Equal(2, notesResult.Count);
         }
         #endregion
@@ -138,7 +134,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
             _dayRepository.Setup(c => c.GetByWeekAndDay(dayDTO.TemplateName, dayDTO.WeekNr, dayDTO.DayNr)).Returns(_dummyDBContext.Day1);
 
             ActionResult<CustomDay> actionResult = _controller.Add(dayDTO);
-            CustomDay customDay = actionResult.Value;
+            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
+            CustomDay customDay = okObjectResult.Value as CustomDay;
             Assert.Equal(4, customDay.DayActivities.Count);
             _customDayRepository.Verify(a => a.Add(It.IsAny<CustomDay>()), Times.Once);
             _customDayRepository.Verify(a => a.SaveChanges(), Times.Once);
@@ -168,7 +165,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
             _dayRepository.Setup(d => d.GetByWeekAndDay(dayDTO.TemplateName, dayDTO.WeekNr, dayDTO.DayNr)).Returns(_dummyDBContext.Day1);
 
             ActionResult<CustomDay> actionResult = _controller.Edit(date, dayDTO);
-            Assert.Equal("Chocomousse", actionResult.Value.Dessert);
+            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
+            Assert.Equal("Chocomousse", (okObjectResult.Value as CustomDay).Dessert);
             _customDayRepository.Verify(a => a.SaveChanges(), Times.Once);
         }
         #endregion
@@ -191,7 +189,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
             _activityRepository.Setup(a => a.GetById(dayActivityDTO.ActivityId)).Returns(_dummyDBContext.Activity2);
 
             ActionResult<DayActivity> actionResult = _controller.AddActivity(date, dayActivityDTO);
-            Assert.Equal(TimeOfDay.VOORMIDDAG, actionResult.Value.TimeOfDay);
+            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
+            Assert.Equal(TimeOfDay.VOORMIDDAG, (okObjectResult.Value as DayActivity).TimeOfDay);
             _customDayRepository.Verify(a => a.SaveChanges(), Times.Once);
         }
 
@@ -206,7 +205,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
             _dayActivityRepository.Setup(d => d.GetCustomDayActivity(date, timeOfDay, activityId)).Returns(_dummyDBContext.DayActivity2);
 
             ActionResult<DayActivity> actionResult = _controller.RemoveActivity(date, activityId, timeOfDay);
-            Assert.Equal("Koken", actionResult.Value.Activity.Name);
+            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
+            Assert.Equal("Koken", (okObjectResult.Value as DayActivity).Activity.Name);
             _customDayRepository.Verify(a => a.SaveChanges(), Times.Once);
         }
         #endregion
@@ -219,14 +219,15 @@ namespace KolveniershofBACKEND.Tests.Controllers
 
             HelperDTO helperDTO = new HelperDTO()
             {
-                UserId = 1
+                UserId = 7
             };
 
             _customDayRepository.Setup(c => c.GetByDate(date)).Returns(_dummyDBContext.CustomDay1);
-            _userRepository.Setup(u => u.GetById(helperDTO.UserId)).Returns(_dummyDBContext.U1);
+            _userRepository.Setup(u => u.GetById(helperDTO.UserId)).Returns(_dummyDBContext.UserNew);
 
             ActionResult<Helper> actionResult = _controller.AddHelper(date, helperDTO);
-            Assert.Equal("Tybo", actionResult.Value.User.FirstName);
+            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
+            Assert.Equal("Florian", (okObjectResult.Value as Helper).User.FirstName);
             _customDayRepository.Verify(c => c.SaveChanges(), Times.Once());
         }
 
@@ -240,7 +241,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
             _helperRepository.Setup(h => h.GetCustomDayHelper(date, userId)).Returns(_dummyDBContext.Helper1);
 
             ActionResult<Helper> actionResult = _controller.RemoveHelper(date, userId);
-            Assert.Equal("Tybo", actionResult.Value.User.FirstName);
+            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
+            Assert.Equal("Tybo", (okObjectResult.Value as Helper).User.FirstName);
             _customDayRepository.Verify(c => c.SaveChanges(), Times.Once());
         }
 
@@ -260,7 +262,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
 
             _customDayRepository.Setup(c => c.GetByDate(date)).Returns(_dummyDBContext.CustomDay1);
             ActionResult<Note> actionResult = _controller.AddNote(date, noteDTO);
-            Assert.Equal(NoteType.VERVOER, actionResult.Value.NoteType);
+            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
+            Assert.Equal(NoteType.VERVOER, (okObjectResult.Value as Note).NoteType);
             _customDayRepository.Verify(c => c.SaveChanges(), Times.Once());
         }
 
@@ -268,15 +271,16 @@ namespace KolveniershofBACKEND.Tests.Controllers
         public void RemoveNote_Succeeds()
         {
             DateTime date = DateTime.Today;
-            int noteId = 1;
+            int noteId = 2;
 
             _customDayRepository.Setup(c => c.GetByDate(date)).Returns(_dummyDBContext.CustomDay1);
-            _noteRepository.Setup(n => n.GetCustomDayNote(date, noteId)).Returns(_dummyDBContext.Note1);
+            _noteRepository.Setup(n => n.GetCustomDayNote(date, noteId)).Returns(_dummyDBContext.Note2);
 
             ActionResult<Note> actionResult = _controller.RemoveNote(date, noteId);
-            Assert.Equal(NoteType.VERVOER, actionResult.Value.NoteType);
+            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
+            Assert.Equal(NoteType.VARIA, (okObjectResult.Value as Note).NoteType);
             _customDayRepository.Verify(c => c.SaveChanges(), Times.Once());
-        } 
+        }
         #endregion
 
     }
