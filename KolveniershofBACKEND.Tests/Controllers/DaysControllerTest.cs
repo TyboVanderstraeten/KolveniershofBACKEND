@@ -52,6 +52,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
             IEnumerable<CustomDay> days = response?.Value as IEnumerable<CustomDay>;
 
             Assert.Equal(_dummyDBContext.CustomDays.Length, days.Count());
+
         }
 
         [Fact]
@@ -80,6 +81,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
             ActionResult<IEnumerable<CustomDay>> actionResult = _controller.GetAll(startDate, endDate);
 
             Assert.IsType<NotFoundResult>(actionResult?.Result);
+
         }
 
         [Fact]
@@ -91,6 +93,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
             ActionResult<CustomDay> actionResult = _controller.GetByDate(date);
             var response = actionResult?.Result as OkObjectResult;
             CustomDay day = response?.Value as CustomDay;
+
 
             Assert.Equal(2, day.DayNr);
         }
@@ -180,6 +183,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
             ActionResult<IEnumerable<User>> actionResult = _controller.GetSick(date);
 
             Assert.IsType<NotFoundResult>(actionResult?.Result);
+
         }
 
         [Fact]
@@ -215,6 +219,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
             ActionResult<IEnumerable<Note>> actionResult = _controller.GetNotes(date);
 
             Assert.IsType<NotFoundResult>(actionResult?.Result);
+
         }
         #endregion
 
@@ -240,6 +245,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
             ActionResult<CustomDay> actionResult = _controller.Add(dayDTO);
             var response = actionResult?.Result as OkObjectResult;
             CustomDay customDay = response?.Value as CustomDay;
+
 
 
             Assert.Equal(4, customDay.DayActivities.Count);
@@ -299,6 +305,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
             Assert.Equal("Chocomousse", customDay.Dessert);
             Assert.Equal(dayDTO.DayNr, customDay.DayNr);
             Assert.Equal(dayDTO.DayId, customDay.DayId);
+
             _customDayRepository.Verify(a => a.SaveChanges(), Times.Once);
         }
 
@@ -378,6 +385,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
             DayActivity dayActivity = response?.Value as DayActivity;
 
             Assert.Equal(TimeOfDay.VOORMIDDAG, dayActivity.TimeOfDay);
+
             _customDayRepository.Verify(a => a.SaveChanges(), Times.Once);
         }
 
@@ -433,6 +441,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
             DayActivity dayActivity = response?.Value as DayActivity;
 
             Assert.Equal("Koken", dayActivity.Activity.Name);
+
             _customDayRepository.Verify(a => a.SaveChanges(), Times.Once);
         }
 
@@ -475,6 +484,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
             HelperDTO helperDTO = new HelperDTO()
             {
                 UserId = 747
+
             };
             _customDayRepository.Setup(c => c.GetByDate(date)).Returns(_dummyDBContext.CustomDay1);
             _userRepository.Setup(u => u.GetById(2)).Returns(_dummyDBContext.U2);
@@ -499,6 +509,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
 
             Assert.IsType<NotFoundResult>(actionResult?.Result);
             _customDayRepository.Verify(a => a.SaveChanges(), Times.Never);
+
         }
 
         [Fact]
@@ -514,6 +525,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
             Helper helper = response?.Value as Helper;
 
             Assert.Equal("Tim", helper.User.FirstName);
+
             _customDayRepository.Verify(c => c.SaveChanges(), Times.Once());
         }
 
@@ -565,6 +577,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
 
             Assert.Equal(NoteType.VERVOER, note.NoteType);
             Assert.Equal(noteDTO.Content, note.Content);
+
             _customDayRepository.Verify(c => c.SaveChanges(), Times.Once());
         }
 
@@ -600,6 +613,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
             Note note = response?.Value as Note;
 
             Assert.Equal(NoteType.VARIA, note.NoteType);
+
             _customDayRepository.Verify(c => c.SaveChanges(), Times.Once());
         }
 

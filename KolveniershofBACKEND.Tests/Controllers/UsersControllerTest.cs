@@ -94,6 +94,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
             var response = actionResult?.Result as OkObjectResult;
             IEnumerable<User> users = response?.Value as IEnumerable<User>;
 
+
             Assert.Equal(4, users.Count());
         }
         #endregion
@@ -146,6 +147,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
             var response = actionResult?.Result as OkObjectResult;
             User user = response?.Value as User;
 
+
             Assert.Equal("Tybo", user.FirstName);
         }
 
@@ -172,6 +174,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
             ActionResult<User> actionResult = _controller.GetByEmail(email);
             var response = actionResult?.Result as OkObjectResult;
             User user = response?.Value as User;
+
 
             Assert.Equal(email, user.Email);
         }
@@ -215,6 +218,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
             bool availability = (bool)response?.Value;
 
             Assert.True(availability);
+
         }
         #endregion
 
@@ -237,7 +241,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
             ActionResult<User> actionResult = await _controller.Add(userDTO);
             var response = actionResult?.Result as OkObjectResult;
             User userResult = response.Value as User;
-
+          
             Assert.Equal(userDTO.Email, userResult.Email);
             _userRepository.Verify(u => u.Add(It.IsAny<User>()), Times.Once());
             _userRepository.Verify(u => u.SaveChanges(), Times.Once());
@@ -286,8 +290,6 @@ namespace KolveniershofBACKEND.Tests.Controllers
             _userRepository.Setup(a => a.GetById(userId)).Returns((User)null);
 
             ActionResult<User> actionResult = await _controller.Remove(userId);
-
-
             Assert.IsType<NotFoundResult>(actionResult.Result);
             _userRepository.Verify(u => u.Remove(It.IsAny<User>()), Times.Never());
             _userRepository.Verify(u => u.SaveChanges(), Times.Never());

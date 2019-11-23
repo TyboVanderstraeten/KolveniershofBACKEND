@@ -91,8 +91,10 @@ namespace KolveniershofBACKEND.Tests.Controllers
             _dayActivityRepository.Setup(d => d.GetCustomDayActivity(date, timeOfDay, 1)).Returns(_dummyDBContext.DayActivity1);
 
             ActionResult<IEnumerable<Attendance>> actionResult = _controller.GetAllClients(date, activityId, timeOfDay);
+            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
 
             Assert.IsType<NotFoundResult>(actionResult?.Result);
+
         }
 
         [Fact]
@@ -123,9 +125,11 @@ namespace KolveniershofBACKEND.Tests.Controllers
             _dayActivityRepository.Setup(d => d.GetCustomDayActivity(date, timeOfDay, 1)).Returns(_dummyDBContext.DayActivity1);
 
             ActionResult<IEnumerable<Attendance>> actionResult = _controller.GetAllPersonnel(date, activityId, timeOfDay);
+            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
 
             Assert.IsType<NotFoundResult>(actionResult?.Result);
         }
+
 
         #endregion
 
@@ -135,17 +139,18 @@ namespace KolveniershofBACKEND.Tests.Controllers
         {
             DateTime date = DateTime.Today;
             TimeOfDay timeOfDay = TimeOfDay.AVOND;
-            int activityId = 1;
+            int activityId = 7;
             int userId = 1;
 
             _dayActivityRepository.Setup(d => d.GetCustomDayActivity(date, timeOfDay, activityId)).Returns(_dummyDBContext.DayActivity1);
-            _userRepository.Setup(d => d.GetById(userId)).Returns(_dummyDBContext.U1);
+            _userRepository.Setup(d => d.GetById(userId)).Returns(_dummyDBContext.UserNew);
 
             ActionResult<Attendance> actionResult = _controller.Add(date, timeOfDay, activityId, userId);
             var response = actionResult?.Result as OkObjectResult;
             Attendance newAttendance = response?.Value as Attendance;
 
             Assert.Equal("Tybo", newAttendance.User.FirstName);
+
             _dayActivityRepository.Verify(a => a.SaveChanges(), Times.Once());
         }
 
@@ -195,6 +200,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
             Attendance attendance = response?.Value as Attendance;
 
             Assert.Equal("Tim", attendance?.User.FirstName);
+
             _dayActivityRepository.Verify(d => d.SaveChanges(), Times.Once());
         }
 
@@ -248,6 +254,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
             Attendance attendanceToEdit = response?.Value as Attendance;
 
             Assert.Equal(commentDTO.Comment, attendanceToEdit?.Comment);
+
             _dayActivityRepository.Verify(d => d.SaveChanges(), Times.Once());
         }
 

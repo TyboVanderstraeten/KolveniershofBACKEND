@@ -1,4 +1,5 @@
 ﻿using KolveniershofBACKEND.Models.Domain;
+using KolveniershofBACKEND.Models.Domain.Enums;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Threading.Tasks;
@@ -18,6 +19,7 @@ namespace KolveniershofBACKEND.Data
 
         public async Task seedDatabase()
         {
+            
             #region Activities
             Activity a1 = new Activity(ActivityType.ATELIER, "Testatelier", "Dit is een testatelier", "test.picto");
             Activity a2 = new Activity(ActivityType.ATELIER, "Koken", "We gaan koken", "koken.picto");
@@ -62,6 +64,35 @@ namespace KolveniershofBACKEND.Data
             _dbContext.Users.Add(u6);
             #endregion
 
+            #region Drivers
+            Driver driver1 = new Driver("Ine");
+            Driver driver2 = new Driver("Annemie");
+            Driver driver3 = new Driver("Kathleen");
+            Driver driver4 = new Driver("Nick");
+            Driver driver5 = new Driver("Hedwig");
+            Driver driver6 = new Driver("Koen");
+            Driver driver7 = new Driver("Frieza");
+            Driver driver8 = new Driver("Dina");
+            Driver driver9 = new Driver("Freddy");
+            Driver driver10 = new Driver("An");
+            Driver driver11 = new Driver("Anja");
+            Driver driver12 = new Driver("Ann T");
+
+            _dbContext.Drivers.Add(driver1);
+            _dbContext.Drivers.Add(driver2);
+            _dbContext.Drivers.Add(driver3);
+            _dbContext.Drivers.Add(driver4);
+            _dbContext.Drivers.Add(driver5);
+            _dbContext.Drivers.Add(driver6);
+            _dbContext.Drivers.Add(driver7);
+            _dbContext.Drivers.Add(driver8);
+            _dbContext.Drivers.Add(driver9);
+            _dbContext.Drivers.Add(driver9);
+            _dbContext.Drivers.Add(driver10);
+            _dbContext.Drivers.Add(driver11);
+            _dbContext.Drivers.Add(driver12);
+            #endregion
+
             #region TemplateDay
             string[] templateNames = { "zomer", "winter" };
             for (int h = 0; h < 2; h++)
@@ -93,6 +124,21 @@ namespace KolveniershofBACKEND.Data
                         Helper helper2 = new Helper(day, u4);
                         day.AddHelper(helper1);
                         day.AddHelper(helper2);
+
+                        BusDriver busDriver1 = new BusDriver(day, driver1, TimeOfDay.OCHTEND, BusColor.BEIGE);
+                        BusDriver busDriver2 = new BusDriver(day, driver2, TimeOfDay.OCHTEND, BusColor.GEEL);
+                        BusDriver busDriver3 = new BusDriver(day, driver3, TimeOfDay.OCHTEND, BusColor.BLAUW);
+                        BusDriver busDriver4 = new BusDriver(day, driver4, TimeOfDay.AVOND, BusColor.BEIGE);
+                        BusDriver busDriver5 = new BusDriver(day, driver5, TimeOfDay.AVOND, BusColor.GEEL);
+                        BusDriver busDriver6 = new BusDriver(day, driver6, TimeOfDay.AVOND, BusColor.BLAUW);
+
+                        day.AddBusDriver(busDriver1);
+                        day.AddBusDriver(busDriver2);
+                        day.AddBusDriver(busDriver3);
+                        day.AddBusDriver(busDriver4);
+                        day.AddBusDriver(busDriver5);
+                        day.AddBusDriver(busDriver6);
+
                         _dbContext.Days.Add(day);
                     }
                 }

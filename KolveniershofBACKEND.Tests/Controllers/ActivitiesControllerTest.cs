@@ -37,6 +37,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
 
             Assert.Equal(200, response?.StatusCode);
             Assert.Equal(7, activities.Count);
+
         }
 
         [Fact]
@@ -50,6 +51,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
             Activity activityThatCameBackFromResponse = response?.Value as Activity;
 
             Assert.Equal("Testatelier", activityThatCameBackFromResponse.Name);
+
         }
 
         [Fact]
@@ -82,6 +84,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
 
             Assert.Equal(200, response?.StatusCode);
             Assert.Equal("Zwemmen", newActivity.Name);
+
             _activityRepository.Verify(a => a.Add(It.IsAny<Activity>()), Times.Once());
             _activityRepository.Verify(a => a.SaveChanges(), Times.Once());
         }
