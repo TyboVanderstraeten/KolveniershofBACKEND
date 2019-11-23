@@ -1,4 +1,5 @@
 ﻿using KolveniershofBACKEND.Models.Domain;
+using KolveniershofBACKEND.Models.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -91,7 +92,7 @@ namespace KolveniershofBACKEND.Tests.Data
         public IList<Attendance> Attendances2 { get; }
         public IList<Attendance> Attendances3 { get; }
         public IList<Attendance> Attendances4 { get; }
-        
+
 
 
         public Note Note1 { get; }
@@ -99,6 +100,20 @@ namespace KolveniershofBACKEND.Tests.Data
         public IList<Note> Notes { get; }
         #endregion
 
+        #region Driver
+        public Driver Driver1 { get; }
+        public Driver Driver2 { get; }
+        public Driver Driver3 { get; }
+        #endregion
+
+        #region BusDriver
+        public BusDriver BusDriver1 { get; }
+        public BusDriver BusDriver2 { get; }
+        public BusDriver BusDriver4 { get; }
+        public BusDriver BusDriver3 { get; }
+
+        public List<BusDriver> BusDriversForWeek1 = new List<BusDriver>();
+        #endregion
 
         public DummyDBContext()
         {
@@ -241,6 +256,25 @@ namespace KolveniershofBACKEND.Tests.Data
             CustomDay3.Notes = Notes;
 
             CustomDays = new[] { CustomDay1, CustomDay2, CustomDay3 };
+            #endregion
+
+            #region init Drivers
+            int driverId = 1;
+            Driver1 = new Driver("Jan") { DriverId = driverId++ };
+            Driver2 = new Driver("Karel") { DriverId = driverId++ }; ;
+            Driver3 = new Driver("Makker") { DriverId = driverId++ }; ;
+            #endregion
+
+            #region init BusDriver
+            BusDriver1 = new BusDriver(Day1, Driver1, TimeOfDay.OCHTEND, BusColor.BEIGE);
+            BusDriver2 = new BusDriver(Day2, Driver2, TimeOfDay.AVOND, BusColor.GEEL);
+            BusDriver3 = new BusDriver(Day3, Driver2, TimeOfDay.AVOND, BusColor.GEEL);
+            BusDriver4 = new BusDriver(Day1, Driver2, TimeOfDay.AVOND, BusColor.GEEL);
+
+            BusDriversForWeek1.Add(BusDriver1);
+            BusDriversForWeek1.Add(BusDriver2);
+            BusDriversForWeek1.Add(BusDriver3);
+            BusDriversForWeek1.Add(BusDriver4);
             #endregion
         }
 

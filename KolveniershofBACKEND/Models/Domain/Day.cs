@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace KolveniershofBACKEND.Models.Domain
 {
@@ -25,11 +26,14 @@ namespace KolveniershofBACKEND.Models.Domain
         }
         public ICollection<DayActivity> DayActivities { get; set; }
         public ICollection<Helper> Helpers { get; set; }
+        [JsonIgnore]
+        public ICollection<BusDriver> BusDrivers { get; set; }
 
         protected Day()
         {
             DayActivities = new List<DayActivity>();
             Helpers = new List<Helper>();
+            BusDrivers = new List<BusDriver>();
         }
 
         public Day(string templateName, int weekNr, int dayNr)
@@ -39,6 +43,7 @@ namespace KolveniershofBACKEND.Models.Domain
             DayNr = dayNr;
             DayActivities = new List<DayActivity>();
             Helpers = new List<Helper>();
+            BusDrivers = new List<BusDriver>();
         }
 
         public void AddHelper(Helper helper)
@@ -87,6 +92,16 @@ namespace KolveniershofBACKEND.Models.Domain
             {
                 throw new ArgumentException("DayActivity doesn't exist");
             }
+        }
+
+        public void AddBusDriver(BusDriver busDriver)
+        {
+            BusDrivers.Add(busDriver);
+        }
+
+        public void RemoveBusDriver(BusDriver busDriver)
+        {
+            BusDrivers.Remove(busDriver);
         }
     }
 }
