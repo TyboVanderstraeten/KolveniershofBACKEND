@@ -7,5 +7,8 @@ namespace KolveniershofBACKEND.Data.Repositories.Interfaces
     {
         IEnumerable<Driver> GetAllDrivers();
         Driver GetById(int driverId);
+        Driver GetByName(string namer);
+        void Add(Driver newDriver);
+        void SaveChanges();
     }
 }
