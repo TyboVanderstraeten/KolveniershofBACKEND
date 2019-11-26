@@ -153,8 +153,14 @@ namespace KolveniershofBACKEND.Controllers
                             customDay.MainDish,
                             customDay.Dessert
                             );
+
                         customDayUser.DayId = customDay.DayId;
                         customDayUser.DayActivities = dayActivitiesAttended.ToList();
+                        foreach (var dayActivity in customDayUser.DayActivities)
+                        {
+                            dayActivity.Attendances = dayActivity.Attendances.Where(da => da.UserId == userId).ToList();
+
+                        }
                         customDayUser.Helpers = customDay.Helpers;
                         customDayUser.Notes = customDay.Notes;
                         return Ok(customDayUser);
@@ -199,7 +205,7 @@ namespace KolveniershofBACKEND.Controllers
         {
             IEnumerable<User> users = _customDayRepository.GetSickUsersForDay(date).ToList();
             if (users == null || !users.Any()) // this condition was added because even if nothing matches the predicate a list with 0 items is returned
-                               // variable == is always false
+                                               // variable == is always false
             {
                 return NotFound();
             }
