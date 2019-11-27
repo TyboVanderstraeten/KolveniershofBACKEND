@@ -2,6 +2,7 @@
 using KolveniershofBACKEND.Models.Domain;
 using KolveniershofBACKEND.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -42,6 +43,27 @@ namespace KolveniershofBACKEND.Controllers
         }
 
         /// <summary>
+        /// Get the bus scheme for a day
+        /// </summary>
+        /// <param name="weekNr">The id of a day</param>
+        /// <returns>All busDrivers with chosen day id</returns>
+        [HttpGet]
+        [Route("{dayId}")]
+        public ActionResult<IEnumerable<BusDriver>> GetBusSchemesByDayId(int dayId)
+        {
+            var busDrivers = _busDriverRepository.GetBusDriversByDayId(dayId);
+
+            if (busDrivers == null || !busDrivers.Any())
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(busDrivers);
+            }
+        }
+
+        /// <summary>
         /// Update the driver for a particular day
         /// </summary>
         /// <param name="busDriverDTO">The particular day with the id of the driver and time of day</param>
@@ -58,7 +80,7 @@ namespace KolveniershofBACKEND.Controllers
 
             if (busDriver.Driver.DriverId == busDriverDTO.NewDriverId)
             {
-                return Forbid();
+                return BadRequest();
             }
 
             var newDriver = _driverRepository.GetById(busDriverDTO.NewDriverId);
@@ -68,13 +90,27 @@ namespace KolveniershofBACKEND.Controllers
                 return NotFound();
             }
 
-            var newBusDriver = new BusDriver(busDriver.Day, newDriver, busDriverDTO.TimeOfDay, busDriver.BusColor);
-            _busDriverRepository.Remove(busDriver);
-            
-            _busDriverRepository.Add(newBusDriver);
-            _busDriverRepository.SaveChanges();
+            var existingBusDriver = _busDriverRepository.GetBusDriverByDayIdDriverIdAndTimeOfDay(busDriverDTO.DayId, newDriver.DriverId, busDriverDTO.TimeOfDay);
 
-            return Ok(newBusDriver);
+            if(existingBusDriver != null)
+            {
+                return Forbid();
+            }
+
+            try
+            {
+                var newBusDriver = new BusDriver(busDriver.Day, newDriver, busDriverDTO.TimeOfDay, busDriver.BusColor);
+                _busDriverRepository.Remove(busDriver);
+
+                _busDriverRepository.Add(newBusDriver);
+                _busDriverRepository.SaveChanges();
+
+                return Ok(newBusDriver);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

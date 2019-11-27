@@ -19,19 +19,31 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
 
         public void Add(BusDriver busDriver)
         {
-            _dbContext.Add(busDriver);
+            _busDrivers.Add(busDriver);
         }
 
         public BusDriver GetBusDriverByDayIdDriverIdAndTimeOfDay(int dayId, int driverId, TimeOfDay timeOfDay)
         {
-            return _dbContext.BusDrivers.Include(b => b.Day).SingleOrDefault(d => d.DayId == dayId && d.DriverId == driverId && d.TimeOfDay == timeOfDay);
+            return _busDrivers
+                .Include(b => b.Day)
+                .Include(b => b.Driver)
+                .SingleOrDefault(d => d.DayId == dayId && d.DriverId == driverId && d.TimeOfDay == timeOfDay);
+        }
+
+        public IEnumerable<BusDriver> GetBusDriversByDayId(int dayId)
+        {
+            return _busDrivers
+                .Include(b => b.Day)
+                .Include(b => b.Driver)
+                .Where(b => b.DayId == dayId).ToList();
         }
 
         // The reason I 'hardcode' summer is because it doesn't matter for this functionality
         // summer or winter the busses need to drive
         public IEnumerable<BusDriver> GetBusDriversByWeek(int weekNr)
         {
-            return  _busDrivers.Include(b => b.Day)
+            return  _busDrivers
+                .Include(b => b.Day)
                 .Include(b => b.Driver)
                 .Where(b => b.Day.WeekNr == weekNr && b.Day.TemplateName == "zomer")
                 .ToList();
