@@ -23,6 +23,11 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
                 .OrderBy(a => a.Name).ThenBy(a => a.ActivityType).ToList();
         }
 
+        public IEnumerable<string> GetAllPictograms()
+        {
+            return _activities.Select(a => a.Pictogram).Distinct().ToList();
+        }
+
         public Activity GetById(int id)
         {
             return _activities.SingleOrDefault(a => a.ActivityId == id);
@@ -42,5 +47,7 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
         {
             _dbContext.SaveChanges();
         }
+
+
     }
 }
