@@ -14,11 +14,13 @@ namespace KolveniershofBACKEND.Controllers
     {
         private readonly IBusDriverRepository _busDriverRepository;
         private readonly IDriverRepository _driverRepository;
+        private readonly ICustomDayRepository _customDayRepository;
 
-        public BusSchemesController(IBusDriverRepository busDriverRepository, IDriverRepository driverRepository)
+        public BusSchemesController(IBusDriverRepository busDriverRepository, IDriverRepository driverRepository, ICustomDayRepository customDayRepository)
         {
             _busDriverRepository = busDriverRepository;
             _driverRepository = driverRepository;
+            _customDayRepository = customDayRepository;
         }
 
         /// <summary>
@@ -66,40 +68,35 @@ namespace KolveniershofBACKEND.Controllers
         /// <summary>
         /// Update the driver for a particular day
         /// </summary>
-        /// <param name="busDriverDTO">The particular day with the id of the driver and time of day</param>
+        /// <param name="editBusDriverDTO">The particular day with the id of the driver and time of day</param>
         [HttpPut]
         [Route("edit")]
-        public ActionResult<BusDriver> Edit(BusDriverDTO busDriverDTO)
+        public ActionResult<BusDriver> Edit(EditBusDriverDTO editBusDriverDTO)
         {
-            var busDriver = _busDriverRepository.GetBusDriverByDayIdDriverIdAndTimeOfDay(busDriverDTO.DayId, busDriverDTO.OriginalDriverId, busDriverDTO.TimeOfDay);
+            var busDriver = _busDriverRepository.GetBusDriverByDayIdDriverIdAndTimeOfDay(editBusDriverDTO.DayId, editBusDriverDTO.OriginalDriverId, editBusDriverDTO.TimeOfDay);
 
             if (busDriver == null)
             {
                 return NotFound();
             }
 
-            if (busDriver.Driver.DriverId == busDriverDTO.NewDriverId)
-            {
-                return BadRequest();
-            }
-
-            var newDriver = _driverRepository.GetById(busDriverDTO.NewDriverId);
+            var newDriver = _driverRepository.GetById(editBusDriverDTO.NewDriverId);
 
             if (newDriver == null)
             {
                 return NotFound();
             }
 
-            var existingBusDriver = _busDriverRepository.GetBusDriverByDayIdDriverIdAndTimeOfDay(busDriverDTO.DayId, newDriver.DriverId, busDriverDTO.TimeOfDay);
+            var existingBusDriver = _busDriverRepository.GetBusDriverByDayIdDriverIdAndTimeOfDay(editBusDriverDTO.DayId, newDriver.DriverId, editBusDriverDTO.TimeOfDay);
 
             if(existingBusDriver != null)
             {
-                return Forbid();
+                return BadRequest($"{existingBusDriver.Driver.Name} staat al op de planning!");
             }
 
             try
             {
-                var newBusDriver = new BusDriver(busDriver.Day, newDriver, busDriverDTO.TimeOfDay, busDriver.BusColor);
+                var newBusDriver = new BusDriver(busDriver.Day, newDriver, editBusDriverDTO.TimeOfDay, busDriver.BusColor);
                 _busDriverRepository.Remove(busDriver);
 
                 _busDriverRepository.Add(newBusDriver);
@@ -108,6 +105,52 @@ namespace KolveniershofBACKEND.Controllers
                 return Ok(newBusDriver);
             }
             catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Adds a new bus driver
+        /// </summary>
+        /// <param name="addBusDriverDTO">Then new bus driver that will be added</param>
+        /// <returns>The new bus driver</returns>
+        [HttpPost]
+        [Route("add")]
+        public ActionResult<BusDriver> Add(AddBusDriverDTO addBusDriverDTO)
+        {
+            var existingBusDriver = _busDriverRepository.GetBusDriverByDayIdDriverIdAndTimeOfDay(
+                            addBusDriverDTO.DayId, addBusDriverDTO.NewDriverId, addBusDriverDTO.TimeOfDay);
+
+            if(existingBusDriver != null)
+            {
+                return BadRequest("Er is al een chauffeur die op die dag rijdt!");
+            }
+
+            var day = _customDayRepository.GetById(addBusDriverDTO.DayId);
+
+            if(day == null)
+            {
+                return NotFound();
+            }
+
+            var driver = _driverRepository.GetById(addBusDriverDTO.NewDriverId);
+
+            if(driver == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                BusDriver newBusDriver = new BusDriver(day, driver, addBusDriverDTO.TimeOfDay, addBusDriverDTO.BusColor);
+
+                _busDriverRepository.Add(newBusDriver);
+                _busDriverRepository.SaveChanges();
+
+                return Ok(newBusDriver);
+            }
+            catch(Exception ex)
             {
                 return BadRequest(ex.Message);
             }
