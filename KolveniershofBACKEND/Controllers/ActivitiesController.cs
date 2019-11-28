@@ -38,6 +38,29 @@ namespace KolveniershofBACKEND.Controllers
         }
 
         /// <summary>
+        /// Get all pictograms
+        /// </summary>
+        /// <returns>All pictograms</returns>
+        [HttpGet]
+        [Route("pictograms")]
+        public ActionResult<IEnumerable<object>> GetAllPictograms()
+        {
+            IEnumerable<object> pictograms = _activityRepository.GetAllPictograms().Select(p =>
+            {
+                return new { base64PictoString = p };
+            }).ToList();
+
+            if (pictograms == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(pictograms);
+            }
+        }
+
+        /// <summary>
         /// Get a specific activity
         /// </summary>
         /// <param name="id">The id of the activity</param>
