@@ -1,4 +1,4 @@
-﻿using KolveniershofBACKEND.Models.Domain;
+using KolveniershofBACKEND.Models.Domain;
 using KolveniershofBACKEND.Tests.Data;
 using System;
 using System.Collections.Generic;
@@ -24,7 +24,7 @@ namespace KolveniershofBACKEND.Tests.Models
         [Fact]
         public void Notes_CustomDayWithNotes_ReturnsLengthOfNotes()
         {
-            Assert.Equal(2, _customDayWithNotes.Notes.Count);
+            Assert.Equal(3, _customDayWithNotes.Notes.Count);
         }
 
         [Fact]

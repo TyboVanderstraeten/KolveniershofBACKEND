@@ -1,4 +1,5 @@
-﻿using KolveniershofBACKEND.Models.Domain;
+using KolveniershofBACKEND.Models.Domain;
+using KolveniershofBACKEND.Models.Domain.Enums;
 using System.Collections.Generic;
 
 namespace KolveniershofBACKEND.Data.Repositories.Interfaces
@@ -7,7 +8,7 @@ namespace KolveniershofBACKEND.Data.Repositories.Interfaces
     {
         IEnumerable<BusDriver> GetBusDriversByWeek(int weekNr);
         IEnumerable<BusDriver> GetBusDriversByDayId(int dayId);
-        BusDriver GetBusDriverByDayIdDriverIdAndTimeOfDay(int dayId, int driverId, TimeOfDay timeOfDay);
+        BusDriver GetBusDriverByDayIdBusColorAndTimeOfDay(int dayId, BusColor busColor, TimeOfDay timeOfDay);
         void Add(BusDriver busDriver);
         void Remove(BusDriver busDriver);
         void SaveChanges();

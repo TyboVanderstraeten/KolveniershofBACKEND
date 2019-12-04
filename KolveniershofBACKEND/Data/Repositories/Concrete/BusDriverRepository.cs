@@ -1,5 +1,6 @@
-﻿using KolveniershofBACKEND.Data.Repositories.Interfaces;
+using KolveniershofBACKEND.Data.Repositories.Interfaces;
 using KolveniershofBACKEND.Models.Domain;
+using KolveniershofBACKEND.Models.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,12 +23,12 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
             _busDrivers.Add(busDriver);
         }
 
-        public BusDriver GetBusDriverByDayIdDriverIdAndTimeOfDay(int dayId, int driverId, TimeOfDay timeOfDay)
+        public BusDriver GetBusDriverByDayIdBusColorAndTimeOfDay(int dayId, BusColor busColor, TimeOfDay timeOfDay)
         {
             return _busDrivers
                 .Include(b => b.Day)
                 .Include(b => b.Driver)
-                .SingleOrDefault(d => d.DayId == dayId && d.DriverId == driverId && d.TimeOfDay == timeOfDay);
+                .SingleOrDefault(d => d.DayId == dayId && d.BusColor == busColor && d.TimeOfDay == timeOfDay);
         }
 
         public IEnumerable<BusDriver> GetBusDriversByDayId(int dayId)

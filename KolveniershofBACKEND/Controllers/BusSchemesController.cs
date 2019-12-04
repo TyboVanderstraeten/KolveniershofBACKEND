@@ -1,4 +1,4 @@
-﻿using KolveniershofBACKEND.Data.Repositories.Interfaces;
+using KolveniershofBACKEND.Data.Repositories.Interfaces;
 using KolveniershofBACKEND.Models.Domain;
 using KolveniershofBACKEND.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
@@ -71,38 +71,30 @@ namespace KolveniershofBACKEND.Controllers
         /// <param name="editBusDriverDTO">The particular day with the id of the driver and time of day</param>
         [HttpPut]
         [Route("edit")]
-        public ActionResult<BusDriver> Edit(EditBusDriverDTO editBusDriverDTO)
+        public ActionResult<BusDriver> Edit(BusDriverDTO busDriverDTO)
         {
-            var busDriver = _busDriverRepository.GetBusDriverByDayIdDriverIdAndTimeOfDay(editBusDriverDTO.DayId, editBusDriverDTO.OriginalDriverId, editBusDriverDTO.TimeOfDay);
+            var busDriver = _busDriverRepository.GetBusDriverByDayIdBusColorAndTimeOfDay(busDriverDTO.DayId, busDriverDTO.BusColor, busDriverDTO.TimeOfDay);
 
             if (busDriver == null)
             {
                 return NotFound();
             }
 
-            var newDriver = _driverRepository.GetById(editBusDriverDTO.NewDriverId);
+            var newDriver = _driverRepository.GetById(busDriverDTO.DriverId);
 
             if (newDriver == null)
             {
                 return NotFound();
             }
 
-            var existingBusDriver = _busDriverRepository.GetBusDriverByDayIdDriverIdAndTimeOfDay(editBusDriverDTO.DayId, newDriver.DriverId, editBusDriverDTO.TimeOfDay);
-
-            if(existingBusDriver != null)
-            {
-                return BadRequest($"{existingBusDriver.Driver.Name} staat al op de planning!");
-            }
-
             try
             {
-                var newBusDriver = new BusDriver(busDriver.Day, newDriver, editBusDriverDTO.TimeOfDay, busDriver.BusColor);
-                _busDriverRepository.Remove(busDriver);
+                busDriver.Driver = newDriver;
+                busDriver.DriverId = newDriver.DriverId;
 
-                _busDriverRepository.Add(newBusDriver);
                 _busDriverRepository.SaveChanges();
 
-                return Ok(newBusDriver);
+                return Ok(busDriver);
             }
             catch (Exception ex)
             {
@@ -117,24 +109,24 @@ namespace KolveniershofBACKEND.Controllers
         /// <returns>The new bus driver</returns>
         [HttpPost]
         [Route("add")]
-        public ActionResult<BusDriver> Add(AddBusDriverDTO addBusDriverDTO)
+        public ActionResult<BusDriver> Add(BusDriverDTO busDriverDTO)
         {
-            var existingBusDriver = _busDriverRepository.GetBusDriverByDayIdDriverIdAndTimeOfDay(
-                            addBusDriverDTO.DayId, addBusDriverDTO.NewDriverId, addBusDriverDTO.TimeOfDay);
+            var existingBusDriver = _busDriverRepository.GetBusDriverByDayIdBusColorAndTimeOfDay(
+                            busDriverDTO.DayId, busDriverDTO.BusColor, busDriverDTO.TimeOfDay);
 
             if(existingBusDriver != null)
             {
                 return BadRequest("Er is al een chauffeur die op die dag rijdt!");
             }
 
-            var day = _customDayRepository.GetById(addBusDriverDTO.DayId);
+            var day = _customDayRepository.GetById(busDriverDTO.DayId);
 
             if(day == null)
             {
                 return NotFound();
             }
 
-            var driver = _driverRepository.GetById(addBusDriverDTO.NewDriverId);
+            var driver = _driverRepository.GetById(busDriverDTO.DriverId);
 
             if(driver == null)
             {
@@ -143,7 +135,7 @@ namespace KolveniershofBACKEND.Controllers
 
             try
             {
-                BusDriver newBusDriver = new BusDriver(day, driver, addBusDriverDTO.TimeOfDay, addBusDriverDTO.BusColor);
+                BusDriver newBusDriver = new BusDriver(day, driver, busDriverDTO.TimeOfDay, busDriverDTO.BusColor);
 
                 _busDriverRepository.Add(newBusDriver);
                 _busDriverRepository.SaveChanges();

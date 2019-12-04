@@ -13,7 +13,7 @@ namespace KolveniershofBACKEND.Data.Mappers
             builder.ToTable("BusDriver");
             builder.Property(b => b.TimeOfDay).HasConversion(new EnumToStringConverter<TimeOfDay>()).IsRequired();
             builder.Property(b => b.BusColor).HasConversion(new EnumToStringConverter<BusColor>()).IsRequired();
-            builder.HasKey(b => new { b.DayId, b.DriverId, b.TimeOfDay });
+            builder.HasKey(b => new { b.DayId, b.BusColor, b.TimeOfDay });
         }
     }
 }
