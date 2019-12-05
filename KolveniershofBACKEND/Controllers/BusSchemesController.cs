@@ -57,7 +57,7 @@ namespace KolveniershofBACKEND.Controllers
 
             if (busDrivers == null || !busDrivers.Any())
             {
-                return NotFound();
+                return Ok(new List<BusDriver>());
             }
             else
             {
