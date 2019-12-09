@@ -60,7 +60,7 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
                 customDay.DayActivities = customDay.DayActivities.Where(da => da.Attendances.Any(a => a.UserId == userId)).ToList();
             }
 
-            return customDaysRange.OrderBy(cd=>cd.Date).ToList();
+            return customDaysRange.OrderBy(cd => cd.Date).ToList();
         }
 
         public IEnumerable<User> GetAbsentUsersForDay(DateTime date)
@@ -126,7 +126,7 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
         {
             return _customDays.Include(cd => cd.Notes)
                               .Include(cd => cd.DayActivities).ThenInclude(da => da.Activity)
-                              .Include(cd => cd.DayActivities).ThenInclude(da => da.Attendances).ThenInclude(a => a.User)
+                              .Include(cd => cd.DayActivities).ThenInclude(da => da.Attendances)
                               .Include(cd => cd.Helpers).ThenInclude(h => h.User)
                               .SingleOrDefault(cd => cd.Date.Date == date.Date);
         }
