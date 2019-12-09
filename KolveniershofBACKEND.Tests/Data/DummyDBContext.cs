@@ -1,4 +1,5 @@
 ﻿using KolveniershofBACKEND.Models.Domain;
+using KolveniershofBACKEND.Models.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,9 +16,16 @@ namespace KolveniershofBACKEND.Tests.Data
         public User U1 { get; }
         public User U2 { get; }
         public User U3 { get; }
+        public User U4 { get; set; }
         public User[] Users { get; }
 
         public User UserNew { get; }
+        #endregion
+
+        #region WeekendDays
+        public WeekendDay GoingOutWithGirlfriendOn24112019 { get; set; }
+        public WeekendDay PicknickingWithParentsOn23112019 { get; set; }
+        public WeekendDay GamingWithBestFriendOn24112019 { get; set; }
         #endregion
 
         #region Activities
@@ -37,6 +45,10 @@ namespace KolveniershofBACKEND.Tests.Data
         public Day Day1 { get; }
         public Day Day2 { get; }
         public Day Day3 { get; }
+        public Day Day4 { get; }
+        public Day Day5 { get; }
+        public Day Day6 { get; }
+
         public Day[] Days { get; }
 
         public DayActivity DayActivity1 { get; }
@@ -77,6 +89,7 @@ namespace KolveniershofBACKEND.Tests.Data
         public CustomDay CustomDay1 { get; }
         public CustomDay CustomDay2 { get; }
         public CustomDay CustomDay3 { get; }
+        public CustomDay CustomDay4 { get; set; }
         public CustomDay[] CustomDays { get; }
 
         public Attendance Attendance1 { get; }
@@ -91,25 +104,50 @@ namespace KolveniershofBACKEND.Tests.Data
         public IList<Attendance> Attendances2 { get; }
         public IList<Attendance> Attendances3 { get; }
         public IList<Attendance> Attendances4 { get; }
-        
+
 
 
         public Note Note1 { get; }
         public Note Note2 { get; }
+        public Note Note3 { get; }
+        public Note Note4 { get; }
         public IList<Note> Notes { get; }
         #endregion
 
+        #region Driver
+        public Driver Driver1 { get; }
+        public Driver Driver2 { get; }
+        public Driver Driver3 { get; }
+        #endregion
+
+        #region BusDriver
+        public BusDriver BusDriver1 { get; }
+        public BusDriver BusDriver2 { get; }
+        public BusDriver BusDriver4 { get; }
+        public BusDriver BusDriver3 { get; }
+
+        public List<BusDriver> BusDriversForWeek1 = new List<BusDriver>();
+        #endregion
 
         public DummyDBContext()
         {
+            #region init WeekendDays
+            int weekendDayId = 1;
+            GoingOutWithGirlfriendOn24112019 = new WeekendDay(new DateTime(2019, 11, 24), "afspreken met liefje") { WeekendDayId = weekendDayId++ };
+            PicknickingWithParentsOn23112019 = new WeekendDay(new DateTime(2019, 11, 23), "gaan picknicken met ouders") { WeekendDayId = weekendDayId++ };
+            GamingWithBestFriendOn24112019 = new WeekendDay(new DateTime(2019, 11, 24), "gamen met beste vriend") { WeekendDayId = weekendDayId++ };
+            #endregion
+
             #region init Users
             int userId = 1;
-            U1 = new User(UserType.BEGELEIDER, "Tybo", "Vanderstraeten", "tybo@hotmail.com", "string.jpeg", null, null) { UserId = userId++ };
-            U2 = new User(UserType.CLIENT, "Rob", "De Putter", "rob@hotmail.com", "string.jpeg", 2, null) { UserId = userId++ };
-            U3 = new User(UserType.STAGIAIR, "Tim", "Geldof", "tim@hotmail.com", "string.jpeg", null, null) { UserId = userId++ };
-            UserNew = new User(UserType.BEGELEIDER, "Florian", "Landuyt", "florian@hotmail.com", "string.jpeg", null, null) { UserId = userId++ };
+            U1 = new User(UserType.BEGELEIDER, "Tybo", "Vanderstraeten", "tybo@hotmail.com", "string.jpeg", null,null) { UserId = userId++ };
+            U2 = new User(UserType.CLIENT, "Rob", "De Putter", "rob@hotmail.com", "string.jpeg", 2,null) { UserId = userId++ };
+            U3 = new User(UserType.STAGIAIR, "Tim", "Geldof", "tim@hotmail.com", "string.jpeg", null,null) { UserId = userId++ };
+            U4 = new User(UserType.CLIENT, "Alihan", "Fevziev", "alihan@hotmail.com", "string.jpeg", 1, 3) { UserId = userId++ };
+            U4.AddWeekendDay(GoingOutWithGirlfriendOn24112019);
+            GoingOutWithGirlfriendOn24112019.UserId = U4.UserId;
 
-            Users = new[] { U1, U2, U3 };
+            Users = new[] { U1, U2, U3, U4 };
             #endregion
 
             #region init Activities
@@ -131,10 +169,12 @@ namespace KolveniershofBACKEND.Tests.Data
             #region init Days
             int dayId = 1;
 
-            Day1 = new Day("eerste_week_eerste_dag", 1, 1) { DayId = dayId++ };
-            Day2 = new Day("eerste_week_tweede_dag", 1, 2) { DayId = dayId++ };
-            Day3 = new Day("eerste_week_derde_dag", 1, 3) { DayId = dayId++ };
-
+            Day1 = new Day("eerste_week_eerste_dag",1, 1) { DayId = dayId++ };
+            Day2 = new Day("eerste_week_tweede_dag",1, 2) { DayId = dayId++ };
+            Day3 = new Day("eerste_week_derde_dag",1, 3) { DayId = dayId++ };
+            Day4 = new Day("eerste_week_vierde_dag", 1, 4) { DayId = dayId++ };
+            Day5 = new Day("eerste_week_vijfde_dag", 1, 5) { DayId = dayId++ };
+            Day6 = new Day("tweede_week_eerste_dag", 2, 1) { DayId = dayId++ };
 
             Attendances1 = new List<Attendance>();
             Attendances2 = new List<Attendance>();
@@ -146,8 +186,8 @@ namespace KolveniershofBACKEND.Tests.Data
 
             Attendance1 = new Attendance(DayActivity1, U1);
             Attendance5 = new Attendance(DayActivity1, U2);
-            Attendance6 = new Attendance(DayActivity1, U2);
-            Attendances1.Add(Attendance1);
+            Attendance6 = new Attendance(DayActivity1, U3);
+
             Attendances1.Add(Attendance5);
             Attendances1.Add(Attendance6);
             DayActivity1.Attendances = Attendances1;
@@ -176,6 +216,7 @@ namespace KolveniershofBACKEND.Tests.Data
             DayActivities1.Add(DayActivity3);
             DayActivities1.Add(DayActivity4);
             Day1.DayActivities = DayActivities1;
+            Day5.DayActivities = DayActivities1;
 
             Helper1 = new Helper(Day1, U1);
             Helper2 = new Helper(Day1, U3);
@@ -184,6 +225,7 @@ namespace KolveniershofBACKEND.Tests.Data
             Helpers1.Add(Helper2);
 
             Day1.Helpers = Helpers1;
+            Day4.Helpers = Helpers1;
 
             DayActivity5 = new DayActivity(Day2, Activity5, TimeOfDay.VOORMIDDAG);
             DayActivity6 = new DayActivity(Day2, Activity7, TimeOfDay.MIDDAG);
@@ -216,11 +258,15 @@ namespace KolveniershofBACKEND.Tests.Data
 
             #region init CustomDays
             int noteId = 1;
-            Note1 = new Note(NoteType.VERVOER, "Florian neemt de bus niet vandaag") { NoteId = noteId++};
+            Note1 = new Note(NoteType.VERVOER, "Florian neemt de bus niet vandaag") { NoteId = noteId++ };
             Note2 = new Note(NoteType.VARIA, "Vandaag zullen er geen bekertjes aanwezig zijn") { NoteId = noteId++ };
+            Note3 = new Note(NoteType.VERVOER, "Beige bus zal niet rijden") { NoteId = noteId++ };
+            Note4 = new Note(NoteType.CLIENTEN, "Deano is ziek") { NoteId = noteId++ };
+
             Notes = new List<Note>();
             Notes.Add(Note1);
             Notes.Add(Note2);
+            Notes.Add(Note3);
 
             int customDayId = 1;
 
@@ -240,10 +286,29 @@ namespace KolveniershofBACKEND.Tests.Data
             CustomDay3.Helpers = Helpers3;
             CustomDay3.Notes = Notes;
 
-            CustomDays = new[] { CustomDay1, CustomDay2, CustomDay3 };
+            CustomDay4 = new CustomDay("eerste_week_vierde_dag", 1, 4, DateTime.Today.AddDays(3), "kippensoep", "steak", "appeltaart");
+            
+            CustomDays = new[] { CustomDay1, CustomDay2, CustomDay3, CustomDay4 };
+            #endregion
+
+            #region init Drivers
+            int driverId = 1;
+            Driver1 = new Driver("Jan") { DriverId = driverId++ };
+            Driver2 = new Driver("Karel") { DriverId = driverId++ }; ;
+            Driver3 = new Driver("Makker") { DriverId = driverId++ }; ;
+            #endregion
+
+            #region init BusDriver
+            BusDriver1 = new BusDriver(Day1, Driver1, TimeOfDay.OCHTEND, BusColor.BEIGE);
+            BusDriver2 = new BusDriver(Day2, Driver2, TimeOfDay.AVOND, BusColor.GEEL);
+            BusDriver3 = new BusDriver(Day3, Driver2, TimeOfDay.AVOND, BusColor.GEEL);
+            BusDriver4 = new BusDriver(Day1, Driver2, TimeOfDay.AVOND, BusColor.GEEL);
+
+            BusDriversForWeek1.Add(BusDriver1);
+            BusDriversForWeek1.Add(BusDriver2);
+            BusDriversForWeek1.Add(BusDriver3);
+            BusDriversForWeek1.Add(BusDriver4);
             #endregion
         }
-
-
     }
 }

@@ -89,26 +89,31 @@ namespace KolveniershofBACKEND.Tests.Controllers
         public void GetAllUsers_Succeeds()
         {
             _userRepository.Setup(u => u.GetAll()).Returns(_dummyDBContext.Users);
-            ActionResult<IEnumerable<User>> actionResult = _controller.GetAll();
-            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
-            IList<User> users = okObjectResult.Value as IList<User>;
 
-            Assert.Equal(3, users.Count);
+            ActionResult<IEnumerable<User>> actionResult = _controller.GetAll();
+            var response = actionResult?.Result as OkObjectResult;
+            IEnumerable<User> users = response?.Value as IEnumerable<User>;
+
+
+            Assert.Equal(4, users.Count());
         }
         #endregion
 
-        //#region GetAllFromGroup
-        //[Fact]
-        //public void GetAllFromGroup_Succeeds()
-        //{
-        //    int groupNr = 2;
-        //    IEnumerable<User> group2 = _dummyDBContext.Users.ToList().Where(u => u.Group == groupNr);
-        //    _userRepository.Setup(a => a.GetAllFromGroup(groupNr)).Returns(group2);
-        //    ActionResult<IEnumerable<User>> actionResult = _controller.GetAllFromGroup(groupNr);
-        //    IList<User> users = actionResult.Value as IList<User>;
-        //    Assert.Equal("Rob", users.ToList().First().FirstName); //there is only 1 user in this list!
-        //}
-        //#endregion
+        #region GetAllFromGroup
+        [Fact]
+        public void GetAllFromGroup_Succeeds()
+        {
+            int groupNr = 2;
+            IEnumerable<User> group2 = _dummyDBContext.Users.ToList().Where(u => u.Group == groupNr);
+            _userRepository.Setup(a => a.GetAllFromGroup(groupNr)).Returns(group2);
+
+            ActionResult<IEnumerable<User>> actionResult = _controller.GetAll(groupNr);
+            var response = actionResult?.Result as OkObjectResult;
+            IEnumerable<User> users = response?.Value as IEnumerable<User>;
+
+            Assert.Equal(groupNr, users?.FirstOrDefault().Group); 
+        }
+        #endregion
 
         #region GetAllWithType
         //[Fact]
@@ -139,8 +144,9 @@ namespace KolveniershofBACKEND.Tests.Controllers
             int userId = 1;
             _userRepository.Setup(u => u.GetById(userId)).Returns(_dummyDBContext.U1);
             ActionResult<User> actionResult = _controller.GetById(userId);
-            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
-            User user = okObjectResult.Value as User;
+            var response = actionResult?.Result as OkObjectResult;
+            User user = response?.Value as User;
+
 
             Assert.Equal("Tybo", user.FirstName);
         }
@@ -166,8 +172,9 @@ namespace KolveniershofBACKEND.Tests.Controllers
             _userRepository.Setup(u => u.GetByEmail(email)).Returns(_dummyDBContext.U1);
 
             ActionResult<User> actionResult = _controller.GetByEmail(email);
-            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
-            User user = okObjectResult.Value as User;
+            var response = actionResult?.Result as OkObjectResult;
+            User user = response?.Value as User;
+
 
             Assert.Equal(email, user.Email);
         }
@@ -194,6 +201,9 @@ namespace KolveniershofBACKEND.Tests.Controllers
             _userManager.Setup(u => u.FindByEmailAsync(email)).ReturnsAsync(identityUser);
 
             ActionResult<bool> actionResult = await _controller.CheckAvailibilityEmail(email);
+            var response = actionResult?.Result as OkObjectResult;
+            bool availability = (bool)response?.Value;
+
             Assert.False(actionResult.Value);
         }
 
@@ -204,8 +214,11 @@ namespace KolveniershofBACKEND.Tests.Controllers
             _userManager.Setup(u => u.FindByEmailAsync(email)).ReturnsAsync((IdentityUser)null);
 
             ActionResult<bool> actionResult = await _controller.CheckAvailibilityEmail(email);
-            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
-            Assert.True((bool)okObjectResult.Value);
+            var response = actionResult?.Result as OkObjectResult;
+            bool availability = (bool)response?.Value;
+
+            Assert.True(availability);
+
         }
         #endregion
 
@@ -216,7 +229,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
             UserDTO userDTO = new UserDTO()
             {
                 UserType = UserType.BEGELEIDER,
-                FirstName = "Florian",
+                FirstName = "Florian2",
                 LastName = "Landuyt",
                 Email = "florian@hotmail.com",
                 ProfilePicture = null,
@@ -224,9 +237,11 @@ namespace KolveniershofBACKEND.Tests.Controllers
             };
             User user = new User(UserType.BEGELEIDER, "Florian", "Landuyt", "florian@hotmail.com", null, null,null);
             _userRepository.Setup(u => u.GetByEmail(user.Email)).Returns((User)null);
+
             ActionResult<User> actionResult = await _controller.Add(userDTO);
-            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
-            User userResult = okObjectResult.Value as User;
+            var response = actionResult?.Result as OkObjectResult;
+            User userResult = response.Value as User;
+          
             Assert.Equal(userDTO.Email, userResult.Email);
             _userRepository.Verify(u => u.Add(It.IsAny<User>()), Times.Once());
             _userRepository.Verify(u => u.SaveChanges(), Times.Once());
@@ -285,13 +300,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
         [Fact]
         public void EditUser_Succeeds()
         {
-
-
             UserDTO userDTO = new UserDTO()
             {
-                #region MyRegion
-
-                #endregion
                 UserId = 1,
                 UserType = UserType.BEGELEIDER,
                 FirstName = "Florian",
@@ -309,7 +319,29 @@ namespace KolveniershofBACKEND.Tests.Controllers
             User user = okObjectResult.Value as User;
             Assert.Equal("Florian", user.FirstName);
             _userRepository.Verify(u => u.SaveChanges(), Times.Once());
-        } 
+        }
+
+        [Fact]
+        public void EditUser_UserAlreadyExists_ReturnsNotFound()
+        {
+            UserDTO userDTO = new UserDTO()
+            {
+                UserId = 1,
+                UserType = UserType.BEGELEIDER,
+                FirstName = "Florian",
+                LastName = "Landuyt",
+                Email = "tybo@hotmail.com",
+                ProfilePicture = null,
+                Group = null
+            };
+
+            _userRepository.Setup(u => u.GetById(userDTO.UserId)).Returns((User)null);
+
+            ActionResult<User> actionResult = _controller.Edit(userDTO);
+
+            Assert.IsType<NotFoundResult>(actionResult?.Result);
+            _userRepository.Verify(u => u.SaveChanges(), Times.Never());
+        }
         #endregion
     }
 }

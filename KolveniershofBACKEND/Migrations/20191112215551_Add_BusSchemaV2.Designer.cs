@@ -4,14 +4,16 @@ using KolveniershofBACKEND.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace KolveniershofBACKEND.Migrations
 {
     [DbContext(typeof(DBContext))]
-    partial class DBContextModelSnapshot : ModelSnapshot
+    [Migration("20191112215551_Add_BusSchemaV2")]
+    partial class Add_BusSchemaV2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -28,7 +30,8 @@ namespace KolveniershofBACKEND.Migrations
                     b.Property<string>("ActivityType")
                         .IsRequired();
 
-                    b.Property<string>("Description");
+                    b.Property<string>("Description")
+                        .IsRequired();
 
                     b.Property<string>("Name")
                         .IsRequired();
@@ -171,9 +174,8 @@ namespace KolveniershofBACKEND.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("DegreeOfLimitation");
-
-                    b.Property<string>("Email");
+                    b.Property<string>("Email")
+                        .IsRequired();
 
                     b.Property<string>("FirstName")
                         .IsRequired();
@@ -199,7 +201,8 @@ namespace KolveniershofBACKEND.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Comment");
+                    b.Property<string>("Comment")
+                        .IsRequired();
 
                     b.Property<DateTime>("Date");
 
@@ -379,12 +382,14 @@ namespace KolveniershofBACKEND.Migrations
 
                     b.Property<DateTime>("Date");
 
-                    b.Property<string>("Dessert");
+                    b.Property<string>("Dessert")
+                        .IsRequired();
 
                     b.Property<string>("MainDish")
                         .IsRequired();
 
-                    b.Property<string>("PreDish");
+                    b.Property<string>("PreDish")
+                        .IsRequired();
 
                     b.ToTable("CustomDay");
 
