@@ -1,4 +1,4 @@
-﻿using KolveniershofBACKEND.Controllers;
+using KolveniershofBACKEND.Controllers;
 using KolveniershofBACKEND.Data.Repositories.Interfaces;
 using KolveniershofBACKEND.Models.Domain;
 using KolveniershofBACKEND.Models.DTO;
@@ -196,7 +196,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
             var response = actionResult?.Result as OkObjectResult;
             IEnumerable<Note> notesResult = response?.Value as IEnumerable<Note>;
 
-            Assert.Equal(2, notesResult.Count());
+            Assert.Equal(3, notesResult.Count());
         }
 
         [Fact]
@@ -304,7 +304,6 @@ namespace KolveniershofBACKEND.Tests.Controllers
 
             Assert.Equal("Chocomousse", customDay.Dessert);
             Assert.Equal(dayDTO.DayNr, customDay.DayNr);
-            Assert.Equal(dayDTO.DayId, customDay.DayId);
 
             _customDayRepository.Verify(a => a.SaveChanges(), Times.Once);
         }

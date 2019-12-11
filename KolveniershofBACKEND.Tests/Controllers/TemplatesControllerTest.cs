@@ -1,4 +1,4 @@
-﻿using KolveniershofBACKEND.Controllers;
+using KolveniershofBACKEND.Controllers;
 using KolveniershofBACKEND.Data.Repositories.Interfaces;
 using KolveniershofBACKEND.Models.Domain;
 using KolveniershofBACKEND.Models.DTO;
@@ -292,13 +292,13 @@ namespace KolveniershofBACKEND.Tests.Controllers
             int dayNr = 1;
 
             _dayRepository.Setup(d => d.GetByWeekAndDay(templateName, weekNr, dayNr)).Returns(_dummyDBContext.Day1);
-            _userRepository.Setup(d => d.GetById(helperDTO.UserId)).Returns(_dummyDBContext.UserNew);
+            _userRepository.Setup(d => d.GetById(helperDTO.UserId)).Returns(_dummyDBContext.U4);
 
             ActionResult<Helper> actionResult = _controller.AddHelper(templateName, weekNr, dayNr, helperDTO);
             var response = actionResult?.Result as OkObjectResult;
             Helper helper = response?.Value as Helper;
 
-            Assert.Equal("Tybo", helper.User.FirstName);
+            Assert.Equal("Alihan", helper?.User.FirstName);
 
             _dayRepository.Verify(d => d.SaveChanges(), Times.Once());
         }
