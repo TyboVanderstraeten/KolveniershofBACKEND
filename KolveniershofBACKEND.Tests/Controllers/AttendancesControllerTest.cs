@@ -1,4 +1,4 @@
-﻿using KolveniershofBACKEND.Controllers;
+using KolveniershofBACKEND.Controllers;
 using KolveniershofBACKEND.Data.Repositories.Interfaces;
 using KolveniershofBACKEND.Models.Domain;
 using KolveniershofBACKEND.Models.DTO;
@@ -143,13 +143,13 @@ namespace KolveniershofBACKEND.Tests.Controllers
             int userId = 1;
 
             _dayActivityRepository.Setup(d => d.GetCustomDayActivity(date, timeOfDay, activityId)).Returns(_dummyDBContext.DayActivity1);
-            _userRepository.Setup(d => d.GetById(userId)).Returns(_dummyDBContext.UserNew);
+            _userRepository.Setup(d => d.GetById(userId)).Returns(_dummyDBContext.U4);
 
             ActionResult<Attendance> actionResult = _controller.Add(date, timeOfDay, activityId, userId);
             var response = actionResult?.Result as OkObjectResult;
             Attendance newAttendance = response?.Value as Attendance;
 
-            Assert.Equal("Tybo", newAttendance.User.FirstName);
+            Assert.Equal("Alihan", newAttendance.User.FirstName);
 
             _dayActivityRepository.Verify(a => a.SaveChanges(), Times.Once());
         }

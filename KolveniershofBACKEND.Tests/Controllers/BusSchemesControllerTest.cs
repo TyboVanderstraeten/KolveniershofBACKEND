@@ -1,6 +1,7 @@
-﻿using KolveniershofBACKEND.Controllers;
+using KolveniershofBACKEND.Controllers;
 using KolveniershofBACKEND.Data.Repositories.Interfaces;
 using KolveniershofBACKEND.Models.Domain;
+using KolveniershofBACKEND.Models.Domain.Enums;
 using KolveniershofBACKEND.Models.DTO;
 using KolveniershofBACKEND.Tests.Data;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +17,7 @@ namespace KolveniershofBACKEND.Tests.Controllers
     {
         private Mock<IBusDriverRepository> _busDriverRepository;
         private Mock<IDriverRepository> _driverRepository;
+        private Mock<ICustomDayRepository> _customDayRepository;
         private DummyDBContext _dummyDBContext;
         private BusSchemesController _controller;
 
@@ -23,7 +25,8 @@ namespace KolveniershofBACKEND.Tests.Controllers
         {
             _busDriverRepository = new Mock<IBusDriverRepository>();
             _driverRepository = new Mock<IDriverRepository>();
-            _controller = new BusSchemesController(_busDriverRepository.Object, _driverRepository.Object);
+            _customDayRepository = new Mock<ICustomDayRepository>();
+            _controller = new BusSchemesController(_busDriverRepository.Object, _driverRepository.Object, _customDayRepository.Object);
             _dummyDBContext = new DummyDBContext();
         }
 
@@ -62,13 +65,13 @@ namespace KolveniershofBACKEND.Tests.Controllers
             BusDriverDTO busDriverDTO = new BusDriverDTO()
             {
                 DayId = _dummyDBContext.Day1.DayId,
-                NewDriverId = 3,
-                OriginalDriverId = 1,
+                DriverId = 3,
+                BusColor = BusColor.BEIGE,
                 TimeOfDay = TimeOfDay.OCHTEND
             };
-            _busDriverRepository.Setup(b => b.GetBusDriverByDayIdDriverIdAndTimeOfDay(busDriverDTO.DayId, busDriverDTO.OriginalDriverId, busDriverDTO.TimeOfDay))
+            _busDriverRepository.Setup(b => b.GetBusDriverByDayIdBusColorAndTimeOfDay(busDriverDTO.DayId, busDriverDTO.BusColor, busDriverDTO.TimeOfDay))
                                 .Returns(_dummyDBContext.BusDriver1);
-            _driverRepository.Setup(d => d.GetById(busDriverDTO.NewDriverId)).Returns(_dummyDBContext.Driver3);
+            _driverRepository.Setup(d => d.GetById(busDriverDTO.DriverId)).Returns(_dummyDBContext.Driver3);
 
             ActionResult<BusDriver> actionResult = _controller.Edit(busDriverDTO);
             var response = actionResult?.Result as OkObjectResult;
@@ -79,36 +82,16 @@ namespace KolveniershofBACKEND.Tests.Controllers
         }
 
         [Fact]
-        public void Edit_WrongDayIdAndWrongOriginalDriverId_ReturnsNotFound()
+        public void Edit_WrongDayIdAndWrongDriverId_ReturnsNotFound()
         {
             BusDriverDTO busDriverDTO = new BusDriverDTO()
             {
                 DayId = 69,
-                NewDriverId = 3,
-                OriginalDriverId = -4,
+                DriverId = 30,
+                BusColor = BusColor.BEIGE,
                 TimeOfDay = TimeOfDay.OCHTEND
             };
-            _busDriverRepository.Setup(b => b.GetBusDriverByDayIdDriverIdAndTimeOfDay(1, 1, busDriverDTO.TimeOfDay)).Returns(_dummyDBContext.BusDriver1);
-            _driverRepository.Setup(d => d.GetById(busDriverDTO.NewDriverId)).Returns(_dummyDBContext.Driver3);
-
-            ActionResult<BusDriver> actionResult = _controller.Edit(busDriverDTO);
-
-            Assert.IsType<NotFoundResult>(actionResult?.Result);
-            _busDriverRepository.Verify(a => a.SaveChanges(), Times.Never());
-        }
-
-        [Fact]
-        public void Edit_RightDayIdAndOriginalDriverIdButWrongNewDriverId_ReturnsNotFound()
-        {
-            BusDriverDTO busDriverDTO = new BusDriverDTO()
-            {
-                DayId = _dummyDBContext.Day1.DayId,
-                NewDriverId = -3,
-                OriginalDriverId = 1,
-                TimeOfDay = TimeOfDay.OCHTEND
-            };
-            _busDriverRepository.Setup(b => b.GetBusDriverByDayIdDriverIdAndTimeOfDay(busDriverDTO.DayId, busDriverDTO.OriginalDriverId, busDriverDTO.TimeOfDay))
-                                .Returns(_dummyDBContext.BusDriver1);
+            _busDriverRepository.Setup(b => b.GetBusDriverByDayIdBusColorAndTimeOfDay(1, BusColor.BEIGE, busDriverDTO.TimeOfDay)).Returns(_dummyDBContext.BusDriver1);
             _driverRepository.Setup(d => d.GetById(3)).Returns(_dummyDBContext.Driver3);
 
             ActionResult<BusDriver> actionResult = _controller.Edit(busDriverDTO);
@@ -118,22 +101,22 @@ namespace KolveniershofBACKEND.Tests.Controllers
         }
 
         [Fact]
-        public void Edit_SameOriginalDriverIdAndNewDriverId_ReturnsForbid()
+        public void Edit_RightDayIdButWrongNewDriverId_ReturnsNotFound()
         {
             BusDriverDTO busDriverDTO = new BusDriverDTO()
             {
                 DayId = _dummyDBContext.Day1.DayId,
-                NewDriverId = 1,
-                OriginalDriverId = 1,
+                DriverId = -3,
+                BusColor = BusColor.BLAUW,
                 TimeOfDay = TimeOfDay.OCHTEND
             };
-            _busDriverRepository.Setup(b => b.GetBusDriverByDayIdDriverIdAndTimeOfDay(busDriverDTO.DayId, busDriverDTO.OriginalDriverId, busDriverDTO.TimeOfDay))
+            _busDriverRepository.Setup(b => b.GetBusDriverByDayIdBusColorAndTimeOfDay(busDriverDTO.DayId, BusColor.BLAUW, busDriverDTO.TimeOfDay))
                                 .Returns(_dummyDBContext.BusDriver1);
             _driverRepository.Setup(d => d.GetById(3)).Returns(_dummyDBContext.Driver3);
 
             ActionResult<BusDriver> actionResult = _controller.Edit(busDriverDTO);
 
-            Assert.IsType<ForbidResult>(actionResult?.Result);
+            Assert.IsType<NotFoundResult>(actionResult?.Result);
             _busDriverRepository.Verify(a => a.SaveChanges(), Times.Never());
         }
         #endregion

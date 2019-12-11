@@ -1,4 +1,4 @@
-﻿using KolveniershofBACKEND.Models.Domain;
+using KolveniershofBACKEND.Models.Domain;
 using KolveniershofBACKEND.Tests.Data;
 using System;
 using Xunit;
@@ -25,7 +25,7 @@ namespace KolveniershofBACKEND.Tests.Models
         public void HelpersAndDayActivities_DayWithHelpersAndDayActivities_ReturnsHelpersAndDayActivitiesLength()
         {
             Assert.Equal(4, _dayWithHelpersAndDayActivities.DayActivities.Count);
-            Assert.Equal(1, _dayWithHelpersAndDayActivities.Helpers.Count);
+            Assert.Equal(2, _dayWithHelpersAndDayActivities.Helpers.Count);
         }
 
         [Fact]
@@ -39,7 +39,7 @@ namespace KolveniershofBACKEND.Tests.Models
         public void HelpersAndDayActivities_DayWithHelpersAndNoDayActivities_ReturnsHelpersLengthAndZero()
         {
             Assert.Empty(_dayWithHelpersAndNoDayActivities.DayActivities);
-            Assert.Equal(1, _dayWithHelpersAndNoDayActivities.Helpers.Count);
+            Assert.Equal(2, _dayWithHelpersAndNoDayActivities.Helpers.Count);
         }
 
         [Fact]
@@ -75,7 +75,7 @@ namespace KolveniershofBACKEND.Tests.Models
         {
             _dayWithHelpersAndDayActivities.RemoveHelper(_dummyDBContext.Helper2);
 
-            Assert.Empty(_dayWithHelpersAndDayActivities.Helpers);
+            Assert.NotEmpty(_dayWithHelpersAndDayActivities.Helpers);
         }
 
         [Fact]
