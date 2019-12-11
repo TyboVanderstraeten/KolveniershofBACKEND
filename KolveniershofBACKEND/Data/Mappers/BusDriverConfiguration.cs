@@ -1,4 +1,4 @@
-﻿using KolveniershofBACKEND.Models.Domain;
+using KolveniershofBACKEND.Models.Domain;
 using KolveniershofBACKEND.Models.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
