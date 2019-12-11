@@ -6,6 +6,7 @@ namespace KolveniershofBACKEND.Data.Repositories.Interfaces
     public interface IActivityRepository
     {
         IEnumerable<Activity> GetAll();
+        IEnumerable<Activity> GetAllIncludingSickAbsent();
         IEnumerable<string> GetAllPictograms();
         Activity GetById(int id);
         void Add(Activity activity);
