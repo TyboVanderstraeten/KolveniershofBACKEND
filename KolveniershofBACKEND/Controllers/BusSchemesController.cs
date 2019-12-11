@@ -155,6 +155,13 @@ namespace KolveniershofBACKEND.Controllers
     [Route("getAllPossibleWeeks")]
     public ActionResult<IEnumerable<int>> GetAllWeeks()
     {
+      var allBusDrivers = _busDriverRepository.GetAll();
+
+      if (allBusDrivers == null || !allBusDrivers.Any())
+      {
+        return NotFound();
+      }
+
       return _busDriverRepository.GetAllWeeks().OrderBy(b => b).ToList();
     }
   }
