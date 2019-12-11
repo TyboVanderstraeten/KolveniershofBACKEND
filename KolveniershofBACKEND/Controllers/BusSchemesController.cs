@@ -15,12 +15,15 @@ namespace KolveniershofBACKEND.Controllers
     private readonly IBusDriverRepository _busDriverRepository;
     private readonly IDriverRepository _driverRepository;
     private readonly ICustomDayRepository _customDayRepository;
+    private readonly IDayRepository _dayRepository;
 
-    public BusSchemesController(IBusDriverRepository busDriverRepository, IDriverRepository driverRepository, ICustomDayRepository customDayRepository)
+    public BusSchemesController(IBusDriverRepository busDriverRepository, IDriverRepository driverRepository, ICustomDayRepository customDayRepository,
+                                IDayRepository dayRepository)
     {
       _busDriverRepository = busDriverRepository;
       _driverRepository = driverRepository;
       _customDayRepository = customDayRepository;
+      _dayRepository = dayRepository;
     }
 
     /// <summary>
@@ -119,11 +122,16 @@ namespace KolveniershofBACKEND.Controllers
         return BadRequest("Er is al een chauffeur die op die dag rijdt!");
       }
 
-      var day = _customDayRepository.GetById(busDriverDTO.DayId);
+      Day day = _customDayRepository.GetById(busDriverDTO.DayId);
 
       if (day == null)
       {
-        return NotFound();
+        day = _dayRepository.GetById(busDriverDTO.DayId);
+
+        if(day == null)
+        {
+          return NotFound();
+        }
       }
 
       var driver = _driverRepository.GetById(busDriverDTO.DriverId);
