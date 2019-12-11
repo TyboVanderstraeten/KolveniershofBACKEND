@@ -174,6 +174,62 @@ namespace KolveniershofBACKEND.Controllers
         }
 
         /// <summary>
+        /// Get a custom day for a user with all his attended activities without helpers
+        /// </summary>
+        /// <param name="userId">The id of the user</param>
+        /// <param name="date">The date of the custom day</param>
+        /// <returns>The custom day of the user with his attended activities</returns>
+        [HttpGet]
+        [Route("{date}/nohelpers/user/{userId}")]
+        public ActionResult<CustomDay> GetForUserNoHelpers(int userId, DateTime date)
+        {
+            CustomDay customDay = _customDayRepository.GetByDateNoHelpers(date);
+            if (customDay == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                IEnumerable<DayActivity> dayActivitiesAttended = customDay.DayActivities.Where(da => da.Attendances.Any(a => a.UserId == userId)).ToList();
+                if (dayActivitiesAttended == null || !dayActivitiesAttended.Any()) // this condition was added because even if nothing matches the predicate a list with 0 items is returned
+                                                                                   // variable == is always false
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    try
+                    {
+                        CustomDay customDayUser = new CustomDay(
+                            customDay.TemplateName,
+                            customDay.WeekNr,
+                            customDay.DayNr,
+                            customDay.Date,
+                            customDay.PreDish,
+                            customDay.MainDish,
+                            customDay.Dessert
+                            );
+
+                        customDayUser.DayId = customDay.DayId;
+                        customDayUser.DayActivities = dayActivitiesAttended.ToList();
+                        foreach (var dayActivity in customDayUser.DayActivities)
+                        {
+                            dayActivity.Attendances = dayActivity.Attendances.Where(da => da.UserId == userId).ToList();
+
+                        }
+                        customDayUser.Helpers = customDay.Helpers;
+                        customDayUser.Notes = customDay.Notes;
+                        return Ok(customDayUser);
+                    }
+                    catch (Exception ex)
+                    {
+                        return BadRequest(ex.Message);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Get all absent users for a custom day
         /// </summary>
         /// <param name="date">The date of the custom day</param>

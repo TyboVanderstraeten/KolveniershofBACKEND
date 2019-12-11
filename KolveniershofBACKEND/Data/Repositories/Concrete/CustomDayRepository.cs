@@ -131,6 +131,14 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
                               .SingleOrDefault(cd => cd.Date.Date == date.Date);
         }
 
+        public CustomDay GetByDateNoHelpers(DateTime date)
+        {
+            return _customDays.Include(cd => cd.Notes)
+                              .Include(cd => cd.DayActivities).ThenInclude(da => da.Activity)
+                              .Include(cd => cd.DayActivities).ThenInclude(da => da.Attendances)
+                              .SingleOrDefault(cd => cd.Date.Date == date.Date);
+        }
+
         public CustomDay GetById(int id)
         {
             return _customDays.Include(cd => cd.Notes)
