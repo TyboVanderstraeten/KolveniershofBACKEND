@@ -23,6 +23,11 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
       _busDrivers.Add(busDriver);
     }
 
+    public IEnumerable<BusDriver> GetAll()
+    {
+      return _busDrivers.ToList();
+    }
+
     public IEnumerable<int> GetAllWeeks()
     {
       return _busDrivers.Select(b => b.Day.WeekNr).Distinct();
