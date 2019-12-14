@@ -97,6 +97,28 @@ namespace KolveniershofBACKEND.Controllers
             }
         }
 
+        ///<summary>
+        /// Get all custom days in a range with those day activities attended by the user without helpers
+        /// </summary>
+        /// <param name="startDate">The first day (included) </param>
+        /// <param name="endDate">The last day (included)</param>
+        /// <param name="userId">The id of the user</param>
+        /// <returns>All custom days in the range with those day activities attended by the user without helpers</returns>
+        [HttpGet]
+        [Route("{startDate}/{endDate}/nohelpers/user/{userId}")]
+        public ActionResult<IEnumerable<CustomDay>> GetAllForUserNoHelpers(DateTime startDate, DateTime endDate, int userId)
+        {
+            IEnumerable<CustomDay> customDays = _customDayRepository.GetAllInRangeForUserNoHelpers(startDate, endDate, userId).ToList();
+            if (customDays == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(customDays);
+            }
+        }
+
         /// <summary>
         /// Get a specific custom day
         /// </summary>

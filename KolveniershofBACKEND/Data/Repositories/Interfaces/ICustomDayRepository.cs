@@ -9,6 +9,7 @@ namespace KolveniershofBACKEND.Data.Repositories.Interfaces
         IEnumerable<CustomDay> GetAll();
         IEnumerable<CustomDay> GetAllInRange(DateTime start, DateTime end);
         IEnumerable<CustomDay> GetAllInRangeForUser(DateTime start, DateTime end, int userId);
+        IEnumerable<CustomDay> GetAllInRangeForUserNoHelpers(DateTime start, DateTime end, int userId);
         IEnumerable<User> GetAbsentUsersForDay(DateTime date);
         IEnumerable<User> GetSickUsersForDay(DateTime date);
         IEnumerable<Note> GetNotesForDay(DateTime date);
