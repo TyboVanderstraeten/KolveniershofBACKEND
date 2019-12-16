@@ -30,7 +30,7 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
 
         public IEnumerable<string> GetAllPictograms()
         {
-            return _activities.Select(a => a.Pictogram).Distinct().ToList();
+            return _activities.Select(a => a.Pictogram).Where(p => !p.Equals(string.Empty)).Distinct().ToList();
         }
 
         public Activity GetById(int id)
