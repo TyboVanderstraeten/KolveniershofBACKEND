@@ -37,8 +37,7 @@ namespace KolveniershofBACKEND
             #region DBContext
             services.AddDbContext<DBContext>(options =>
             {
-                // Change 'TyboConnection' to 'DefaultConnection', my SQL-server instance name is different than default
-                options.UseSqlServer(Configuration["ConnectionStrings:TyboConnection"]);
+                options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]);
             });
             #endregion
 
