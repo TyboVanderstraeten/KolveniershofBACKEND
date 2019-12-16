@@ -6,6 +6,7 @@ using KolveniershofBACKEND.Data.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -128,7 +129,12 @@ namespace KolveniershofBACKEND
             #region CORS
             services.AddCors(options =>
             {
-                options.AddPolicy("AllowAllOrigins", builder => builder.AllowAnyOrigin());
+                options.AddPolicy("CorsPolicy", builder => builder
+                    .AllowCredentials()
+                    .SetIsOriginAllowed(host => true)
+                    .WithMethods("GET", "POST", "PUT", "DELETE")
+                    .WithHeaders("Accept", "Authorization", "Content-Type", "Origin", "X-Requested-With")
+                );
             });
             #endregion
         }
@@ -148,13 +154,16 @@ namespace KolveniershofBACKEND
 
             app.UseHttpsRedirection();
             app.UseAuthentication();
-
+            app.UseCors("CorsPolicy");
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.All
+            });
             app.UseMvc();
 
             app.UseSwaggerUi3();
             app.UseSwagger();
 
-            app.UseCors("AllowAllOrigins");
         }
     }
 }
