@@ -155,8 +155,6 @@ namespace KolveniershofBACKEND
             app.UseSwagger();
 
             app.UseCors("AllowAllOrigins");
-
-            //dbInitializer.seedDatabase().Wait();
         }
     }
 }
