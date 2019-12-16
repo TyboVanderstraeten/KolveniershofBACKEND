@@ -1,0 +1,1815 @@
+{
+	"info": {
+		"_postman_id": "632e8b39-759d-4a85-a78b-50f5e3347ebe",
+		"name": "Tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Activities",
+			"item": [
+				{
+					"name": "Get all activities",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4302e7fd-096a-4e87-b95c-5f7ff8bbb4c4",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"let jsonData = pm.response.json();",
+									"",
+									"pm.test(\"total amount more than 1\"), function(){",
+									"    pm.expect(jsonData.length).to.be.above(1);",
+									"}",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://kolveniershofbackendgroup5.azurewebsites.net/KolveniershofAPI/Activities",
+							"protocol": "https",
+							"host": [
+								"kolveniershofbackendgroup5",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"KolveniershofAPI",
+								"Activities"
+							]
+						},
+						"description": "Request to get all of the Activities"
+					},
+					"response": []
+				},
+				{
+					"name": "Get activity for activityId 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "446f9c72-35d4-4857-a1b7-49033226a937",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"let jsonData = pm.response.json();",
+									"",
+									"pm.test(\"id is 1\", function () {",
+									"    pm.expect(jsonData.activityId).to.eql(1)",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://kolveniershofbackendgroup5.azurewebsites.net/KolveniershofAPI/Activities/1",
+							"protocol": "https",
+							"host": [
+								"kolveniershofbackendgroup5",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"KolveniershofAPI",
+								"Activities",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all the pictograms",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8c0ce304-30eb-4868-a3d0-654f37e3e737",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"let jsonData = pm.response.json();",
+									"",
+									"pm.test(\"total amount more than 1\"), function(){",
+									"    pm.expect(jsonData.length).to.be.above(1);",
+									"}",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://kolveniershofbackendgroup5.azurewebsites.net/KolveniershofAPI/Activities/pictograms",
+							"protocol": "https",
+							"host": [
+								"kolveniershofbackendgroup5",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"KolveniershofAPI",
+								"Activities",
+								"pictograms"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update an activity",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6a3f90e4-8a03-4fb1-8178-fd1df4a9330d",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"let jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Description should be Wij gaan koken \", function () {",
+									"    pm.expect(jsonData.description).to.eql(\"Wij gaan koken\");",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"activityId\": 2,\r\n        \"activityType\": \"ATELIER\",\r\n        \"name\": \"Koken\",\r\n        \"description\": \"Wij gaan koken\",\r\n        \"pictogram\": \"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\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://kolveniershofbackendgroup5.azurewebsites.net/KolveniershofAPI/Activities",
+							"protocol": "https",
+							"host": [
+								"kolveniershofbackendgroup5",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"KolveniershofAPI",
+								"Activities"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Days",
+			"item": [
+				{
+					"name": "Get all days",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0b07468b-66fa-4a86-8165-627dcdf14d6e",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"let jsonData = pm.response.json();",
+									"",
+									"pm.test(\"total amount more than 1\"), function(){",
+									"    pm.expect(jsonData.length).to.be.above(1);",
+									"}",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://kolveniershofbackendgroup5.azurewebsites.net/KolveniershofAPI/Days",
+							"protocol": "https",
+							"host": [
+								"kolveniershofbackendgroup5",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"KolveniershofAPI",
+								"Days"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all days between startdate and enddate",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "549d854a-e84b-4c0b-9b72-86803f8a4357",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"let jsonData = pm.response.json();",
+									"let firstDay = pm.response.json()[0]",
+									"let lastday = pm.response.json()[jsonData.length - 1]",
+									"",
+									"pm.test(\"total amount more than 1\"), function(){",
+									"    pm.expect(jsonData.length).to.be.above(1);",
+									"}",
+									"",
+									"pm.test(\"check date\", function () {",
+									"    pm.expect(firstDay.date).to.eql(\"2019-12-16T00:00:00\")",
+									"});",
+									"",
+									"pm.test(\"check date\", function () {",
+									"    pm.expect(lastday.date).to.eql(\"2019-12-20T00:00:00\")",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://kolveniershofbackendgroup5.azurewebsites.net/KolveniershofAPI/Days/2019-12-16/2019-12-20",
+							"protocol": "https",
+							"host": [
+								"kolveniershofbackendgroup5",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"KolveniershofAPI",
+								"Days",
+								"2019-12-16",
+								"2019-12-20"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Days for specific date",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "40a2e059-9926-4999-a9b5-e49f30db44bd",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"let jsonData = pm.response.json();",
+									"",
+									"pm.test(\"total amount more than 1\"), function(){",
+									"    pm.expect(jsonData.length).to.be.above(1);",
+									"}",
+									"",
+									"pm.test(\"check date\", function () {",
+									"    pm.expect(jsonData.date).to.eql(\"2019-12-16T00:00:00\")",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://kolveniershofbackendgroup5.azurewebsites.net/KolveniershofAPI/Days/2019-12-16",
+							"protocol": "https",
+							"host": [
+								"kolveniershofbackendgroup5",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"KolveniershofAPI",
+								"Days",
+								"2019-12-16"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get day for specific user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3503ff1d-0bb1-4b9d-a23b-f7b62e3bc68e",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"let jsonData = pm.response.json();",
+									"",
+									"",
+									"pm.test(\"total amount more than 1\"), function(){",
+									"    pm.expect(jsonData.length).to.be.above(1);",
+									"}",
+									"",
+									"pm.test(\"check date\", function () {",
+									"    pm.expect(jsonData.date).to.eql(\"2019-12-16T00:00:00\")",
+									"});",
+									"",
+									"pm.test(\"check userid\", function () {",
+									"    pm.expect(jsonData.dayActivities[0].attendances[0].userId).to.eql(1)",
+									"});",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://kolveniershofbackendgroup5.azurewebsites.net/KolveniershofAPI/Days/2019-12-16/user/1",
+							"protocol": "https",
+							"host": [
+								"kolveniershofbackendgroup5",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"KolveniershofAPI",
+								"Days",
+								"2019-12-16",
+								"user",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get helpers for specific date",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "943f00e5-78f8-49a2-881f-a171cc4894ed",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"let jsonData = pm.response.json();",
+									"let firstHelper = pm.response.json()[0]",
+									"",
+									"pm.test(\"total amount more than 1\"), function(){",
+									"    pm.expect(jsonData.length).to.be.above(1);",
+									"}",
+									"",
+									"pm.test(\"check if it's not a client\", function () {",
+									"    pm.expect(jsonData.userType).not.eql(\"CLIENT\")",
+									"});",
+									"",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://kolveniershofbackendgroup5.azurewebsites.net/KolveniershofAPI/Days/2019-12-16/helpers",
+							"protocol": "https",
+							"host": [
+								"kolveniershofbackendgroup5",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"KolveniershofAPI",
+								"Days",
+								"2019-12-16",
+								"helpers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get specific day for specific user without the helpers",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "276469a5-f526-4c44-893c-33505cfbb9b8",
+								"exec": [
+									"let jsonData = pm.response.json();",
+									"",
+									"pm.test(\"total amount more than 1\"), function(){",
+									"    pm.expect(jsonData.length).to.be.above(1);",
+									"}",
+									"",
+									"pm.test(\"check date\", function () {",
+									"    pm.expect(jsonData.date).to.eql(\"2019-12-16T00:00:00\")",
+									"});",
+									"",
+									"pm.test(\"check userid\", function () {",
+									"    pm.expect(jsonData.dayActivities[0].attendances[0].userId).to.eql(1)",
+									"});",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://kolveniershofbackendgroup5.azurewebsites.net/KolveniershofAPI/Days/2019-12-16/nohelpers/user/1",
+							"protocol": "https",
+							"host": [
+								"kolveniershofbackendgroup5",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"KolveniershofAPI",
+								"Days",
+								"2019-12-16",
+								"nohelpers",
+								"user",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get possible helpers, this result can give an empty array",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c9a833ea-bdbd-4a9b-b2a7-439e906e54ad",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://kolveniershofbackendgroup5.azurewebsites.net/KolveniershofAPI/Days/2019-12-16/possiblehelpers",
+							"protocol": "https",
+							"host": [
+								"kolveniershofbackendgroup5",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"KolveniershofAPI",
+								"Days",
+								"2019-12-16",
+								"possiblehelpers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all possible dayactivities for specific time of day, this result can give an empty array",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "03c6c2bd-0d00-4972-9fe2-91fb5cb2c8bd",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://kolveniershofbackendgroup5.azurewebsites.net/KolveniershofAPI/Days/2019-12-16/VOORMIDDAG/possibledayactivities",
+							"protocol": "https",
+							"host": [
+								"kolveniershofbackendgroup5",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"KolveniershofAPI",
+								"Days",
+								"2019-12-16",
+								"VOORMIDDAG",
+								"possibledayactivities"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add day",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e2d45cae-4301-40d6-bb6b-5490c83eddb2",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"let jsonData = pm.response.json();",
+									"",
+									"pm.test(\"check date\", function () {",
+									"    pm.expect(jsonData.date).to.eql(\"2030-12-16T00:00:00\");",
+									"});",
+									"",
+									"pm.test(\"check predisch\", function () {",
+									"    pm.expect(jsonData.preDish).to.eql(\"Tomatensoep\");",
+									"});",
+									"",
+									"pm.test(\"check template\", function () {",
+									"    pm.expect(jsonData.templateName).to.eql(\"winter\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"templateName\": \"winter\",\n  \"weekNr\": 2,\n  \"dayNr\": 5,\n  \"date\": \"2030-12-16\",\n  \"preDish\": \"Tomatensoep\",\n  \"mainDish\": \"Scampi's met look\",\n  \"dessert\": \"Chocomousse\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://kolveniershofbackendgroup5.azurewebsites.net/KolveniershofAPI/Days",
+							"protocol": "https",
+							"host": [
+								"kolveniershofbackendgroup5",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"KolveniershofAPI",
+								"Days"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put day",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0805e908-9744-489d-8eef-34f1bb889811",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"let jsonData = pm.response.json();",
+									"",
+									"pm.test(\"check date\", function () {",
+									"    pm.expect(jsonData.date).to.eql(\"2030-12-16T00:00:00\");",
+									"});",
+									"",
+									"pm.test(\"check predisch\", function () {",
+									"    pm.expect(jsonData.preDish).to.eql(\"Wortelsoep\");",
+									"});",
+									"",
+									"pm.test(\"check template\", function () {",
+									"    pm.expect(jsonData.templateName).to.eql(\"winter\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"templateName\": \"winter\",\n  \"weekNr\": 2,\n  \"dayNr\": 5,\n  \"date\": \"2030-12-16\",\n  \"preDish\": \"Wortelsoep\",\n  \"mainDish\": \"Scampi's met look\",\n  \"dessert\": \"Chocomousse\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://kolveniershofbackendgroup5.azurewebsites.net/KolveniershofAPI/Days/2030-12-16",
+							"protocol": "https",
+							"host": [
+								"kolveniershofbackendgroup5",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"KolveniershofAPI",
+								"Days",
+								"2030-12-16"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add activity to day",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ddf4a6dd-6370-4e67-89fe-2b077c1afe0a",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"let jsonData = pm.response.json();",
+									"",
+									"pm.test(\"check activityId\", function () {",
+									"    pm.expect(jsonData.activityId).to.eql(3);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"activityId\": 3,\r\n  \"timeOfDay\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://kolveniershofbackendgroup5.azurewebsites.net/KolveniershofAPI/Days/2030-12-16/activity",
+							"protocol": "https",
+							"host": [
+								"kolveniershofbackendgroup5",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"KolveniershofAPI",
+								"Days",
+								"2030-12-16",
+								"activity"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete activity from day",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1eb14fb6-e277-4a43-8870-5f9c7b35f8a8",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"let jsonData = pm.response.json();",
+									"",
+									"pm.test(\"check activityId\", function () {",
+									"    pm.expect(jsonData.activityId).to.eql(3);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://kolveniershofbackendgroup5.azurewebsites.net/KolveniershofAPI/Days/2030-12-16/VOORMIDDAG/activity/3",
+							"protocol": "https",
+							"host": [
+								"kolveniershofbackendgroup5",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"KolveniershofAPI",
+								"Days",
+								"2030-12-16",
+								"VOORMIDDAG",
+								"activity",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete helper from day",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "184738f5-27b0-4490-bca5-b52df2f93cd6",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"let jsonData = pm.response.json();",
+									"",
+									"pm.test(\"check userid\", function () {",
+									"    pm.expect(jsonData.userId).to.eql(3);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://kolveniershofbackendgroup5.azurewebsites.net/KolveniershofAPI/Days/2030-12-16/helper/3",
+							"protocol": "https",
+							"host": [
+								"kolveniershofbackendgroup5",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"KolveniershofAPI",
+								"Days",
+								"2030-12-16",
+								"helper",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add helper to day",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a411ed34-4a09-441d-a051-4bba4b1489e6",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"let jsonData = pm.response.json();",
+									"",
+									"pm.test(\"check userid\", function () {",
+									"    pm.expect(jsonData.userId).to.eql(3);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"userId\": 3\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://kolveniershofbackendgroup5.azurewebsites.net/KolveniershofAPI/Days/2030-12-16/helper",
+							"protocol": "https",
+							"host": [
+								"kolveniershofbackendgroup5",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"KolveniershofAPI",
+								"Days",
+								"2030-12-16",
+								"helper"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete day",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "dd8fafb2-c013-4465-8952-a2e0f6cf9a92",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"let jsonData = pm.response.json();",
+									"",
+									"pm.test(\"check date\", function () {",
+									"    pm.expect(jsonData.date).to.eql(\"2030-12-16T00:00:00\");",
+									"});",
+									"",
+									"pm.test(\"check predisch\", function () {",
+									"    pm.expect(jsonData.preDish).to.eql(\"Wortelsoep\");",
+									"});",
+									"",
+									"pm.test(\"check template\", function () {",
+									"    pm.expect(jsonData.templateName).to.eql(\"winter\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://kolveniershofbackendgroup5.azurewebsites.net/KolveniershofAPI/Days/2030-12-16",
+							"protocol": "https",
+							"host": [
+								"kolveniershofbackendgroup5",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"KolveniershofAPI",
+								"Days",
+								"2030-12-16"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Templates",
+			"item": [
+				{
+					"name": "Get all templates",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8a191237-969f-411b-a332-75d80c94e7ad",
+								"exec": [
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"let jsonData = pm.response.json();",
+									"",
+									"pm.test(\"More than 7 results\", function () {",
+									"    pm.expect(jsonData.length).to.be.above(7);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://kolveniershofbackendg5.azurewebsites.net/KolveniershofAPI/Templates",
+							"protocol": "https",
+							"host": [
+								"kolveniershofbackendg5",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"KolveniershofAPI",
+								"Templates"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all templates for specific templateName",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f4a6c6bf-61f0-41ce-a6a5-83aa3d1b6d6d",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"let jsonData = pm.response.json();",
+									"let firstData = pm.response.json()[0]",
+									"let lastData = pm.response.json()[jsonData.length - 1]",
+									"",
+									"pm.test(\"More than 7 results\", function () {",
+									"    pm.expect(jsonData.length).to.be.above(7);",
+									"});",
+									"",
+									"pm.test(\"check templatename first\", function () {",
+									"    pm.expect(firstData.templateName).to.eql(\"winter\");",
+									"});",
+									"",
+									"pm.test(\"check templatename last\", function () {",
+									"    pm.expect(lastData.templateName).to.eql(\"winter\");",
+									"});",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://kolveniershofbackendg5.azurewebsites.net/KolveniershofAPI/Templates/winter",
+							"protocol": "https",
+							"host": [
+								"kolveniershofbackendg5",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"KolveniershofAPI",
+								"Templates",
+								"winter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all template for specific name and weekNr",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5bdcd570-d791-4ee8-b2f6-c521337cd0bc",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"let jsonData = pm.response.json();",
+									"let firstData = pm.response.json()[0]",
+									"let lastData = pm.response.json()[jsonData.length - 1]",
+									"",
+									"pm.test(\"check templatename first\", function () {",
+									"    pm.expect(firstData.templateName).to.eql(\"winter\");",
+									"});",
+									"",
+									"pm.test(\"check templatename last\", function () {",
+									"    pm.expect(lastData.templateName).to.eql(\"winter\");",
+									"});",
+									"",
+									"pm.test(\"check weekNr first\", function () {",
+									"    pm.expect(firstData.weekNr).to.eql(1);",
+									"});",
+									"",
+									"pm.test(\"check weekNr last\", function () {",
+									"    pm.expect(lastData.weekNr).to.eql(1);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://kolveniershofbackendg5.azurewebsites.net/KolveniershofAPI/Templates/winter/1",
+							"protocol": "https",
+							"host": [
+								"kolveniershofbackendg5",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"KolveniershofAPI",
+								"Templates",
+								"winter",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get templatenames",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2089a754-28d2-4520-a06d-0f6cff5178a1",
+								"exec": [
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"let jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Above 1\", function () {",
+									"    pm.expect(jsonData.length).to.be.above(1);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://kolveniershofbackendg5.azurewebsites.net/KolveniershofAPI/Templates/templatenames",
+							"protocol": "https",
+							"host": [
+								"kolveniershofbackendg5",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"KolveniershofAPI",
+								"Templates",
+								"templatenames"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get templates for specfic templatename, weekNr and dayNr",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4f9a563a-856c-47eb-a2be-c33c4f78e133",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"let jsonData = pm.response.json();",
+									"",
+									"pm.test(\"check templatename\", function () {",
+									"    pm.expect(jsonData.templateName).to.eql(\"winter\");",
+									"});",
+									"",
+									"pm.test(\"check weekNr \", function () {",
+									"    pm.expect(jsonData.weekNr).to.eql(1);",
+									"});",
+									"",
+									"pm.test(\"check dayNr\", function () {",
+									"    pm.expect(jsonData.dayNr).to.eql(1);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://kolveniershofbackendg5.azurewebsites.net/KolveniershofAPI/Templates/winter/1/1",
+							"protocol": "https",
+							"host": [
+								"kolveniershofbackendg5",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"KolveniershofAPI",
+								"Templates",
+								"winter",
+								"1",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add template",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4db57810-7d61-4480-b669-795702b58970",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"let jsonData = pm.response.json();",
+									"",
+									"pm.test(\"check name\", function () {",
+									"    pm.expect(jsonData.templateName).to.eql(\"winter\");",
+									"});",
+									"",
+									"pm.test(\"check weekNr\", function () {",
+									"    pm.expect(jsonData.weekNr).to.eql(5);",
+									"});",
+									"",
+									"pm.test(\"check dayNr\", function () {",
+									"    pm.expect(jsonData.dayNr).to.eql(3);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"templateName\": \"winter\",\r\n  \"weekNr\": 5,\r\n  \"dayNr\": 3\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://kolveniershofbackendg5.azurewebsites.net/KolveniershofAPI/Templates",
+							"protocol": "https",
+							"host": [
+								"kolveniershofbackendg5",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"KolveniershofAPI",
+								"Templates"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete template",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e53c2241-cdcf-437e-8c7d-68809e371676",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"let jsonData = pm.response.json();",
+									"",
+									"pm.test(\"check name\", function () {",
+									"    pm.expect(jsonData.templateName).to.eql(\"winter\");",
+									"});",
+									"",
+									"pm.test(\"check weekNr\", function () {",
+									"    pm.expect(jsonData.weekNr).to.eql(5);",
+									"});",
+									"",
+									"pm.test(\"check dayNr\", function () {",
+									"    pm.expect(jsonData.dayNr).to.eql(3);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://kolveniershofbackendg5.azurewebsites.net/KolveniershofAPI/Templates/winter/5/3",
+							"protocol": "https",
+							"host": [
+								"kolveniershofbackendg5",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"KolveniershofAPI",
+								"Templates",
+								"winter",
+								"5",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Get all the users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "723fa9f1-d0c2-4e49-a443-b6b3521057ad",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"let jsonData = pm.response.json();",
+									"",
+									"pm.test(\"total amount more than 1\"), function(){",
+									"    pm.expect(jsonData.length).to.be.above(1);",
+									"}",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://kolveniershofbackendgroup5.azurewebsites.net/KolveniershofAPI/Users",
+							"protocol": "https",
+							"host": [
+								"kolveniershofbackendgroup5",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"KolveniershofAPI",
+								"Users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all users with specific usertype",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ba454763-92e4-4f76-8aac-907d75b82d02",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"let jsonData = pm.response.json();",
+									"let first = pm.response.json()[0]",
+									"let last = pm.response.json()[jsonData.length - 1]",
+									"",
+									"pm.test(\"total amount more than 1\"), function(){",
+									"    pm.expect(jsonData.length).to.be.above(1);",
+									"}",
+									"",
+									"pm.test(\"check if client first\"), function(){",
+									"    pm.expect(first.userType).to.eql(\"CLIENT\");",
+									"}",
+									"",
+									"pm.test(\"check if client last\"), function(){",
+									"    pm.expect(last.userType).to.eql(\"CLIENT\");",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://kolveniershofbackendgroup5.azurewebsites.net/KolveniershofAPI/Users/type/CLIENT",
+							"protocol": "https",
+							"host": [
+								"kolveniershofbackendgroup5",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"KolveniershofAPI",
+								"Users",
+								"type",
+								"CLIENT"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get specific user with Id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4510e633-d800-4f21-a771-4199b739a12c",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"let jsonData = pm.response.json();",
+									"",
+									"",
+									"pm.test(\"check id\"), function(){",
+									"    pm.expect(first.userId).to.eql(1);",
+									"}",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://kolveniershofbackendgroup5.azurewebsites.net/KolveniershofAPI/Users/1",
+							"protocol": "https",
+							"host": [
+								"kolveniershofbackendgroup5",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"KolveniershofAPI",
+								"Users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get user with specific email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7db00d21-60b3-46aa-a60d-da8c2f5f4cf7",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"let jsonData = pm.response.json();",
+									"",
+									"",
+									"pm.test(\"check email\"), function(){",
+									"    pm.expect(first.email).to.eql(\"tybov@hotmail.com\");",
+									"}",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://kolveniershofbackendgroup5.azurewebsites.net/KolveniershofAPI/Users/email/tybov@hotmail.com",
+							"protocol": "https",
+							"host": [
+								"kolveniershofbackendgroup5",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"KolveniershofAPI",
+								"Users",
+								"email",
+								"tybov@hotmail.com"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get availability for email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "36593425-7879-4fbc-96c2-f5d3e558d782",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"let jsonData = pm.response.json();",
+									"",
+									"",
+									"pm.test(\"check email\"), function(){",
+									"    pm.expect(first.email).to.be.false;",
+									"}",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://kolveniershofbackendgroup5.azurewebsites.net/KolveniershofAPI/Users/availability/robrecht@hotmail.com",
+							"protocol": "https",
+							"host": [
+								"kolveniershofbackendgroup5",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"KolveniershofAPI",
+								"Users",
+								"availability",
+								"robrecht@hotmail.com"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Weekends",
+			"item": [
+				{
+					"name": "Get weekendday for specific user ",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "aefd9f8f-da71-4f88-abb3-bdc574d7c266",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"let jsonData = pm.response.json();",
+									"",
+									"pm.test(\"check date\"), function(){",
+									"    pm.expect(jsonData.date).to.eql(\"2019-12-21T00:00:00\");",
+									"}",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://kolveniershofbackendgroup5.azurewebsites.net/KolveniershofAPI/Weekends/2019-12-21/user/1",
+							"protocol": "https",
+							"host": [
+								"kolveniershofbackendgroup5",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"KolveniershofAPI",
+								"Weekends",
+								"2019-12-21",
+								"user",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add weekendday for specific user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f99c0fa9-4d0b-44ee-ba24-d1610e81f68e",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"let jsonData = pm.response.json();",
+									"",
+									"pm.test(\"check date\"), function(){",
+									"    pm.expect(jsonData.date).to.eql(\"2019-12-21T00:00:00\");",
+									"}",
+									"",
+									"pm.test(\"check comment\"), function(){",
+									"    pm.expect(jsonData.ciomment).to.eql(\"We zijn naar het zwembad geweest\");",
+									"}",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": 1,\r\n    \"date\": \"2019-12-14T00:00:00\",\r\n    \"comment\": \"We zijn naar het zwembad geweest\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://kolveniershofbackendgroup5.azurewebsites.net/KolveniershofAPI/Weekends",
+							"protocol": "https",
+							"host": [
+								"kolveniershofbackendgroup5",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"KolveniershofAPI",
+								"Weekends"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put weekenddays",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3a340032-b051-4fd2-8ee6-aec2e7bc8ee4",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"let jsonData = pm.response.json();",
+									"",
+									"pm.test(\"check date\"), function(){",
+									"    pm.expect(jsonData.date).to.eql(\"2019-12-21T00:00:00\");",
+									"}",
+									"",
+									"pm.test(\"check comment\"), function(){",
+									"    pm.expect(jsonData.ciomment).to.eql(\"We zijn naar de zee geweest\");",
+									"}",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": 1,\r\n    \"date\": \"2019-12-14T00:00:00\",\r\n    \"comment\": \"We zijn naar de zee geweest\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://kolveniershofbackendgroup5.azurewebsites.net/KolveniershofAPI/Weekends/2019-12-21/user/1",
+							"protocol": "https",
+							"host": [
+								"kolveniershofbackendgroup5",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"KolveniershofAPI",
+								"Weekends",
+								"2019-12-21",
+								"user",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete weekendday",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b50d4c95-a8bf-428c-8e76-fb11a2894e6a",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"let jsonData = pm.response.json();",
+									"",
+									"pm.test(\"check date\"), function(){",
+									"    pm.expect(jsonData.date).to.eql(\"2019-12-21T00:00:00\");",
+									"}",
+									"",
+									"pm.test(\"check comment\"), function(){",
+									"    pm.expect(jsonData.ciomment).to.eql(null);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://kolveniershofbackendgroup5.azurewebsites.net/KolveniershofAPI/Weekends/2019-12-21/user/1",
+							"protocol": "https",
+							"host": [
+								"kolveniershofbackendgroup5",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"KolveniershofAPI",
+								"Weekends",
+								"2019-12-21",
+								"user",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
