@@ -23,6 +23,11 @@ namespace KolveniershofBACKEND.Data.Repositories.Concrete
                 .OrderBy(a => a.Name).ThenBy(a => a.ActivityType).ToList();
         }
 
+        public IEnumerable<Activity> GetAllIncludingSickAbsent()
+        {
+            return _activities.OrderBy(a => a.Name).ThenBy(a => a.ActivityType).ToList();
+        }
+
         public IEnumerable<string> GetAllPictograms()
         {
             return _activities.Select(a => a.Pictogram).Distinct().ToList();

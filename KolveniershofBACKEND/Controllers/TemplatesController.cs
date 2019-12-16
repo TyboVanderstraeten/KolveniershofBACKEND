@@ -194,6 +194,10 @@ namespace KolveniershofBACKEND.Controllers
                 try
                 {
                     Day dayToAdd = new Day(model.TemplateName, model.WeekNr, model.DayNr);
+                    Activity activitySick = _activityRepository.GetAllIncludingSickAbsent().SingleOrDefault(a => a.ActivityType == ActivityType.ZIEK);
+                    Activity activityAbsent = _activityRepository.GetAllIncludingSickAbsent().SingleOrDefault(a => a.ActivityType == ActivityType.AFWEZIG);
+                    dayToAdd.AddDayActivity(new DayActivity(dayToAdd, activitySick, TimeOfDay.VOLLEDIG));
+                    dayToAdd.AddDayActivity(new DayActivity(dayToAdd, activityAbsent, TimeOfDay.VOLLEDIG));
                     _dayRepository.Add(dayToAdd);
                     _dayRepository.SaveChanges();
                     return Ok(dayToAdd);

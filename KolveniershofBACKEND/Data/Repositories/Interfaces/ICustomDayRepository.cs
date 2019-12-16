@@ -17,6 +17,7 @@ namespace KolveniershofBACKEND.Data.Repositories.Interfaces
         IEnumerable<Activity> GetPossibleDayActivities(DateTime date, TimeOfDay timeOfDay);
         CustomDay GetById(int id);
         CustomDay GetByDate(DateTime date);
+        CustomDay GetByDateNoHelpers(DateTime date);
         void Add(CustomDay customDay);
         void Remove(CustomDay customDay);
         void SaveChanges();
